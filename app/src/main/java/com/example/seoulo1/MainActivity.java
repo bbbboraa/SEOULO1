@@ -13,5 +13,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
     //푸시 받아라!!!!!
+    //하은 하이 줄여서 하하
 
 }
