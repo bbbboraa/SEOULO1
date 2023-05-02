@@ -8,7 +8,7 @@
     tools:context=".MainActivity">
 
 
-
+    //달력 생성
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
