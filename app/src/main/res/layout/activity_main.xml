@@ -9,6 +9,11 @@
     tools:ignore="ExtraText">
 
 
+    <Button
+        android:id="@+id/btn_move"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="calendar move" />
 </LinearLayout>
 
 
