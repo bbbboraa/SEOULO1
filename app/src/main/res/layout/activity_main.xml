@@ -5,6 +5,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+<!--    //달력-->
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:id="@+id/btn_calenderOK"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="280dp"
+        android:layout_marginTop="130dp"
+        android:text="확인"
+        android:visibility="visible" />
+
+
 
 </LinearLayout>
 
