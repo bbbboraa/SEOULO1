@@ -26,5 +26,5 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent); // 액티비티 이동
             }
         });
-
+    }
 }
