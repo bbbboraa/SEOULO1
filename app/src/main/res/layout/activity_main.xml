@@ -3,13 +3,59 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-
-    <Button
-        android:id="@+id/btn_move"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="calendar move" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+    <fragment android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:id="@+id/map"
+            android:layout_width="290dp"
+            android:layout_height="match_parent"
+            tools:context=".MapsActivity" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <Button
+                    android:id="@+id/btn_my_location_move"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="내 주변\n장소 찾기" />
+                <Button
+                    android:id="@+id/btn_hot_place_move"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="핫 플레이스\n찾기" />
+                <Button
+                    android:id="@+id/btn_move"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="경로 추천" />
+                <Button
+                    android:id="@+id/btn_checklist_move"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="준비물 체크" />
+                <Button
+                    android:id="@+id/btn_travel_log_move"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="여행 일정\n 관리" />
+                <Button
+                    android:id="@+id/btn_expense_graph_move"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="경비 그래프" />
+            </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
 </LinearLayout>
 
