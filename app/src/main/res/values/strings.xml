@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">SEOULO</string>
-    <string name="calendarOK">확인</string>
+    <string name="calendar_day">날짜</string>
 </resources>
