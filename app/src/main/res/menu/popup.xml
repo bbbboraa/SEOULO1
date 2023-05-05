@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_my_location"
+        android:title="내 주변\n장소 찾기"/>
+    <item android:id="@+id/menu_hot_place"
+        android:title="핫플레이스\n찾기"/>
+    <item android:id="@+id/menu_route"
+        android:title="경로 찾기"/>
+    <item android:id="@+id/menu_checklist"
+        android:title="준비물 체크"/>
+    <item android:id="@+id/menu_travel_log"
+        android:title="여행 일정\n 관리"/>
+    <item android:id="@+id/menu_expense_graph"
+        android:title="경비 그래프"/>
+</menu>

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.PopupMenu;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,7 +18,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
-    private Button btn_move;
+    private Button btn_move, menu_btn;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -29,16 +30,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        btn_move = findViewById(R.id.btn_move);
-        btn_move.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
-                startActivity(intent); // 액티비티 이동
-            }
-        });
-    }
 
+
+//        btn_move = findViewById(R.id.btn_move);
+//        btn_move.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+//                startActivity(intent); // 액티비티 이동
+//            }
+//        });
+
+
+}
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         mMap = googleMap;
@@ -51,7 +55,45 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         markerOptions.snippet("한국 수도");
 
         mMap.addMarker(markerOptions);
-
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(SEOUL, 10));
+
+        menu_btn = findViewById(R.id.menu_btn);
+        menu_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //PopupMenu 객체 생성
+                PopupMenu popup= new PopupMenu(MainActivity.this, view); //두 번째 파라미터가 팝업메뉴가 붙을 뷰
+                //PopupMenu popup= new PopupMenu(MainActivity.this, btn2); //첫번째 버튼을 눌렀지만 팝업메뉴는 btn2에 붙어서 나타남
+                getMenuInflater().inflate(R.menu.popup, popup.getMenu());
+
+                //팝업메뉴의 메뉴아이템을 선택하는 것을 듣는 리스너 객체 생성 및 설정
+                popup.setOnMenuItemClickListener(menuItem -> {
+
+                    switch (menuItem.getItemId()){
+                        case R.id.menu_my_location:
+                            //setContentView(R.layout.activity_main);
+                            break;
+
+                        case R.id.menu_hot_place:
+                            break;
+
+                        case R.id.menu_route:
+                            Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+                            startActivity(intent);
+                            break;
+                        case R.id.menu_checklist:
+                            break;
+                        case R.id.menu_travel_log:
+                            break;
+                        case R.id.menu_expense_graph:
+                            break;
+                    }
+
+                    return false;
+                });
+                popup.show();
+            }
+        });
     }
 }
