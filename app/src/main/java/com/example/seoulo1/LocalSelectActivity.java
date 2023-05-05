@@ -401,6 +401,7 @@ public class LocalSelectActivity extends AppCompatActivity
         poly8.setClickable(true);
     }
 
+    public void
 
     @Override
     public void onPolylineClick(@NonNull Polyline polyline) { }
