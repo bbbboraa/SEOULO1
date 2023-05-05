@@ -80,6 +80,7 @@ public class LocalSelectActivity extends AppCompatActivity
                 )
         );
         poly1.setTag("A");
+        poly1.setStrokeColor(android.R.color.holo_green_light);
         poly1.setClickable(true);
 
         Polygon poly2 =  googleMap.addPolygon(new PolygonOptions()
@@ -136,6 +137,7 @@ public class LocalSelectActivity extends AppCompatActivity
                 )
         );
         poly2.setTag("B");
+        poly2.setStrokeColor(android.R.color.holo_red_light);
         poly2.setClickable(true);
 
         Polygon poly3 = googleMap.addPolygon(new PolygonOptions()
@@ -174,6 +176,7 @@ public class LocalSelectActivity extends AppCompatActivity
                 )
         );
         poly3.setTag("C");
+        poly3.setStrokeColor(android.R.color.holo_blue_light);
         poly3.setClickable(true);
 
         Polygon poly4 = googleMap.addPolygon(new PolygonOptions()
@@ -215,6 +218,7 @@ public class LocalSelectActivity extends AppCompatActivity
                 )
         );
         poly4.setTag("D");
+        poly4.setStrokeColor(android.R.color.holo_orange_light);
         poly4.setClickable(true);
 
         Polygon poly5 = googleMap.addPolygon(new PolygonOptions()
@@ -252,6 +256,7 @@ public class LocalSelectActivity extends AppCompatActivity
                 )
         );
         poly5.setTag("E");
+        poly5.setStrokeColor(android.R.color.holo_purple);
         poly5.setClickable(true);
 
         Polygon poly6 = googleMap.addPolygon(new PolygonOptions()
@@ -316,6 +321,7 @@ public class LocalSelectActivity extends AppCompatActivity
                 )
         );
         poly6.setTag("F");
+        poly6.setStrokeColor(android.R.color.darker_gray);
         poly6.setClickable(true);
 
         Polygon poly7 = googleMap.addPolygon(new PolygonOptions()
@@ -349,6 +355,7 @@ public class LocalSelectActivity extends AppCompatActivity
                 )
         );
         poly7.setTag("G");
+        poly7.setStrokeColor(android.R.color.black);
         poly7.setClickable(true);
 
         Polygon poly8 = googleMap.addPolygon(new PolygonOptions()
@@ -390,19 +397,13 @@ public class LocalSelectActivity extends AppCompatActivity
                 )
         );
         poly8.setTag("H");
+        poly8.setStrokeColor(android.R.color.holo_blue_dark);
         poly8.setClickable(true);
-
-
-
     }
+
 
     @Override
-    public void onPolylineClick(@NonNull Polyline polyline) {
-
-    }
-
+    public void onPolylineClick(@NonNull Polyline polyline) { }
     @Override
-    public void onPolygonClick(@NonNull Polygon polygon) {
-
-    }
+    public void onPolygonClick(@NonNull Polygon polygon) { }
 }
