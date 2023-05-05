@@ -1,5 +1,7 @@
 package com.example.seoulo1;
 
+import static android.opengl.Matrix.length;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +12,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
@@ -35,9 +38,22 @@ public class LocalSelectActivity extends AppCompatActivity
 
         googleMap.setOnPolylineClickListener(this);
         googleMap.setOnPolygonClickListener(this);
+        mMap = googleMap;
+        double addr[] = {37.56100278, 126.9996417, 37.57037778, 126.9816417, 37.5360944, 126.9675222, 37.57636667, 126.9388972
+                        , 37.571625, 127.0421417, 37.58638333, 127.0203333, 37.56061111, 127.039, 37.56070556, 126.9105306 };
+                                  //중구                    //종로구                   //용산구                //서대문구
+                                  //동대문구                 //성북구                   //성동구                //마포구
+
+        for (int i = 0; i< addr.length; i=+2){
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions
+                    .position(new LatLng(addr[i], addr[i+1]))
+                    .title("마커"+(i/2));
+            mMap.addMarker(markerOptions);
+        }
 
         Polygon poly1 = googleMap.addPolygon(new PolygonOptions()
-                .clickable(true)  //중구 A
+                .clickable(true)  //중구 //JungGu
                 .add(
                         new LatLng(37.544062989758594, 127.00854659142894),
                         new LatLng(37.54385947805103, 127.00727818360471),
@@ -79,12 +95,12 @@ public class LocalSelectActivity extends AppCompatActivity
                         new LatLng(37.544062989758594, 127.00854659142894)
                 )
         );
-        poly1.setTag("A");
+        poly1.setTag("JungGu");
         poly1.setStrokeColor(android.R.color.holo_green_light);
         poly1.setClickable(true);
 
         Polygon poly2 =  googleMap.addPolygon(new PolygonOptions()
-                .clickable(true)  //종로구 B
+                .clickable(true)  //종로구 //JongnoGu
                 .add(
                         new LatLng(37.631840777111364, 126.9749313865046),
                         new LatLng(37.632194205253654, 126.97609588529602),
@@ -136,12 +152,12 @@ public class LocalSelectActivity extends AppCompatActivity
                         new LatLng(37.631840777111364, 126.9749313865046)
                 )
         );
-        poly2.setTag("B");
+        poly2.setTag("JongnoGu");
         poly2.setStrokeColor(android.R.color.holo_red_light);
         poly2.setClickable(true);
 
         Polygon poly3 = googleMap.addPolygon(new PolygonOptions()
-                .clickable(true)  //용산구 C
+                .clickable(true)  //용산구 //YongsanGu
                 .add(
                         new LatLng(37.5548768201904, 126.96966524449994),
                         new LatLng(37.55308718044556, 126.97642899633566),
@@ -175,12 +191,12 @@ public class LocalSelectActivity extends AppCompatActivity
                         new LatLng(37.5548768201904, 126.96966524449994)
                 )
         );
-        poly3.setTag("C");
+        poly3.setTag("YongsanGu");
         poly3.setStrokeColor(android.R.color.holo_blue_light);
         poly3.setClickable(true);
 
         Polygon poly4 = googleMap.addPolygon(new PolygonOptions()
-                .clickable(true)  //서대문구 D
+                .clickable(true)  //서대문구 //SeodaemunGu
                 .add(
                         new LatLng(37.59851932019209, 126.95347706883003),
                         new LatLng(37.5992407011344, 126.95499403097206),
@@ -217,12 +233,12 @@ public class LocalSelectActivity extends AppCompatActivity
                         new LatLng(37.59851932019209, 126.95347706883003)
                 )
         );
-        poly4.setTag("D");
+        poly4.setTag("SeodaemunGu");
         poly4.setStrokeColor(android.R.color.holo_orange_light);
         poly4.setClickable(true);
 
         Polygon poly5 = googleMap.addPolygon(new PolygonOptions()
-                .clickable(true)  //동대문구 E
+                .clickable(true)  //동대문구 //DongdaemunGu
                 .add(
                         new LatLng(37.607062869017085, 127.07111288773496),
                         new LatLng(37.60107201319839, 127.07287376670605),
@@ -255,12 +271,12 @@ public class LocalSelectActivity extends AppCompatActivity
                         new LatLng(37.607062869017085, 127.07111288773496)
                 )
         );
-        poly5.setTag("E");
+        poly5.setTag("DongdaemunGu");
         poly5.setStrokeColor(android.R.color.holo_purple);
         poly5.setClickable(true);
 
         Polygon poly6 = googleMap.addPolygon(new PolygonOptions()
-                .clickable(true)  //성북구 F
+                .clickable(true)  //성북구 //SeongbukGu
                 .add(
                         new LatLng(37.631446839436855, 126.99372381657889),
                         new LatLng(37.626192451322005, 126.99927047335905),
@@ -320,12 +336,12 @@ public class LocalSelectActivity extends AppCompatActivity
                         new LatLng(37.63654916557213, 126.98446028560235)
                 )
         );
-        poly6.setTag("F");
+        poly6.setTag("SeongbukGu");
         poly6.setStrokeColor(android.R.color.darker_gray);
         poly6.setClickable(true);
 
         Polygon poly7 = googleMap.addPolygon(new PolygonOptions()
-                .clickable(true)  //성동구 G
+                .clickable(true)  //성동구 //SeondongGu
                 .add(
                         new LatLng(37.57275246810175, 127.04241813085706),
                         new LatLng(37.57038253579033, 127.04794980454399),
@@ -354,12 +370,12 @@ public class LocalSelectActivity extends AppCompatActivity
                         new LatLng(37.57275246810175, 127.04241813085706)
                 )
         );
-        poly7.setTag("G");
+        poly7.setTag("SeondongGu");
         poly7.setStrokeColor(android.R.color.black);
         poly7.setClickable(true);
 
         Polygon poly8 = googleMap.addPolygon(new PolygonOptions()
-                .clickable(true)  //마포구 H
+                .clickable(true)  //마포구 //MapoGu
                 .add(
                         new LatLng(37.584651324803644, 126.88883849288884),
                         new LatLng(37.57082994377989, 126.9098094620638),
@@ -396,12 +412,10 @@ public class LocalSelectActivity extends AppCompatActivity
                         new LatLng(37.584651324803644, 126.88883849288884)
                 )
         );
-        poly8.setTag("H");
+        poly8.setTag("MapoGu");
         poly8.setStrokeColor(android.R.color.holo_blue_dark);
-        poly8.setClickable(true);
+        //poly8.setClickable(true);
     }
-
-    public void
 
     @Override
     public void onPolylineClick(@NonNull Polyline polyline) { }
