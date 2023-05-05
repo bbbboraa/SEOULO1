@@ -6,10 +6,11 @@
     tools:context="com.example.seoulo1.LocalSelectActivity">
 
     <fragment android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:id="@+id/map"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/localmap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MapsActivity" />
+        tools:context="com.example.polygons.PolyActivity" />
 
 
 </LinearLayout>
