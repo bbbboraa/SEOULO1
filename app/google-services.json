@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "272830649056",
+    "project_id": "seoulo",
+    "storage_bucket": "seoulo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:272830649056:android:b60edd1387da28b0ff3685",
+        "android_client_info": {
+          "package_name": "com.example.seoulo1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "272830649056-rf3e3p597s3vj8qtnnp1t2rgdii3m908.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.seoulo1",
+            "certificate_hash": "676b66b1025bc512b37c5a1504fdffb2b068baac"
+          }
+        },
+        {
+          "client_id": "272830649056-53s9hrlenhigal420l4tqno0l9v91c40.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrnLbRNZtuzKCPQXMtg0Ew0W1_dRrdSN8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "272830649056-53s9hrlenhigal420l4tqno0l9v91c40.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

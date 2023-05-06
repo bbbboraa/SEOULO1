@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">SEOULO</string>
     <string name="calendar_day">날짜</string>
+    <string name="title_activity_register">RegisterActivity</string>
 </resources>
