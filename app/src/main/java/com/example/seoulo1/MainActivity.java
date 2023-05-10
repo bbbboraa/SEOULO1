@@ -72,7 +72,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     switch (menuItem.getItemId()){
                         case R.id.menu_my_location:
-                            //setContentView(R.layout.activity_main);
+                            Intent intent4 = new Intent(MainActivity.this, MyLocationActivity.class);
+                            startActivity(intent4);
                             break;
 
                         case R.id.menu_hot_place:
