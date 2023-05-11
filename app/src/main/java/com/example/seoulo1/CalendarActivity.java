@@ -3,6 +3,7 @@ package com.example.seoulo1;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,9 +32,10 @@ public class CalendarActivity extends AppCompatActivity {
         calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
 
+        //기간 선택
         MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
 
-        builder.setTitleText("Date Picker");
+        builder.setTitleText("여행 일정을 선택하세요");
 
         //미리 날짜 선택
         builder.setSelection(Pair.create(MaterialDatePicker.thisMonthInUtcMilliseconds(), MaterialDatePicker.todayInUtcMilliseconds()));
@@ -46,13 +48,9 @@ public class CalendarActivity extends AppCompatActivity {
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Pair<Long, Long>>() {
             @Override
             public void onPositiveButtonClick(Pair<Long, Long> selection) {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
                 Date date1 = new Date();
                 Date date2 = new Date();
-
-                long cha = date1.getTime() - date2.getTime();
-                cha = cha / 86400;
-                long finalCha = cha;
 
                 date1.setTime(selection.first);
                 date2.setTime(selection.second);
@@ -61,7 +59,7 @@ public class CalendarActivity extends AppCompatActivity {
                 String dateString2 = simpleDateFormat.format(date2);
 
 
-                calendar_day.setText("day" + (int) finalCha);
+                calendar_day.setText(dateString1 + "~" + dateString2);
 
             }
         });
