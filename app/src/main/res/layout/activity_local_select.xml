@@ -18,65 +18,283 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/local_image" />
+        app:srcCompat="@drawable/local_image3" />
 
     <Button
         android:id="@+id/강서구"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="69dp"
+        android:layout_height="40dp"
         android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
         android:text="강서구"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.045"
+        app:layout_constraintHorizontal_bias="0.046"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.487" />
+        app:layout_constraintVertical_bias="0.479" />
+
+    <Button
+        android:id="@+id/마포구"
+        android:layout_width="69dp"
+        android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:text="마포구"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.247"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.49" />
+
+    <Button
+        android:id="@+id/서대문구"
+        android:layout_width="80.8dp"
+        android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:text="서대문구"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.375"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.432" />
+
+    <Button
+        android:id="@+id/동대문구"
+        android:layout_width="80.8dp"
+        android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:text="동대문구"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.69"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.454" />
+
+    <Button
+        android:id="@+id/은평구"
+        android:layout_width="69dp"
+        android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:text="은평구"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.269"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.374" />
+
+    <Button
+        android:id="@+id/종로구"
+        android:layout_width="69dp"
+        android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:text="종로구"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.351" />
+
+    <Button
+        android:id="@+id/도봉구"
+        android:layout_width="69dp"
+        android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:text="도봉구"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.646"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.279" />
+
+    <Button
+        android:id="@+id/강북구"
+        android:layout_width="69dp"
+        android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:text="강북구"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.444"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.293" />
+
+    <Button
+        android:id="@+id/성북구"
+        android:layout_width="69dp"
+        android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:text="성북구"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.599"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.397" />
+
+    <Button
+        android:id="@+id/노원구"
+        android:layout_width="69dp"
+        android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:text="노원구"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.745"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.34" />
+
+    <Button
+        android:id="@+id/중랑구"
+        android:layout_width="69dp"
+        android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:text="중랑구"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.827"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.396" />
+
+    <Button
+        android:id="@+id/광진구"
+        android:layout_width="69dp"
+        android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:text="광진구"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.883"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.48" />
+
+    <Button
+        android:id="@+id/성동구"
+        android:layout_width="69dp"
+        android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:text="성동구"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.701"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.522" />
+
+    <Button
+        android:id="@+id/중구"
+        android:layout_width="69dp"
+        android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:text="중구"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.49" />
+
+    <Button
+        android:id="@+id/용산구"
+        android:layout_width="69dp"
+        android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:text="용산구"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.514"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.548" />
 
     <Button
         android:id="@+id/양천구"
-        android:layout_width="70dp"
+        android:layout_width="69dp"
         android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
         android:text="양천구"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.108"
+        app:layout_constraintHorizontal_bias="0.111"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.56" />
+        app:layout_constraintVertical_bias="0.538" />
 
     <Button
         android:id="@+id/구로구"
-        android:layout_width="70dp"
+        android:layout_width="69dp"
         android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
         android:text="구로구"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.145"
+        app:layout_constraintHorizontal_bias="0.09"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.607" />
+        app:layout_constraintVertical_bias="0.606" />
 
     <Button
         android:id="@+id/금천구"
-        android:layout_width="70dp"
+        android:layout_width="69dp"
         android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
         android:text="금천구"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.214"
+        app:layout_constraintHorizontal_bias="0.242"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.665" />
+        app:layout_constraintVertical_bias="0.654" />
 
     <Button
         android:id="@+id/영등포구"
-        android:layout_width="70dp"
+        android:layout_width="69dp"
         android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
         android:text="영등포구"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -88,47 +306,55 @@
 
     <Button
         android:id="@+id/동작구"
-        android:layout_width="70dp"
+        android:layout_width="69dp"
         android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
         android:text="동작구"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.392"
+        app:layout_constraintHorizontal_bias="0.397"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.601" />
+        app:layout_constraintVertical_bias="0.606" />
 
     <Button
         android:id="@+id/관악구"
-        android:layout_width="70dp"
+        android:layout_width="69dp"
         android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
         android:text="관악구"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.445"
+        app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.654" />
+        app:layout_constraintVertical_bias="0.675" />
 
     <Button
         android:id="@+id/강동구"
-        android:layout_width="70dp"
+        android:layout_width="69dp"
         android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
         android:text="강동구"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.953"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.522" />
+        app:layout_constraintVertical_bias="0.536" />
 
     <Button
         android:id="@+id/송파구"
-        android:layout_width="70dp"
+        android:layout_width="69dp"
         android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
         android:text="송파구"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -136,33 +362,37 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.58" />
+        app:layout_constraintVertical_bias="0.606" />
 
     <Button
         android:id="@+id/강남구"
-        android:layout_width="70dp"
+        android:layout_width="69dp"
         android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
         android:text="강남구"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.803"
+        app:layout_constraintHorizontal_bias="0.722"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.617" />
+        app:layout_constraintVertical_bias="0.58" />
 
     <Button
         android:id="@+id/서초구"
-        android:layout_width="70dp"
+        android:layout_width="69dp"
         android:layout_height="40dp"
+        android:background="@drawable/round_background"
+        android:backgroundTint="@color/cardview_dark_background"
         android:text="서초구"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.598"
+        app:layout_constraintHorizontal_bias="0.599"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.617" />
+        app:layout_constraintVertical_bias="0.628" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
