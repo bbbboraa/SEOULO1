@@ -1,15 +1,14 @@
 package com.example.seoulo1;
-import android.os.Bundle;
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Bundle;
 
-public class LocalSelectActivity extends AppCompatActivity {
+public class AddrResearchActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_local_select);
+        setContentView(R.layout.activity_addr_research);
     }
-
 }
