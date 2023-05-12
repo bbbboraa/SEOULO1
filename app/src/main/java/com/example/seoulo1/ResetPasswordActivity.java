@@ -1,6 +1,5 @@
 package com.example.seoulo1;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -19,7 +18,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
     FirebaseAuth auth;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
