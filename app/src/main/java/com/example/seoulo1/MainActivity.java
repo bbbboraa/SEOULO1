@@ -3,7 +3,7 @@ package com.example.seoulo1;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.PopupMenu;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,7 +17,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
-    private Button btn_move, menu_btn;
+    private ImageButton like_btn, menu_btn;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mMap.addMarker(markerOptions);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(SEOUL, 10));
+
+        like_btn = findViewById(R.id.like_btn);
 
         menu_btn = findViewById(R.id.menu_btn);
         menu_btn.setOnClickListener(view -> {
