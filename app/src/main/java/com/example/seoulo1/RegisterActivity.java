@@ -20,7 +20,7 @@ import java.util.HashMap;
 public class RegisterActivity extends AppCompatActivity {
 
     EditText nickname, email, phoneNum, password, username;
-    Button btn_register;
+    Button btn_register, login_button;
 
     private FirebaseAuth auth;
     private DatabaseReference reference;
@@ -36,6 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
         password = findViewById(R.id.et_pwd);
         username = findViewById(R.id.et_name);
         btn_register = findViewById(R.id.btn_register);
+        login_button = findViewById(R.id.login_button);
 
         auth = FirebaseAuth.getInstance();
 
@@ -54,6 +55,10 @@ public class RegisterActivity extends AppCompatActivity {
             } else {
                 register(txt_username, txt_email, txt_password, txt_phoneNum, txt_username);
             }
+        });
+        login_button.setOnClickListener(v ->{
+            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+            startActivity(intent);
         });
     }
 

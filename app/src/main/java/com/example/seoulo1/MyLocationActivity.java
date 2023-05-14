@@ -301,6 +301,7 @@ public class MyLocationActivity extends AppCompatActivity  implements
                     latlng.latitude,
                     latlng.longitude,
                     1);
+            Log.d(TAG, "getCurrentAddress:!!!!!!");
         } catch (IOException ioException) {
             //네트워크 문제
             Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();

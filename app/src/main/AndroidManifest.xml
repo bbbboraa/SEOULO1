@@ -32,9 +32,6 @@
             android:name=".MypageActivity"
             android:exported="false" />
         <activity
-            android:name=".JoinActivity"
-            android:exported="false" />
-        <activity
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
