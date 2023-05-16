@@ -2,21 +2,26 @@ package com.example.seoulo1;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 
 public class LocalSelectActivity extends AppCompatActivity {
     private ImageButton like_btn, menu_btn;
+    private Button gangseo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_select);
 
         like_btn = findViewById(R.id.like_btn);
-
+        gangseo = findViewById(R.id.gangseo);
         menu_btn = findViewById(R.id.menu_btn);
         menu_btn.setOnClickListener(view -> {
 
@@ -56,6 +61,13 @@ public class LocalSelectActivity extends AppCompatActivity {
             popup.show();
         });
 
+        gangseo.setOnClickListener(v -> {
+            Intent intent = new Intent(LocalSelectActivity.this, LocalHotplaceActivity.class);
+            intent.putExtra("local", "강서구");
+            startActivity(intent);
+        });
+
     }
+
 
 }
