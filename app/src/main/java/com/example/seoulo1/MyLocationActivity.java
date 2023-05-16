@@ -1,6 +1,7 @@
 package com.example.seoulo1;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -14,6 +15,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -58,6 +61,7 @@ public class MyLocationActivity extends AppCompatActivity  implements
         PlacesListener {
 
     private GoogleMap mMap;
+    private ImageButton like_btn, menu_btn;
     private Marker currentMarker = null;
 
     private static final String TAG = "googlemap_example";
@@ -85,6 +89,7 @@ public class MyLocationActivity extends AppCompatActivity  implements
     // (참고로 Toast에서는 Context가 필요했습니다.)
 
     List<Marker> previous_marker = null;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,6 +128,46 @@ public class MyLocationActivity extends AppCompatActivity  implements
 
         Button button = (Button)findViewById(R.id.button);
         button.setOnClickListener(v -> showPlaceInformation(currentPosition));
+        like_btn = findViewById(R.id.like_btn);
+
+        menu_btn = findViewById(R.id.menu_btn);
+        menu_btn.setOnClickListener(view -> {
+
+            //PopupMenu 객체 생성
+            PopupMenu popup= new PopupMenu(MyLocationActivity.this, view); //두 번째 파라미터가 팝업메뉴가 붙을 뷰
+            //PopupMenu popup= new PopupMenu(MainActivity.this, btn2); //첫번째 버튼을 눌렀지만 팝업메뉴는 btn2에 붙어서 나타남
+            getMenuInflater().inflate(R.menu.popup, popup.getMenu());
+
+            //팝업메뉴의 메뉴아이템을 선택하는 것을 듣는 리스너 객체 생성 및 설정
+            popup.setOnMenuItemClickListener(menuItem -> {
+
+                switch (menuItem.getItemId()){
+                    case R.id.menu_my_location:
+                        Intent intent4 = new Intent(MyLocationActivity.this, MyLocationActivity.class);
+                        startActivity(intent4);
+                        break;
+
+                    case R.id.menu_hot_place:
+                        Intent intent2 = new Intent(MyLocationActivity.this, LocalSelectActivity.class);
+                        startActivity(intent2);
+                        break;
+
+                    case R.id.menu_route:
+                        Intent intent3 = new Intent(MyLocationActivity.this, CalendarActivity.class);
+                        startActivity(intent3);
+                        break;
+                    case R.id.menu_checklist:
+                        break;
+                    case R.id.menu_travel_log:
+                        break;
+                    case R.id.menu_expense_graph:
+                        break;
+                }
+
+                return false;
+            });
+            popup.show();
+        });
 
     }
     @Override
@@ -296,12 +341,13 @@ public class MyLocationActivity extends AppCompatActivity  implements
         List<Address> addresses;
 
         try {
-
+            //addresses= new LatLng(37.56, 126.97);
             addresses = geocoder.getFromLocation(
                     latlng.latitude,
                     latlng.longitude,
                     1);
             Log.d(TAG, "getCurrentAddress:!!!!!!");
+
         } catch (IOException ioException) {
             //네트워크 문제
             Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
@@ -540,7 +586,7 @@ public class MyLocationActivity extends AppCompatActivity  implements
                 .listener(MyLocationActivity.this)
                 .key("AIzaSyCrnLbRNZtuzKCPQXMtg0Ew0W1_dRrdSN8")
                 .latlng(location.latitude, location.longitude)//현재 위치
-                .radius(500) //500 미터 내에서 검색
+                .radius(2000) //500 미터 내에서 검색
                 .type(PlaceType.RESTAURANT) //음식점
                 .build()
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

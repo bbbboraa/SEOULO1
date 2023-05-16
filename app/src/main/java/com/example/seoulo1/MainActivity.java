@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         markerOptions.snippet("한국 수도");
 
         mMap.addMarker(markerOptions);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(SEOUL, 10));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(SEOUL, 12));
 
         like_btn = findViewById(R.id.like_btn);
 
