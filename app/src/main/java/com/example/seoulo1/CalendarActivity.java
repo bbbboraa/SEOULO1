@@ -3,7 +3,6 @@ package com.example.seoulo1;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,15 +39,16 @@ public class CalendarActivity extends AppCompatActivity {
         //미리 날짜 선택
         builder.setSelection(Pair.create(MaterialDatePicker.thisMonthInUtcMilliseconds(), MaterialDatePicker.todayInUtcMilliseconds()));
 
-        MaterialDatePicker materialDatePicker = builder.build();
+        MaterialDatePicker<Pair<Long, Long>> materialDatePicker = builder.build();
 
         materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
 
         //확인버튼
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Pair<Long, Long>>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onPositiveButtonClick(Pair<Long, Long> selection) {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
                 Date date1 = new Date();
                 Date date2 = new Date();
 
