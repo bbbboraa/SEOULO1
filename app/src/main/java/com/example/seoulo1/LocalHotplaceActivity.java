@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -19,7 +20,7 @@ public class LocalHotplaceActivity extends AppCompatActivity {
         selectedlocal = (TextView) findViewById(R.id.selectedlocal);
         Intent intent = getIntent();
         String selected_local = intent.getStringExtra("local");
-        selectedlocal.getVisibility();
+
         selectedlocal.setText(selected_local);
     }
 }
