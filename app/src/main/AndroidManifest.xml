@@ -48,7 +48,8 @@
         </activity>
         <activity
             android:name=".CalendarActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.Light"/>
         <activity
             android:name=".MainActivity"
             android:exported="true" /> <!-- <meta-data -->
@@ -58,7 +59,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCrnLbRNZtuzKCPQXMtg0Ew0W1_dRrdSN8"/>
 
-        <activity android:name=".LocalSelectActivity" />
+        <activity
+            android:name=".LocalSelectActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SEOULO1"/>
 
         <uses-library android:name="com.google.android.maps" />
     </application>
