@@ -18,19 +18,30 @@
             android:layout_height="match_parent"
             tools:context=".MapsActivity" />
 
-        <Button
+        <ImageButton
+            android:id="@+id/like_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/round_background"
+            android:isScrollContainer="true"
+            android:padding="10sp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/like" />
+
+        <ImageButton
             android:id="@+id/menu_btn"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_gravity="right|top"
+            android:layout_gravity="end"
+            android:layout_marginTop="80dp"
+            android:layout_marginEnd="10dp"
             android:background="@drawable/round_background"
-            android:backgroundTint="@color/white"
             android:isScrollContainer="true"
-            app:icon="@drawable/baseline_menu_24"
-            app:iconGravity="start"
-            app:iconPadding="10dp"
-            app:iconSize="50dp"
-            app:iconTint="@color/black" />
+            android:scaleType="center"
+            android:src="@drawable/baseline_menu_24" />
     </FrameLayout>
 
 
