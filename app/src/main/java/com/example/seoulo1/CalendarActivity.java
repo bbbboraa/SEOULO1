@@ -2,7 +2,10 @@ package com.example.seoulo1;
 
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,14 +24,25 @@ public class CalendarActivity extends AppCompatActivity {
     Calendar calendar;
     EditText calendar_day;
 
+    Button btn_AddrReserch_move;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
 
+        btn_AddrReserch_move = findViewById(R.id.btn_AddrReserch_move);
         calendar_day = findViewById(R.id.calendar_day);
         calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+
+        btn_AddrReserch_move.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CalendarActivity.this, AddrResearchActivity.class);
+                startActivity(intent); // 도로명 주소 검색 액티비티 이동
+            }
+        });
 
 
         //기간 선택
