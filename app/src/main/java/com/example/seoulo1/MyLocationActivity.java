@@ -121,13 +121,24 @@ public class MyLocationActivity extends AppCompatActivity  implements
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 
-
-
-
         previous_marker = new ArrayList<>();
 
-        Button button = (Button)findViewById(R.id.button);
-        button.setOnClickListener(v -> showPlaceInformation(currentPosition));
+        Button button_restaurant = (Button)findViewById(R.id.button_restaurant);
+        button_restaurant.setOnClickListener(v -> showPlaceInformation_restaurant(currentPosition));
+
+        Button button_cafe = (Button)findViewById(R.id.button_cafe);
+        button_cafe.setOnClickListener(v -> showPlaceInformation_cafe(currentPosition));
+
+        Button button_cvstore = (Button)findViewById(R.id.button_cvstore);
+        button_cvstore.setOnClickListener(v -> showPlaceInformation_cvstore(currentPosition));
+
+        Button button_shopping = (Button)findViewById(R.id.button_shopping);
+        button_shopping.setOnClickListener(v -> showPlaceInformation_shopping(currentPosition));
+
+        Button button_sights = (Button)findViewById(R.id.button_sights);
+        button_sights.setOnClickListener(v -> showPlaceInformation_sights(currentPosition));
+
+
         like_btn = findViewById(R.id.like_btn);
 
         menu_btn = findViewById(R.id.menu_btn);
@@ -385,8 +396,8 @@ public class MyLocationActivity extends AppCompatActivity  implements
         if (currentMarker != null) currentMarker.remove();
 
 
-        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
+        //LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude()); //현재 위치 구하기 코든데 지금 안됨, test 해볼려면 밑에 코드 주석처리하고 이코드 사용
+        LatLng currentLatLng= new LatLng(37.56, 126.97);   //임의로 위치 설정
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(currentLatLng);
         markerOptions.title(markerTitle);
@@ -552,6 +563,7 @@ public class MyLocationActivity extends AppCompatActivity  implements
                         = new LatLng(place.getLatitude()
                         , place.getLongitude());
 
+
                 String markerSnippet = getCurrentAddress(latLng);
 
                 MarkerOptions markerOptions = new MarkerOptions();
@@ -576,7 +588,7 @@ public class MyLocationActivity extends AppCompatActivity  implements
     public void onPlacesFinished() {
 
     }
-    public void showPlaceInformation(LatLng location) {
+    public void showPlaceInformation_restaurant(LatLng location) {
         mMap.clear();//지도 클리어
 
         if (previous_marker != null)
@@ -584,13 +596,98 @@ public class MyLocationActivity extends AppCompatActivity  implements
 
         new NRPlaces.Builder()
                 .listener(MyLocationActivity.this)
-                .key("AIzaSyCrnLbRNZtuzKCPQXMtg0Ew0W1_dRrdSN8")
-                .latlng(location.latitude, location.longitude)//현재 위치
+                .key("AIzaSyDdlA0zHcNZ4wC1_DA6k3hg0_2tG91JzX8")
+                //.latlng(location.latitude, location.longitude)//현재 위치
+                .latlng(37.56, 126.97)   //임의로 위치 설정
                 .radius(2000) //500 미터 내에서 검색
                 .type(PlaceType.RESTAURANT) //음식점
+                .type(PlaceType.BAR)
+                .type(PlaceType.MEAL_DELIVERY)
+                .type(PlaceType.MEAL_TAKEAWAY)
                 .build()
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                //.execute();
+    }
+
+    public void showPlaceInformation_cafe(LatLng location) {
+        mMap.clear();//지도 클리어
+
+        if (previous_marker != null)
+            previous_marker.clear();//지역정보 마커 클리어
+
+        new NRPlaces.Builder()
+                .listener(MyLocationActivity.this)
+                .key("AIzaSyDdlA0zHcNZ4wC1_DA6k3hg0_2tG91JzX8")
+                //.latlng(location.latitude, location.longitude)//현재 위치
+                .latlng(37.56, 126.97)   //임의로 위치 설정
+                .radius(2000) //500 미터 내에서 검색
+                .type(PlaceType.CAFE)
+                .type(PlaceType.BAKERY)
+                .build()
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+    public void showPlaceInformation_cvstore(LatLng location) {
+        mMap.clear();//지도 클리어
+
+        if (previous_marker != null)
+            previous_marker.clear();//지역정보 마커 클리어
+
+        new NRPlaces.Builder()
+                .listener(MyLocationActivity.this)
+                .key("AIzaSyDdlA0zHcNZ4wC1_DA6k3hg0_2tG91JzX8")
+                //.latlng(location.latitude, location.longitude)//현재 위치
+                .latlng(37.56, 126.97)   //임의로 위치 설정
+                .radius(2000) //500 미터 내에서 검색
+                .type(PlaceType.CONVENIENCE_STORE)
+                .build()
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+    public void showPlaceInformation_shopping(LatLng location) {
+        mMap.clear();//지도 클리어
+
+        if (previous_marker != null)
+            previous_marker.clear();//지역정보 마커 클리어
+
+        new NRPlaces.Builder()
+                .listener(MyLocationActivity.this)
+                .key("AIzaSyDdlA0zHcNZ4wC1_DA6k3hg0_2tG91JzX8")
+                //.latlng(location.latitude, location.longitude)//현재 위치
+                .latlng(37.56, 126.97)   //임의로 위치 설정
+                .radius(2000) //500 미터 내에서 검색
+                .type(PlaceType.DEPARTMENT_STORE)
+                .type(PlaceType.JEWELRY_STORE)
+                .type(PlaceType.CLOTHING_STORE)
+                .type(PlaceType.LIQUOR_STORE)
+                .type(PlaceType.SHOE_STORE)
+                .build()
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+    public void showPlaceInformation_sights(LatLng location) {
+        mMap.clear();//지도 클리어
+
+        if (previous_marker != null)
+            previous_marker.clear();//지역정보 마커 클리어
+
+        new NRPlaces.Builder()
+                .listener(MyLocationActivity.this)
+                .key("AIzaSyDdlA0zHcNZ4wC1_DA6k3hg0_2tG91JzX8")
+                //.latlng(location.latitude, location.longitude)//현재 위치
+                .latlng(37.56, 126.97)   //임의로 위치 설정
+                .radius(2000) //500 미터 내에서 검색
+                .type(PlaceType.AMUSEMENT_PARK)
+                .type(PlaceType.MUSEUM)
+                .type(PlaceType.ART_GALLERY)
+                .type(PlaceType.AQUARIUM)
+                .type(PlaceType.MOVIE_THEATER)
+                .type(PlaceType.STADIUM)
+                .type(PlaceType.ZOO)
+                .type(PlaceType.SPA)
+                .type(PlaceType.MOVIE_RENTAL)
+                .type(PlaceType.CASINO)
+                .type(PlaceType.STADIUM)
+                .type(PlaceType.CITY_HALL)
+                .type(PlaceType.PARK)
+                .build()
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
