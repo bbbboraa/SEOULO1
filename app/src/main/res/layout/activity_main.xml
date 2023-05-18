@@ -29,6 +29,7 @@
             android:isScrollContainer="true"
             android:padding="10sp"
             android:scaleType="centerCrop"
+            android:elevation="20dp"
             android:src="@drawable/like" />
 
         <ImageButton
@@ -41,6 +42,7 @@
             android:background="@drawable/round_background"
             android:isScrollContainer="true"
             android:scaleType="center"
+            android:elevation="20dp"
             android:src="@drawable/baseline_menu_24" />
     </FrameLayout>
 
