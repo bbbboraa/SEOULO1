@@ -60,8 +60,10 @@
             android:elevation="20dp"
             android:isScrollContainer="true"
             android:padding="9dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_my_location"
+            android:scaleType="fitStart"
+            android:src="@drawable/current_loca"
+            android:tintMode="src_in"
+            app:tint="#05528F"
             tools:ignore="MissingConstraints" />
 
         <LinearLayout
@@ -89,7 +91,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="2dp"
                 android:layout_weight="0.2"
-                android:background="@drawable/round_shape"
+                android:background="@drawable/btn_selector"
                 android:text="맛집"
                 android:elevation="5dp"
                 tools:ignore="MissingConstraints" />
@@ -101,7 +103,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="2dp"
                 android:layout_weight="0.2"
-                android:background="@drawable/round_shape"
+                android:background="@drawable/btn_selector"
                 android:text="카페"
                 android:elevation="5dp"
                 tools:ignore="MissingConstraints" />
@@ -112,7 +114,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_weight="0.2"
-                android:background="@drawable/round_shape"
+                android:background="@drawable/btn_selector"
                 android:layout_margin="2dp"
                 android:text="편의점"
                 android:elevation="5dp"
@@ -125,7 +127,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="2dp"
                 android:layout_weight="0.2"
-                android:background="@drawable/round_shape"
+                android:background="@drawable/btn_selector"
                 android:drawablePadding="5dp"
                 android:text="쇼핑"
                 android:elevation="5dp"
@@ -137,7 +139,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_weight="0.2"
-                android:background="@drawable/round_shape"
+                android:background="@drawable/btn_selector"
                 android:layout_margin="2dp"
                 android:text="문화/관광"
                 android:elevation="5dp"

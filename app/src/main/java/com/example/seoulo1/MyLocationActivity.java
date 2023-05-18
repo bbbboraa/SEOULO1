@@ -4,6 +4,8 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -62,6 +64,7 @@ public class MyLocationActivity extends AppCompatActivity  implements
 
     private GoogleMap mMap;
     private ImageButton like_btn, menu_btn,my_location_btn;
+    private Button button_restaurant, button_cafe, button_cvstore, button_shopping, button_sights;
     private Marker currentMarker = null;
 
     private static final String TAG = "googlemap_example";
@@ -99,6 +102,7 @@ public class MyLocationActivity extends AppCompatActivity  implements
                 .findFragmentById(R.id.map_my_location);
 
         //assert mapFragment != null;
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
@@ -123,24 +127,65 @@ public class MyLocationActivity extends AppCompatActivity  implements
 
         previous_marker = new ArrayList<>();
 
-        Button button_restaurant = (Button)findViewById(R.id.button_restaurant);
-        button_restaurant.setOnClickListener(v -> showPlaceInformation_restaurant(currentPosition));
+        button_restaurant = findViewById(R.id.button_restaurant);
+        button_restaurant.setOnClickListener(v -> {
+            button_restaurant.setSelected(true);
+            button_cafe.setSelected(false);
+            button_cvstore.setSelected(false);
+            button_shopping.setSelected(false);
+            button_sights.setSelected(false);
+            showPlaceInformation_restaurant(currentPosition);
+        });
 
-        Button button_cafe = (Button)findViewById(R.id.button_cafe);
-        button_cafe.setOnClickListener(v -> showPlaceInformation_cafe(currentPosition));
+        button_cafe = findViewById(R.id.button_cafe);
+        button_cafe.setOnClickListener(v -> {
+            button_restaurant.setSelected(false);
+            button_cafe.setSelected(true);
+            button_cvstore.setSelected(false);
+            button_shopping.setSelected(false);
+            button_sights.setSelected(false);
+            showPlaceInformation_cafe(currentPosition);
+        });
 
-        Button button_cvstore = (Button)findViewById(R.id.button_cvstore);
-        button_cvstore.setOnClickListener(v -> showPlaceInformation_cvstore(currentPosition));
+        button_cvstore = findViewById(R.id.button_cvstore);
+        button_cvstore.setOnClickListener(v -> {
+            button_restaurant.setSelected(false);
+            button_cafe.setSelected(false);
+            button_cvstore.setSelected(true);
+            button_shopping.setSelected(false);
+            button_sights.setSelected(false);
+            showPlaceInformation_cvstore(currentPosition);
+        });
 
-        Button button_shopping = (Button)findViewById(R.id.button_shopping);
-        button_shopping.setOnClickListener(v -> showPlaceInformation_shopping(currentPosition));
+        button_shopping = findViewById(R.id.button_shopping);
+        button_shopping.setOnClickListener(v -> {
+            button_restaurant.setSelected(false);
+            button_cafe.setSelected(false);
+            button_cvstore.setSelected(false);
+            button_shopping.setSelected(true);
+            button_sights.setSelected(false);
+            showPlaceInformation_shopping(currentPosition);
+        });
 
-        Button button_sights = (Button)findViewById(R.id.button_sights);
-        button_sights.setOnClickListener(v -> showPlaceInformation_sights(currentPosition));
+        button_sights = findViewById(R.id.button_sights);
+        button_sights.setOnClickListener(v -> {
+            button_restaurant.setSelected(false);
+            button_cafe.setSelected(false);
+            button_cvstore.setSelected(false);
+            button_shopping.setSelected(false);
+            button_sights.setSelected(true);
+            showPlaceInformation_sights(currentPosition);
+        });
 
 
         like_btn = findViewById(R.id.like_btn);
         my_location_btn = findViewById(R.id.my_location_btn);
+        my_location_btn.setOnClickListener(v -> {
+            Intent intent1 = new Intent(MyLocationActivity.this, MyLocationActivity.class);
+            intent1.addFlags (Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent1);
+        });
+
 
         menu_btn = findViewById(R.id.menu_btn);
         menu_btn.setOnClickListener(view -> {
@@ -306,8 +351,9 @@ public class MyLocationActivity extends AppCompatActivity  implements
 
             mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
 
-            if (checkPermission())
-                mMap.setMyLocationEnabled(true);
+            if (checkPermission()){
+                Log.d(TAG, "파란점 찍기");
+                mMap.setMyLocationEnabled(true);}
 
         }
 
@@ -408,7 +454,7 @@ public class MyLocationActivity extends AppCompatActivity  implements
         markerOptions.title(markerTitle);
         markerOptions.snippet(markerSnippet);
         markerOptions.draggable(true);
-
+//        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(R.drawable.marker1));
 
         currentMarker = mMap.addMarker(markerOptions);
 
@@ -559,6 +605,7 @@ public class MyLocationActivity extends AppCompatActivity  implements
 
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public void onPlacesSuccess(final List<Place> places) {
         runOnUiThread(() -> {
@@ -571,10 +618,16 @@ public class MyLocationActivity extends AppCompatActivity  implements
 
                 String markerSnippet = getCurrentAddress(latLng);
 
+
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(latLng);
                 markerOptions.title(place.getName());
                 markerOptions.snippet(markerSnippet);
+                BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.mapmarkerblue);
+                Bitmap b=bitmapdraw.getBitmap();
+                Bitmap smallMarker = Bitmap.createScaledBitmap(b, 65, 90, false);
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                //markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
                 Marker item = mMap.addMarker(markerOptions);
                 previous_marker.add(item);
 
@@ -604,7 +657,7 @@ public class MyLocationActivity extends AppCompatActivity  implements
                 .key("AIzaSyDdlA0zHcNZ4wC1_DA6k3hg0_2tG91JzX8")
                 //.latlng(location.latitude, location.longitude)//현재 위치
                 .latlng(37.56, 126.97)   //임의로 위치 설정
-                .radius(2000) //500 미터 내에서 검색
+                .radius(2000) //2km 내에서 검색
                 .type(PlaceType.RESTAURANT) //음식점
                 .type(PlaceType.BAR)
                 .type(PlaceType.MEAL_DELIVERY)
