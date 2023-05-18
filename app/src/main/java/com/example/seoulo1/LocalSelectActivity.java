@@ -35,8 +35,8 @@ public class LocalSelectActivity extends AppCompatActivity {
 
                 switch (menuItem.getItemId()){
                     case R.id.menu_my_location:
-                        Intent intent4 = new Intent(LocalSelectActivity.this, MyLocationActivity.class);
-                        startActivity(intent4);
+                        Intent intent1 = new Intent(LocalSelectActivity.this, MyLocationActivity.class);
+                        startActivity(intent1);
                         break;
 
                     case R.id.menu_hot_place:
@@ -53,6 +53,10 @@ public class LocalSelectActivity extends AppCompatActivity {
                     case R.id.menu_travel_log:
                         break;
                     case R.id.menu_expense_graph:
+                        break;
+                    case R.id.menu_mypage:
+                        Intent intent7 = new Intent(LocalSelectActivity.this, MypageActivity.class);
+                        startActivity(intent7);
                         break;
                 }
 
