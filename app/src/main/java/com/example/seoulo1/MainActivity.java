@@ -60,8 +60,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 switch (menuItem.getItemId()){
                     case R.id.menu_my_location:
-                        Intent intent4 = new Intent(MainActivity.this, MyLocationActivity.class);
-                        startActivity(intent4);
+                        Intent intent1 = new Intent(MainActivity.this, MyLocationActivity.class);
+                        startActivity(intent1);
                         break;
 
                     case R.id.menu_hot_place:
@@ -78,6 +78,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     case R.id.menu_travel_log:
                         break;
                     case R.id.menu_expense_graph:
+                        break;
+                    case R.id.menu_mypage:
+                        Intent intent7 = new Intent(MainActivity.this, MypageActivity.class);
+                        startActivity(intent7);
                         break;
                 }
 

@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    EditText nickname, email, phoneNum, password, username, checkPwd;
+    EditText nickname, email, phoneNum, password, checkPwd;
     Button btn_register, login_button;
 
     private FirebaseAuth auth;
@@ -37,7 +37,6 @@ public class RegisterActivity extends AppCompatActivity {
         email = findViewById(R.id.et_email);
         phoneNum = findViewById(R.id.et_callNum);
         password = findViewById(R.id.et_pwd);
-        username = findViewById(R.id.et_name);
         btn_register = findViewById(R.id.btn_register);
         checkPwd = findViewById(R.id.et_checkPwd);
         login_button = findViewById(R.id.login_button);
@@ -49,13 +48,12 @@ public class RegisterActivity extends AppCompatActivity {
             String txt_email = email.getText().toString();
             String txt_password = password.getText().toString();
             String txt_phoneNum = phoneNum.getText().toString();
-            String txt_username = username.getText().toString();
             String txt_checkPwd = checkPwd.getText().toString();
             Pattern Pattern1 = Pattern.compile("^(?=.*[a-zA-Z])(?=.*\\d)(?=.*\\W).{8,16}$");
             String pattern2 = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$";
             Matcher passMatcher = Pattern1.matcher(txt_password);
 
-            if (TextUtils.isEmpty(txt_username) || TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password)
+            if (TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password)
                     || TextUtils.isEmpty(txt_nickname) || TextUtils.isEmpty(txt_phoneNum)){
                 Toast.makeText(RegisterActivity.this,"빈칸을 입력해주세요.", Toast.LENGTH_SHORT).show();
             } else if (!Pattern.matches(pattern2, txt_email)) {
@@ -65,7 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
             } else if (!txt_password.equals(txt_checkPwd)){
                 Toast.makeText(RegisterActivity.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
             } else {
-                register(txt_nickname, txt_email, txt_password, txt_phoneNum, txt_username);
+                register(txt_nickname, txt_email, txt_password, txt_phoneNum);
             }
         });
                 login_button.setOnClickListener(v -> startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
@@ -73,7 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void register(String nickname, String email, String password, String phoneNum, String username){
+    private void register(String nickname, String email, String password, String phoneNum){
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 Toast.makeText(RegisterActivity.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
@@ -88,7 +86,6 @@ public class RegisterActivity extends AppCompatActivity {
 //                hashMap.put("pwd", password);
                 hashMap.put("nickname", nickname);
                 hashMap.put("phoneNum", phoneNum);
-                hashMap.put("username", username);
                 hashMap.put("imageURL","default");
                 hashMap.put("status","offline");
                 hashMap.put("search", nickname.toLowerCase());
