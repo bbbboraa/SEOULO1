@@ -31,7 +31,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
         btn_reset.setOnClickListener((View.OnClickListener) v -> {
             //email 보내기
             String email = send_email.getText().toString();
-
             if(email.equals("")){
                 Toast.makeText(ResetPasswordActivity.this, "이메일을 입력해주세요!", Toast.LENGTH_SHORT).show();
             } else {

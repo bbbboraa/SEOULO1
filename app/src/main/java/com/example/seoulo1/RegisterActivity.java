@@ -86,7 +86,6 @@ public class RegisterActivity extends AppCompatActivity {
 //                hashMap.put("pwd", password);
                 hashMap.put("nickname", nickname);
                 hashMap.put("phoneNum", phoneNum);
-                hashMap.put("imageURL","default");
                 hashMap.put("status","offline");
                 hashMap.put("search", nickname.toLowerCase());
 

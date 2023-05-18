@@ -61,7 +61,7 @@ public class MyLocationActivity extends AppCompatActivity  implements
         PlacesListener {
 
     private GoogleMap mMap;
-    private ImageButton like_btn, menu_btn;
+    private ImageButton like_btn, menu_btn,my_location_btn;
     private Marker currentMarker = null;
 
     private static final String TAG = "googlemap_example";
@@ -140,6 +140,7 @@ public class MyLocationActivity extends AppCompatActivity  implements
 
 
         like_btn = findViewById(R.id.like_btn);
+        my_location_btn = findViewById(R.id.my_location_btn);
 
         menu_btn = findViewById(R.id.menu_btn);
         menu_btn.setOnClickListener(view -> {

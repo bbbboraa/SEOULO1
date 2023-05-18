@@ -20,34 +20,49 @@
         tools:context=".MapsActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         tools:ignore="MissingConstraints" />
-    <ImageButton
-        android:id="@+id/like_btn"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="end"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/round_background"
-        android:isScrollContainer="true"
-        android:padding="10sp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/like"
-        android:elevation="20dp"
-        tools:ignore="MissingConstraints" />
+        <ImageButton
+            android:id="@+id/like_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/round_background"
+            android:isScrollContainer="true"
+            android:padding="10sp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/like"
+            android:elevation="20dp"
+            tools:ignore="MissingConstraints" />
 
-    <ImageButton
-        android:id="@+id/menu_btn"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="end"
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/round_background"
-        android:isScrollContainer="true"
-        android:scaleType="center"
-        android:src="@drawable/baseline_menu_24"
-        android:elevation="20dp"
-        tools:ignore="MissingConstraints" />
+        <ImageButton
+            android:id="@+id/menu_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="80dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/round_background"
+            android:elevation="20dp"
+            android:isScrollContainer="true"
+            android:scaleType="center"
+            android:src="@drawable/baseline_menu_24"
+            tools:ignore="MissingConstraints" />
+
+        <ImageButton
+            android:id="@+id/my_location_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="60dp"
+            android:background="@drawable/round_background"
+            android:elevation="20dp"
+            android:isScrollContainer="true"
+            android:padding="9dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_my_location"
+            tools:ignore="MissingConstraints" />
 
         <LinearLayout
             android:layout_width="match_parent"
