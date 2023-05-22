@@ -44,6 +44,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.maps.android.SphericalUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ import noman.googleplaces.PlacesListener;
 public class MyLocationActivity extends AppCompatActivity  implements
         OnMapReadyCallback,
         ActivityCompat.OnRequestPermissionsResultCallback,
-        PlacesListener {
+        PlacesListener, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
     private ImageButton like_btn, menu_btn,my_location_btn;
@@ -236,7 +237,7 @@ public class MyLocationActivity extends AppCompatActivity  implements
         Log.d(TAG, "onMapReady :");
 
         mMap = googleMap;
-
+        mMap.setOnMarkerClickListener(this);
         //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에
         //지도의 초기위치를 서울로 이동
         setDefaultLocation();
@@ -289,6 +290,20 @@ public class MyLocationActivity extends AppCompatActivity  implements
         //mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
         mMap.setOnMapClickListener(latLng -> Log.d( TAG, "onMapClick :"));
     }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        ImageButton distance_btn = findViewById(R.id.distance_btn);
+        currentPosition= new LatLng(37.56, 126.97);   //현재 위치로 임의 설정, gps 쓸 시 주석처리
+        double distance = SphericalUtil.computeDistanceBetween(currentPosition, marker.getPosition());
+        distance_btn.setOnClickListener(v -> {
+            Toast.makeText(MyLocationActivity.this, (int) distance + "m 남음", Toast.LENGTH_LONG).show();
+            Log.d(TAG, "onMarkerClick: 출력완료");
+
+        });
+        return false;
+    }
+
     LocationCallback locationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(@NonNull LocationResult locationResult) {
