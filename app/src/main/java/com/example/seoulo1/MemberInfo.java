@@ -5,16 +5,13 @@ public class MemberInfo {
     private String pwd;
     private String nickname;
     private String phoneNum;
-    private String status;
-    private String search;
 
-    public MemberInfo(String id, String pwd, String nickname,  String phoneNum, String imageURL, String status, String search){
+    public MemberInfo(String id, String pwd, String nickname,  String phoneNum){
         this.id = id;
         this.pwd = pwd;
         this.nickname = nickname;
         this.phoneNum = phoneNum;
-        this.status = status;
-        this.search = search;
+
     }
     public MemberInfo() {
 
@@ -34,11 +31,6 @@ public class MemberInfo {
     public void setPhoneNum(String phoneNum) { this.phoneNum = phoneNum; }
 
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-
-    public String getSearch() { return search; }
-    public void setSearch(String search) { this.search = search; }
 
 
 }

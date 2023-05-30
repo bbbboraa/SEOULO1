@@ -83,11 +83,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                 HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("id", userid);
-//                hashMap.put("pwd", password);
                 hashMap.put("nickname", nickname);
                 hashMap.put("phoneNum", phoneNum);
-                hashMap.put("status","offline");
-                hashMap.put("search", nickname.toLowerCase());
 
                 reference.setValue(hashMap).addOnCompleteListener(task1 -> {
                     if(task1.isSuccessful()) {
