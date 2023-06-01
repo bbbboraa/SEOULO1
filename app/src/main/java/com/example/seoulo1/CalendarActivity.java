@@ -4,9 +4,6 @@ package com.example.seoulo1;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
@@ -17,32 +14,20 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public class CalendarActivity extends AppCompatActivity {
 
-    Calendar calendar;
-    EditText calendar_day;
 
-    Button btn_AddrReserch_move;
+    private long daysDiff = 0;
+    private String[] dateArray;
+
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
-
-        btn_AddrReserch_move = findViewById(R.id.btn_AddrReserch_move);
-        calendar_day = findViewById(R.id.calendar_day);
-        calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-
-        btn_AddrReserch_move.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(CalendarActivity.this, AddrResearchActivity.class);
-                startActivity(intent); // 도로명 주소 검색 액티비티 이동
-            }
-        });
 
 
         //기간 선택
@@ -51,31 +36,49 @@ public class CalendarActivity extends AppCompatActivity {
         builder.setTitleText("여행 일정을 선택하세요");
 
         //미리 날짜 선택
-        builder.setSelection(Pair.create(MaterialDatePicker.thisMonthInUtcMilliseconds(), MaterialDatePicker.todayInUtcMilliseconds()));
+        // builder.setSelection(Pair.create(MaterialDatePicker.thisMonthInUtcMilliseconds(), MaterialDatePicker.todayInUtcMilliseconds()));
 
         MaterialDatePicker<Pair<Long, Long>> materialDatePicker = builder.build();
-
-        materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
 
         //확인버튼
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Pair<Long, Long>>() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onPositiveButtonClick(Pair<Long, Long> selection) {
+                // 이 메서드는 날짜 선택기 다이얼로그에서 확인 버튼을 클릭했을 때 실행됩니다.
+
+                // SimpleDateFormat 객체를 생성하여 날짜 형식을 지정합니다.
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+
+                // 선택된 날짜를 저장할 두 개의 Date 객체를 생성합니다.
                 Date date1 = new Date();
                 Date date2 = new Date();
 
+                // 선택된 타임스탬프를 사용하여 Date 객체의 시간을 설정합니다.
                 date1.setTime(selection.first);
                 date2.setTime(selection.second);
 
-                String dateString1 = simpleDateFormat.format(date1);
-                String dateString2 = simpleDateFormat.format(date2);
+                Calendar currentDate = Calendar.getInstance();
+
+                // 선택된 날짜 사이의 밀리초 차이를 계산합니다.
+                long millisecondsDiff = Math.abs(date2.getTime() - date1.getTime());
+
+                // TimeUnit을 사용하여 밀리초를 일 수로 변환하여 일 수 차이를 계산합니다.
+                long daysDiff = TimeUnit.DAYS.convert(millisecondsDiff, TimeUnit.MILLISECONDS);
 
 
-                calendar_day.setText(dateString1 + "~" + dateString2);
-
+                // daysDiff와 dateArray 값을 전달하여 Path_List_Activity로 이동
+                Intent intent = new Intent(CalendarActivity.this, Path_List_Activity.class);
+                intent.putExtra("selectDate", daysDiff);
+                intent.putExtra("Date", dateArray);
+                startActivity(intent);
+                finish();
             }
+
         });
+
+        materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
+
     }
+
 }
