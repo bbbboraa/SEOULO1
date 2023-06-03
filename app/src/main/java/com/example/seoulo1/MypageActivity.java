@@ -3,7 +3,6 @@ package com.example.seoulo1;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -56,38 +55,32 @@ public class MypageActivity extends AppCompatActivity {
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        btn_info_update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String txt_phoneNum = phoneNum.getText().toString();
-                if (!TextUtils.isEmpty(txt_phoneNum)){
-                    reference.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            reference.child("phoneNum").setValue(txt_phoneNum);
+        btn_info_update.setOnClickListener(v -> {
+            String txt_phoneNum = phoneNum.getText().toString();
+            if (!TextUtils.isEmpty(txt_phoneNum)){
+                reference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        reference.child("phoneNum").setValue(txt_phoneNum);
 
-                            Toast.makeText(MypageActivity.this,"회원정보 수정 되었습니다.", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(MypageActivity.this, MainActivity.class));
-                            finish();
-                        }
+                        Toast.makeText(MypageActivity.this,"회원정보 수정 되었습니다.", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(MypageActivity.this, MainActivity.class));
+                        finish();
+                    }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-                        }
-                    });
-                } else {
-                    Toast.makeText(MypageActivity.this,"수정할 정보를 입력하세요.", Toast.LENGTH_SHORT).show();
-                }
+                    }
+                });
+            } else {
+                Toast.makeText(MypageActivity.this,"수정할 정보를 입력하세요.", Toast.LENGTH_SHORT).show();
             }
         });
 
-        btn_pwdReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MypageActivity.this, ResetPasswordActivity.class));
-                finish();
-            }
+        btn_pwdReset.setOnClickListener(v -> {
+            startActivity(new Intent(MypageActivity.this, ResetPasswordActivity.class));
+            finish();
         });
 
 

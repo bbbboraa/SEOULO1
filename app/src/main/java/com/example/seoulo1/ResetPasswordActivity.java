@@ -2,7 +2,6 @@ package com.example.seoulo1;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -28,7 +27,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        btn_reset.setOnClickListener((View.OnClickListener) v -> {
+        btn_reset.setOnClickListener(v -> {
             //email 보내기
             String email = send_email.getText().toString();
             if(email.equals("")){

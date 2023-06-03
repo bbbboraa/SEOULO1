@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:id="@+id/layout_my_location"
-    tools:context=".MyLocationActivity">
+    android:gravity="bottom"
+    tools:context=".MyLocationActivity"
+    tools:ignore="MissingClass"
+    app:umanoDragView="@id/dragView"
+    app:umanoScrollableView="@id/listView"
+    app:umanoPanelHeight="80dp"
+    app:umanoOverlay="true"
+    app:umanoShadowHeight="0dp">
+
+
 
     <FrameLayout
+        android:id= "@+id/parent_lay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:ignore="UselessParent">
+        tools:ignore="MissingClass,UselessParent">
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -82,13 +91,36 @@
             android:tintMode="src_in"
             app:tint="#05528F"
             tools:ignore="MissingConstraints" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/dragView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_shape_clicked"
+        android:backgroundTint="@color/white"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/swipe"
+            android:layout_width="37dp"
+            android:layout_height="5dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/round_rectangle"
+            android:backgroundTint="#8F8F8F" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:orientation="horizontal"
-            android:padding="7dp">
+            android:padding="7dp"
+            android:layout_marginBottom="5dp"
+            tools:ignore="MissingClass">
 
             <ImageButton
                 android:id="@+id/list_location"
@@ -96,7 +128,7 @@
                 android:layout_height="43dp"
                 android:layout_gravity="center"
                 android:background="@drawable/round_background"
-                android:backgroundTint="#DFDFDF"
+                android:backgroundTint="@color/white"
                 android:elevation="5dp"
                 android:isScrollContainer="true"
                 android:src="@drawable/baseline_menu_24" />
@@ -109,8 +141,8 @@
                 android:layout_margin="2dp"
                 android:layout_weight="0.2"
                 android:background="@drawable/btn_selector"
-                android:text="맛집"
                 android:elevation="5dp"
+                android:text="맛집"
                 tools:ignore="MissingConstraints" />
 
             <Button
@@ -121,8 +153,8 @@
                 android:layout_margin="2dp"
                 android:layout_weight="0.2"
                 android:background="@drawable/btn_selector"
-                android:text="카페"
                 android:elevation="5dp"
+                android:text="카페"
                 tools:ignore="MissingConstraints" />
 
             <Button
@@ -130,11 +162,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
+                android:layout_margin="2dp"
                 android:layout_weight="0.2"
                 android:background="@drawable/btn_selector"
-                android:layout_margin="2dp"
-                android:text="편의점"
                 android:elevation="5dp"
+                android:text="편의점"
                 tools:ignore="MissingConstraints" />
 
             <Button
@@ -146,8 +178,8 @@
                 android:layout_weight="0.2"
                 android:background="@drawable/btn_selector"
                 android:drawablePadding="5dp"
-                android:text="쇼핑"
                 android:elevation="5dp"
+                android:text="쇼핑"
                 tools:ignore="MissingConstraints" />
 
             <Button
@@ -155,13 +187,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
+                android:layout_margin="2dp"
                 android:layout_weight="0.2"
                 android:background="@drawable/btn_selector"
-                android:layout_margin="2dp"
-                android:text="문화/관광"
                 android:elevation="5dp"
+                android:text="문화/관광"
                 tools:ignore="MissingConstraints" />
         </LinearLayout>
-    </FrameLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="500dp" />
+    </LinearLayout>
+
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

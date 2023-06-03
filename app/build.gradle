@@ -109,4 +109,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0.'
     implementation 'com.google.maps.android:android-maps-utils:0.4+'
 
+
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
+
 }

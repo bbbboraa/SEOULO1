@@ -20,6 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SEOULO1"
         android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true"
         tools:targetApi="31">
         <activity
             android:name=".Path_List_Activity"

@@ -2,8 +2,10 @@ package com.example.seoulo1;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
@@ -16,8 +18,10 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -46,7 +50,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.maps.android.SphericalUtil;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -58,16 +70,28 @@ import noman.googleplaces.PlaceType;
 import noman.googleplaces.PlacesException;
 import noman.googleplaces.PlacesListener;
 
-public class MyLocationActivity extends AppCompatActivity  implements
+public class MyLocationActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         ActivityCompat.OnRequestPermissionsResultCallback,
         PlacesListener, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
-    private ImageButton like_btn, menu_btn,my_location_btn;
+    private ImageButton like_btn, menu_btn,my_location_btn, list_location;
+    ArrayList<Double> lat_list;
+    ArrayList<Double> lng_list;
+    ArrayList<Integer> distance_list;
+    ArrayList<String> name_list;
+    ArrayList<String> vicinity_list;
+    ArrayList<Marker> markers_list;
+    String[] category_name_array={"맛집", "카페", "편의점","쇼핑","관광/문화"};
+    String[][] category_value_array={{"restaurant", "bar", "meal_delivery", "meal_takeaway"}, {"cafe", "bakery"}, {"convenience_store"},{"department_store", "jewelry_store", "clothing_store", "liquor_store", "shoe_store", "shopping_mall"}, {"tourist_attraction","amusement_park", "park","museum", "art_gallery", "aquarium", "movie_theater", "stadium", "zoo", "movie_rental", "casino", "stadium", "city_hall"} };
+    final List<LocationItem> locationItem = new ArrayList<>();
+
     private Button button_restaurant, button_cafe, button_cvstore, button_shopping, button_sights;
     private Marker currentMarker = null;
 
+    public static final String TABLE_NAME = "Location";
+    SQLiteDatabase db;
     private static final String TAG = "googlemap_example";
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int UPDATE_INTERVAL_MS = 1000;  // 1초
@@ -99,9 +123,11 @@ public class MyLocationActivity extends AppCompatActivity  implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_location);
 
+
+
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_my_location);
-
         //assert mapFragment != null;
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
@@ -124,9 +150,15 @@ public class MyLocationActivity extends AppCompatActivity  implements
 
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-
         previous_marker = new ArrayList<>();
+        lat_list= new ArrayList<>();
+        lng_list= new ArrayList<>();
+        name_list= new ArrayList<>();
+        vicinity_list= new ArrayList<>();
+        distance_list= new ArrayList<>();
+
+        markers_list=new ArrayList<>();
+
 
         button_restaurant = findViewById(R.id.button_restaurant);
         button_restaurant.setOnClickListener(v -> {
@@ -180,12 +212,18 @@ public class MyLocationActivity extends AppCompatActivity  implements
 
 
         like_btn = findViewById(R.id.like_btn);
+        list_location = findViewById(R.id.list_location);
+        list_location.setOnClickListener(v ->{
+            showCategoryList();
+        });
+
         my_location_btn = findViewById(R.id.my_location_btn);
         my_location_btn.setOnClickListener(v -> {
             Intent intent1 = new Intent(MyLocationActivity.this, MyLocationActivity.class);
             intent1.addFlags (Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent1);
         });
+
 
 
         menu_btn = findViewById(R.id.menu_btn);
@@ -232,6 +270,183 @@ public class MyLocationActivity extends AppCompatActivity  implements
         });
 
     }
+    private void showCategoryList() {
+
+        // 카테고리를 선택 할 수 있는 리스트를 띄운다.
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("장소 타입 선택");
+        ArrayAdapter<String> adapter= new ArrayAdapter<String>(
+                this,android.R.layout.simple_list_item_1,category_name_array
+        );
+        DialogListener listener=new DialogListener();
+        builder.setAdapter(adapter,listener);
+        builder.setNegativeButton("취소",null);
+        builder.show();
+
+
+    }
+    // 다이얼로그의 리스너
+    class DialogListener implements DialogInterface.OnClickListener{
+        String type[][] = new String[5][5000];
+
+
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            mMap.clear();//지도 클리어
+
+            // 사용자가 선택한 항목 인덱스번째의 type 값을 가져온다.
+            int j;
+            for(j=0; j< category_value_array[i].length;j++ ){
+                type[0][j]=category_value_array[i][j];
+            }
+            // 주변 정보를 가져온다
+            for (int k=0; k<j; k++) {
+                getNearbyPlace(type[0][k]);
+
+            }
+            lat_list.clear();
+            lng_list.clear();
+            name_list.clear();
+            vicinity_list.clear();
+            distance_list.clear();
+            locationItem.clear();
+        }
+    }
+
+    //주변 정보 가져오기
+    public void getNearbyPlace(String type_keyword){
+        NetworkThread thread=new NetworkThread(type_keyword);
+        thread.start();
+
+    }
+    class NetworkThread extends Thread{
+
+        String type_keyword;
+        public NetworkThread(String type_keyword){
+            this.type_keyword=type_keyword;
+        }
+        @Override
+        public void run() {
+            try{
+                //데이터를 담아놓을 리스트를 초기화한다.
+//                lat_list.clear();
+//                lng_list.clear();
+//                name_list.clear();
+//                vicinity_list.clear();
+//                distance_list.clear();
+
+                //밑에 위도 경도에 원래 이거 넣기 mCurrentLocation.getLatitude()
+                // 접속할 페이지 주소
+                String site="https://maps.googleapis.com/maps/api/place/nearbysearch/json";
+                site+="?location="+37.56+","
+                        +126.97
+                        +"&radius=2000&sensor=false&language=ko"
+                        +"&key=AIzaSyDdlA0zHcNZ4wC1_DA6k3hg0_2tG91JzX8";
+                if(type_keyword!=null && type_keyword.equals("all")==false){
+                    site+="&types="+type_keyword;
+                }
+                // 접속
+                URL url=new URL(site);
+                URLConnection conn=url.openConnection();
+                // 스트림 추출
+                InputStream is=conn.getInputStream();
+                InputStreamReader isr =new InputStreamReader(is,"utf-8");
+                BufferedReader br=new BufferedReader(isr);
+                String str=null;
+                StringBuffer buf=new StringBuffer();
+                // 읽어온다
+                do{
+                    str=br.readLine();
+                    if(str!=null){
+                        buf.append(str);
+                    }
+                }while(str!=null);
+                String rec_data=buf.toString();
+                // JSON 데이터 분석
+                JSONObject root=new JSONObject(rec_data);
+                //status 값을 추출한다.
+                String status=root.getString("status");
+                // 가져온 값이 있을 경우에 지도에 표시한다.
+                if(status.equals("OK")){
+                    //results 배열을 가져온다
+                    JSONArray results=root.getJSONArray("results");
+                    // 개수만큼 반복한다.
+                    for(int i=0; i<results.length() ; i++){
+                        // 객체를 추출한다.(장소하나의 정보)
+                        JSONObject obj1=results.getJSONObject(i);
+                        // 위도 경도 추출
+                        JSONObject geometry=obj1.getJSONObject("geometry");
+                        JSONObject location=geometry.getJSONObject("location");
+                        double lat=location.getDouble("lat");
+                        double lng=location.getDouble("lng");
+                        // 장소 이름 추출
+                        String name=obj1.getString("name");
+                        // 대략적인 주소 추출
+                        String vicinity=obj1.getString("vicinity");
+                        currentPosition= new LatLng(37.56, 126.97);   //현재 위치로 임의 설정, gps 쓸 시 주석처리
+                        LatLng obj1Position = new LatLng(lat, lng);
+                        double distance = SphericalUtil.computeDistanceBetween(currentPosition, obj1Position);
+
+                        // 데이터를 담는다.
+                        lat_list.add(lat);
+                        lng_list.add(lng);
+                        name_list.add(name);
+                        vicinity_list.add(vicinity);
+                        distance_list.add((int)distance);
+                        locationItem.add(new LocationItem(name, type_keyword,vicinity, (int) distance));
+                        Log.d(TAG, "typekeyword !!!!!!!!!!!!!!!!!!======="+ type_keyword);
+
+                    }
+                    showMarker();
+
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),"가져온 데이터가 없습니다.",Toast.LENGTH_LONG).show();
+                }
+
+            }catch (Exception e){e.printStackTrace();}
+        }
+    }
+
+    public void showMarker(){
+        runOnUiThread(() -> {
+            // 지도에 마커를 표시한다.
+            // 지도에 표시되어있는 마커를 모두 제거한다.
+//            for(Marker marker : markers_list){
+//                marker.remove();
+//            }
+//            markers_list.clear();
+            final ListView listView = findViewById(R.id.listView);
+            final LocationAdapter locationAdapter=new LocationAdapter(this, locationItem, listView);
+            listView.setAdapter(locationAdapter);
+            // 가져온 데이터의 수 만큼 마커 객체를 만들어 표시한다.
+            for(int i= 0 ; i< lat_list.size() ; i++){
+                // 값 추출
+                double lat= lat_list.get(i);
+                double lng=lng_list.get(i);
+                String name=name_list.get(i);
+                String vicinity=vicinity_list.get(i);
+                int distance=distance_list.get(i);
+
+                // 생성할 마커의 정보를 가지고 있는 객체를 생성
+                MarkerOptions options=new MarkerOptions();
+                // 위치설정
+                LatLng pos=new LatLng(lat,lng);
+                options.position(pos);
+                // 말풍선이 표시될 값 설정
+                options.title(name);
+                options.snippet(vicinity+ "  여기서 "+distance+"m");
+                // 아이콘 설정
+                //BitmapDescriptor icon= BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher);
+                //options.icon(icon);
+                // 마커를 지도에 표시한다.
+                Marker marker=mMap.addMarker(options);
+                markers_list.add(marker);
+            }
+        });
+    }
+
+
     @Override
     public void onMapReady(@NonNull final GoogleMap googleMap) {
         Log.d(TAG, "onMapReady :");
@@ -287,7 +502,7 @@ public class MyLocationActivity extends AppCompatActivity  implements
 
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         // 현재 오동작을 해서 주석처리
-        //mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
         mMap.setOnMapClickListener(latLng -> Log.d( TAG, "onMapClick :"));
     }
 
@@ -626,13 +841,8 @@ public class MyLocationActivity extends AppCompatActivity  implements
         runOnUiThread(() -> {
             for (Place place : places) {
 
-                LatLng latLng
-                        = new LatLng(place.getLatitude()
-                        , place.getLongitude());
-
-
+                LatLng latLng = new LatLng(place.getLatitude(), place.getLongitude());
                 String markerSnippet = getCurrentAddress(latLng);
-
 
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(latLng);
@@ -762,6 +972,17 @@ public class MyLocationActivity extends AppCompatActivity  implements
                 .build()
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+//    private void insertData(String lat, String lng) {
+//        if (db != null) {
+//            String sql = "INSERT INTO Location(lat, lng) VALUES(?, ?)";
+//            Object[] params = {lat, lng};
+//            db.execSQL(sql, params);
+//        }
+//    }
+//
+//    public void println (String data) {
+//        textView.append(data + "\n");
+//    }
 
 
 }

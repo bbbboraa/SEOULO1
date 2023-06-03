@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/textview_name"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:text="이름"
+            android:textColor="#1E285C"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/textview_category_name"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="유형"
+            android:gravity="start"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/textview_vicinity"
+            android:layout_width="280dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="start"
+            android:text="주소"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/textview_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="거리" />
+    </LinearLayout>
+
+</LinearLayout>
+
