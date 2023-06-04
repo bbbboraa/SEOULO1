@@ -73,9 +73,4 @@ public class AddrResearchActivity extends AppCompatActivity {
                 }
             }
     );
-
-    //private String getSelectedAddress() {
-       // return mEtAddress.getText().toString();
-   // }
-
 }

@@ -19,10 +19,11 @@ import java.util.TimeZone;
 public class Path_List_Activity extends AppCompatActivity {
 
     private static final int MAX_ADDRESS_COUNT = 3;
-    private RecyclerView recyclerView;
-    private AddressAdapter addressAdapter;
-    private ArrayList<String> addressList;
+    private RecyclerView rv1, rv2, rv3, rv4, rv5;
+    private AddressAdapter rv1Adapter, rv2Adapter, rv3Adapter, rv4Adapter, rv5Adapter;
+    private ArrayList<String> rv1DataList, rv2DataList, rv3DataList, rv4DataList, rv5DataList;
 
+    private RecyclerView.LayoutManager rv1LayoutManager, rv2LayoutManager, rv3LayoutManager, rv4LayoutManager, rv5LayoutManager;
     Calendar calendar;
     TextView calendar_day;
 
@@ -38,7 +39,6 @@ public class Path_List_Activity extends AppCompatActivity {
     TextView Shopping1, Shopping2, Shopping3;
     TextView Culture_Tour1, Culture_Tour2, Culture_Tour3;
     TextView Hotel1, Hotel2, Hotel3;
-
 
 
     private ImageButton like_btn, menu_btn;
@@ -123,12 +123,44 @@ public class Path_List_Activity extends AppCompatActivity {
 //        Hotel2 = findViewById(R.id.Hotel2);
 //        Hotel3 = findViewById(R.id.Hotel3);
 
-        recyclerView = findViewById(R.id.rv1);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        rv1 = findViewById(R.id.rv1);
+        rv2 = findViewById(R.id.rv2);
+        rv3 = findViewById(R.id.rv3);
+        rv4 = findViewById(R.id.rv4);
+        rv5 = findViewById(R.id.rv5);
 
-        addressList = new ArrayList<>();
-        addressAdapter = new AddressAdapter(addressList);
-        recyclerView.setAdapter(addressAdapter);
+        rv1LayoutManager = new LinearLayoutManager(this);
+        rv2LayoutManager = new LinearLayoutManager(this);
+        rv3LayoutManager = new LinearLayoutManager(this);
+        rv4LayoutManager = new LinearLayoutManager(this);
+        rv5LayoutManager = new LinearLayoutManager(this);
+
+        rv1DataList = new ArrayList<>();
+        rv2DataList = new ArrayList<>();
+        rv3DataList = new ArrayList<>();
+        rv4DataList = new ArrayList<>();
+        rv5DataList = new ArrayList<>();
+
+        rv1Adapter = new AddressAdapter(rv1DataList);
+        rv2Adapter = new AddressAdapter(rv2DataList);
+        rv3Adapter = new AddressAdapter(rv3DataList);
+        rv4Adapter = new AddressAdapter(rv4DataList);
+        rv5Adapter = new AddressAdapter(rv5DataList);
+
+        rv1.setLayoutManager(new LinearLayoutManager(this));
+        rv1.setAdapter(rv1Adapter);
+
+        rv2.setLayoutManager(new LinearLayoutManager(this));
+        rv2.setAdapter(rv2Adapter);
+
+        rv3.setLayoutManager(new LinearLayoutManager(this));
+        rv3.setAdapter(rv3Adapter);
+
+        rv4.setLayoutManager(new LinearLayoutManager(this));
+        rv4.setAdapter(rv4Adapter);
+
+        rv5.setLayoutManager(new LinearLayoutManager(this));
+        rv5.setAdapter(rv5Adapter);
 
         calendar_day = findViewById(R.id.calendar_day);
         // calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -140,7 +172,6 @@ public class Path_List_Activity extends AppCompatActivity {
         calendar.add(Calendar.DATE, (int) daysDiff);
 
         calendar_day.setText("Day " + (daysDiff + 1));
-
 
 
         btn_AddrReserch_move.setOnClickListener(new View.OnClickListener() {
@@ -157,7 +188,7 @@ public class Path_List_Activity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Path_List_Activity.this, AddrResearchActivity.class);
                 intent.putExtra("selectDate", daysDiff);
-                startActivityForResult(intent, 1); // 도로명 주소 검색 액티비티 이동
+                startActivityForResult(intent, 2); // 도로명 주소 검색 액티비티 이동
             }
         });
 
@@ -166,7 +197,7 @@ public class Path_List_Activity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Path_List_Activity.this, AddrResearchActivity.class);
                 intent.putExtra("selectDate", daysDiff);
-                startActivityForResult(intent, 1);// 도로명 주소 검색 액티비티 이동
+                startActivityForResult(intent, 3);// 도로명 주소 검색 액티비티 이동
             }
         });
 
@@ -176,7 +207,7 @@ public class Path_List_Activity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Path_List_Activity.this, AddrResearchActivity.class);
                 intent.putExtra("selectDate", daysDiff);
-                startActivityForResult(intent, 1); // 도로명 주소 검색 액티비티 이동
+                startActivityForResult(intent, 4); // 도로명 주소 검색 액티비티 이동
             }
         });
 
@@ -185,7 +216,7 @@ public class Path_List_Activity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Path_List_Activity.this, AddrResearchActivity.class);
                 intent.putExtra("selectDate", daysDiff);
-                startActivityForResult(intent, 1); // 도로명 주소 검색 액티비티 이동
+                startActivityForResult(intent, 5); // 도로명 주소 검색 액티비티 이동
             }
         });
 
@@ -203,21 +234,79 @@ public class Path_List_Activity extends AppCompatActivity {
         RecyclerView rv1 = findViewById(R.id.rv1);
         rv1.setLayoutManager(new LinearLayoutManager(this));
 
-        addressList = new ArrayList<>();
-        addressAdapter = new AddressAdapter(addressList);
-        rv1.setAdapter(addressAdapter);
+        RecyclerView rv2= findViewById(R.id.rv2);
+        rv2.setLayoutManager(new LinearLayoutManager(this));
+
+        RecyclerView rv3 = findViewById(R.id.rv3);
+        rv3.setLayoutManager(new LinearLayoutManager(this));
+
+        RecyclerView rv4 = findViewById(R.id.rv4);
+        rv4.setLayoutManager(new LinearLayoutManager(this));
+
+        RecyclerView rv5 = findViewById(R.id.rv5);
+        rv5.setLayoutManager(new LinearLayoutManager(this));
+
+        rv1DataList = new ArrayList<>();
+        rv1Adapter = new AddressAdapter(rv1DataList);
+        rv1.setAdapter(rv1Adapter);
+
+        rv2DataList = new ArrayList<>();
+        rv2Adapter = new AddressAdapter(rv2DataList);
+        rv2.setAdapter(rv2Adapter);
+
+        rv3DataList = new ArrayList<>();
+        rv3Adapter = new AddressAdapter(rv3DataList);
+        rv3.setAdapter(rv3Adapter);
+
+        rv4DataList = new ArrayList<>();
+        rv4Adapter = new AddressAdapter(rv4DataList);
+        rv4.setAdapter(rv4Adapter);
+
+        rv5DataList = new ArrayList<>();
+        rv5Adapter = new AddressAdapter(rv5DataList);
+        rv5.setAdapter(rv5Adapter);
     }
 
     private void handleAddressResult() {
         // 이전 Activity로부터 전달받은 주소 검색 결과를 처리하는 로직을 작성해주세요.
         String searchResult = getIntent().getStringExtra("searchResult");
-        if (addressList.size() >= MAX_ADDRESS_COUNT) {
-            addressList.remove(0); // 가장 오래된 항목 삭제
-            addressAdapter.notifyItemRemoved(0);
+        if (rv1DataList.size() >= MAX_ADDRESS_COUNT) {
+            rv1DataList.remove(0); // 가장 오래된 항목 삭제
+            rv1Adapter.notifyItemRemoved(0);
         }
-        addressList.add(searchResult);
-        addressAdapter.notifyItemInserted(addressList.size() - 1);
+        rv1DataList.add(searchResult);
+        rv1Adapter.notifyItemInserted(rv1DataList.size() - 1);
+
+        if (rv2DataList.size() >= MAX_ADDRESS_COUNT) {
+            rv2DataList.remove(0);
+            rv2Adapter.notifyItemRemoved(0);
+        }
+        rv2DataList.add(searchResult);
+        rv2Adapter.notifyItemInserted(rv2DataList.size() - 1);
+
+        if (rv3DataList.size() >= MAX_ADDRESS_COUNT) {
+            rv3DataList.remove(0);
+            rv3Adapter.notifyItemRemoved(0);
+        }
+        rv3DataList.add(searchResult);
+        rv3Adapter.notifyItemInserted(rv3DataList.size() - 1);
+
+        if (rv4DataList.size() >= MAX_ADDRESS_COUNT) {
+            rv4DataList.remove(0);
+            rv4Adapter.notifyItemRemoved(0);
+        }
+        rv4DataList.add(searchResult);
+        rv4Adapter.notifyItemInserted(rv4DataList.size() - 1);
+
+        if (rv5DataList.size() >= MAX_ADDRESS_COUNT) {
+            rv5DataList.remove(0);
+            rv5Adapter.notifyItemRemoved(0);
+        }
+        rv5DataList.add(searchResult);
+        rv5Adapter.notifyItemInserted(rv5DataList.size() - 1);
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -225,11 +314,22 @@ public class Path_List_Activity extends AppCompatActivity {
         if (data != null) {
             String address = data.getStringExtra("address");
             if (address != null) {
-                if (addressList == null) {
-                    addressList = new ArrayList<>();
+                if (requestCode == 1) {
+                    rv1DataList.add(address);
+                    rv1Adapter.notifyDataSetChanged();
+                } else if (requestCode == 2) {
+                    rv2DataList.add(address);
+                    rv2Adapter.notifyDataSetChanged();
+                } else if (requestCode == 3) {
+                    rv3DataList.add(address);
+                    rv3Adapter.notifyDataSetChanged();
+                } else if (requestCode == 4) {
+                    rv4DataList.add(address);
+                    rv4Adapter.notifyDataSetChanged();
+                } else if (requestCode == 5) {
+                    rv5DataList.add(address);
+                    rv5Adapter.notifyDataSetChanged();
                 }
-                addressList.add(address);
-                addressAdapter.notifyDataSetChanged();
             }
         }
     }
