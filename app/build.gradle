@@ -47,6 +47,13 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    sourceSets {
+        main {
+            assets {
+                srcDirs 'src\\main\\assets', 'src\\main\\assets\\gangseo.json', 'src\\main\\assets\\jsons\\gangseo', 'src\\main\\assets\\jsons\\gangseo.json'
+            }
+        }
+    }
     allprojects{
         tasks.withType(JavaCompile){
             options.compilerArgs <<"-Xlint:deprecation"
@@ -63,6 +70,7 @@ dependencies {
             replacedBy("org.jetbrains.kotlin:kotlin-stdlib", "kotlin-stdlib-jdk8 is now part of kotlin-stdlib")
         }
     }
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
     implementation 'com.firebase:firebase-client-android:2.5.2' //haeun add
 
     implementation 'androidx.appcompat:appcompat:1.6.1'

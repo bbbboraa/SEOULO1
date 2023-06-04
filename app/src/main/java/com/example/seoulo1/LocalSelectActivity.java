@@ -67,7 +67,7 @@ public class LocalSelectActivity extends AppCompatActivity {
 
         gangseo.setOnClickListener(v -> {
             Intent intent = new Intent(LocalSelectActivity.this, LocalHotplaceActivity.class);
-            intent.putExtra("local", "강서구");
+            //intent.putExtra("local", "강서구");
             startActivity(intent);
         });
 
