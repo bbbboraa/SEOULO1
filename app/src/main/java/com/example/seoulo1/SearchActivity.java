@@ -6,10 +6,12 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SearchActivity extends AppCompatActivity {
 
+    private static final int REQUEST_CODE_ADDR_RESEARCH = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,8 +19,9 @@ public class SearchActivity extends AppCompatActivity {
 
         WebView webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
+
         webView.addJavascriptInterface(new BridgeInterface(), "Android");
-        webView.setWebViewClient(new WebViewClient(){
+        webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 // Android -> JavaScript 함수 호출!
@@ -32,12 +35,26 @@ public class SearchActivity extends AppCompatActivity {
 
     private class BridgeInterface {
         @JavascriptInterface
-        public void processDATA(String data){
+        public void processDATA(String data) {
             // 다음(카카오) 주소 검색 API 결과 값이 브릿지 통로를 통해 전달 받는다. (from Javascript)
             Intent intent = new Intent();
             intent.putExtra("data", data);
-            setResult(RESULT_OK,intent);
+            setResult(RESULT_OK, intent);
             finish();
         }
     }
+
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_ADDR_RESEARCH && resultCode == RESULT_OK && data != null) {
+            String address = data.getStringExtra("address");
+
+            // Path_List_Activity로 결과 값 전달
+            Intent intent = new Intent(SearchActivity.this, Path_List_Activity.class);
+            intent.putExtra("address", address);
+            startActivity(intent);
+        }
+    }
+
 }

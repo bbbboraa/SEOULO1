@@ -33,7 +33,7 @@ public class CalendarActivity extends AppCompatActivity {
         //기간 선택
         MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
 
-        builder.setTitleText("여행 일정을 선택하세요");
+        builder.setTitleText("여행 일자를 선택하세요");
 
         //미리 날짜 선택
         // builder.setSelection(Pair.create(MaterialDatePicker.thisMonthInUtcMilliseconds(), MaterialDatePicker.todayInUtcMilliseconds()));
