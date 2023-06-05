@@ -34,11 +34,6 @@ public class Path_List_Activity extends AppCompatActivity {
     Button btn_AddrReserch_move5;
     Button Route_Recom;
 
-    TextView Restaurant1, Restaurant2, Restaurant3;
-    TextView Cafe1, Cafe2, Cafe3;
-    TextView Shopping1, Shopping2, Shopping3;
-    TextView Culture_Tour1, Culture_Tour2, Culture_Tour3;
-    TextView Hotel1, Hotel2, Hotel3;
 
 
     private ImageButton like_btn, menu_btn;
@@ -103,26 +98,6 @@ public class Path_List_Activity extends AppCompatActivity {
         btn_AddrReserch_move5 = findViewById(R.id.btn_AddrReserch_move5);
         Route_Recom = findViewById(R.id.Route_Recom);
 
-        //Restaurant1 = findViewById(R.id.Restaurant1);
-        //Restaurant2 = findViewById(R.id.Restaurant2);
-        //Restaurant3 = findViewById(R.id.Restaurant3);
-
-        //Cafe1 = findViewById(R.id.Cafe1);
-        //Cafe2 = findViewById(R.id.Cafe2);
-        //Cafe3 = findViewById(R.id.Cafe3);
-
-        //Shopping1 = findViewById(R.id.Shopping1);
-        //Shopping2 = findViewById(R.id.Shopping2);
-        //Shopping3 = findViewById(R.id.Shopping3);
-
-//        Culture_Tour1 = findViewById(R.id.Culture_Tour1);
-//        Culture_Tour2 = findViewById(R.id.Culture_Tour2);
-//        Culture_Tour3 = findViewById(R.id.Culture_Tour3);
-//
-//        Hotel1 = findViewById(R.id.Hotel1);
-//        Hotel2 = findViewById(R.id.Hotel2);
-//        Hotel3 = findViewById(R.id.Hotel3);
-
         rv1 = findViewById(R.id.rv1);
         rv2 = findViewById(R.id.rv2);
         rv3 = findViewById(R.id.rv3);
@@ -163,7 +138,6 @@ public class Path_List_Activity extends AppCompatActivity {
         rv5.setAdapter(rv5Adapter);
 
         calendar_day = findViewById(R.id.calendar_day);
-        // calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
         Intent intent = getIntent();
         long daysDiff = getIntent().getLongExtra("selectDate", 0);
@@ -268,7 +242,7 @@ public class Path_List_Activity extends AppCompatActivity {
     }
 
     private void handleAddressResult() {
-        // 이전 Activity로부터 전달받은 주소 검색 결과를 처리하는 로직을 작성해주세요.
+        // 이전 Activity로부터 전달받은 주소 검색 결과를 처리하는 로직을 작성
         String searchResult = getIntent().getStringExtra("searchResult");
         if (rv1DataList.size() >= MAX_ADDRESS_COUNT) {
             rv1DataList.remove(0); // 가장 오래된 항목 삭제

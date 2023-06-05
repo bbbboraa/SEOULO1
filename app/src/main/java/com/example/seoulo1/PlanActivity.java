@@ -36,7 +36,7 @@ public class PlanActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_plan);
 
         // 레이아웃 파일의 UI 요소들과 연결
         scheduleListView = findViewById(R.id.scheduleListView);
