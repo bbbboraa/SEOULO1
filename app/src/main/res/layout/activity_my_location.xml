@@ -54,7 +54,7 @@
             android:background="@drawable/round_background"
             android:elevation="20dp"
             android:isScrollContainer="true"
-            android:scaleType="center"
+            android:scaleType="centerInside"
             android:src="@drawable/baseline_menu_24"
             tools:ignore="MissingConstraints" />
         <ImageButton
@@ -131,7 +131,8 @@
                 android:backgroundTint="@color/white"
                 android:elevation="5dp"
                 android:isScrollContainer="true"
-                android:src="@drawable/baseline_menu_24" />
+                android:scaleType="centerInside"
+                android:src="@drawable/list_resize" />
 
             <Button
                 android:id="@+id/button_restaurant"

@@ -74,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         startActivity(intent3);
                         break;
                     case R.id.menu_checklist:
+                        Intent intent4 = new Intent(MainActivity.this, CheckListActivity.class);
+                        startActivity(intent4);
                         break;
                     case R.id.menu_travel_log:
                         break;

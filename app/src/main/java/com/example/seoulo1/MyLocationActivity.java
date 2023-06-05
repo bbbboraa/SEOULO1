@@ -2,7 +2,6 @@ package com.example.seoulo1;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,13 +11,11 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -49,6 +46,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.maps.android.SphericalUtil;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -60,13 +58,13 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
-import noman.googleplaces.NRPlaces;
 import noman.googleplaces.Place;
-import noman.googleplaces.PlaceType;
 import noman.googleplaces.PlacesException;
 import noman.googleplaces.PlacesListener;
 
@@ -106,12 +104,9 @@ public class MyLocationActivity extends AppCompatActivity implements
 
     Location mCurrentLocation;
     LatLng currentPosition;
-
-
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
     private Location location;
-
 
     private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
     // (참고로 Toast에서는 Context가 필요했습니다.)
@@ -156,7 +151,6 @@ public class MyLocationActivity extends AppCompatActivity implements
         name_list= new ArrayList<>();
         vicinity_list= new ArrayList<>();
         distance_list= new ArrayList<>();
-
         markers_list=new ArrayList<>();
 
 
@@ -167,7 +161,25 @@ public class MyLocationActivity extends AppCompatActivity implements
             button_cvstore.setSelected(false);
             button_shopping.setSelected(false);
             button_sights.setSelected(false);
-            showPlaceInformation_restaurant(currentPosition);
+            //showPlaceInformation_restaurant(currentPosition);
+            String type[][] = new String[5][5000];
+            mMap.clear();//지도 클리어
+            // 사용자가 선택한 항목 인덱스번째의 type 값을 가져온다.
+            int j, i=0;
+            for(j=0; j< category_value_array[i].length;j++ ){
+                type[0][j]=category_value_array[i][j];
+            }
+            // 주변 정보를 가져온다
+            for (int k=0; k<j; k++) {
+                getNearbyPlace(type[0][k]);
+
+            }
+            lat_list.clear();
+            lng_list.clear();
+            name_list.clear();
+            vicinity_list.clear();
+            distance_list.clear();
+            locationItem.clear();
         });
 
         button_cafe = findViewById(R.id.button_cafe);
@@ -177,7 +189,25 @@ public class MyLocationActivity extends AppCompatActivity implements
             button_cvstore.setSelected(false);
             button_shopping.setSelected(false);
             button_sights.setSelected(false);
-            showPlaceInformation_cafe(currentPosition);
+            //showPlaceInformation_cafe(currentPosition);
+            String type[][] = new String[5][5000];
+            mMap.clear();//지도 클리어
+            // 사용자가 선택한 항목 인덱스번째의 type 값을 가져온다.
+            int j, i=1;
+            for(j=0; j< category_value_array[i].length;j++ ){
+                type[0][j]=category_value_array[i][j];
+            }
+            // 주변 정보를 가져온다
+            for (int k=0; k<j; k++) {
+                getNearbyPlace(type[0][k]);
+
+            }
+            lat_list.clear();
+            lng_list.clear();
+            name_list.clear();
+            vicinity_list.clear();
+            distance_list.clear();
+            locationItem.clear();
         });
 
         button_cvstore = findViewById(R.id.button_cvstore);
@@ -187,7 +217,25 @@ public class MyLocationActivity extends AppCompatActivity implements
             button_cvstore.setSelected(true);
             button_shopping.setSelected(false);
             button_sights.setSelected(false);
-            showPlaceInformation_cvstore(currentPosition);
+            //showPlaceInformation_cvstore(currentPosition);
+            String type[][] = new String[5][5000];
+            mMap.clear();//지도 클리어
+            // 사용자가 선택한 항목 인덱스번째의 type 값을 가져온다.
+            int j, i=2;
+            for(j=0; j< category_value_array[i].length;j++ ){
+                type[0][j]=category_value_array[i][j];
+            }
+            // 주변 정보를 가져온다
+            for (int k=0; k<j; k++) {
+                getNearbyPlace(type[0][k]);
+
+            }
+            lat_list.clear();
+            lng_list.clear();
+            name_list.clear();
+            vicinity_list.clear();
+            distance_list.clear();
+            locationItem.clear();
         });
 
         button_shopping = findViewById(R.id.button_shopping);
@@ -197,7 +245,25 @@ public class MyLocationActivity extends AppCompatActivity implements
             button_cvstore.setSelected(false);
             button_shopping.setSelected(true);
             button_sights.setSelected(false);
-            showPlaceInformation_shopping(currentPosition);
+            //showPlaceInformation_shopping(currentPosition);
+            String type[][] = new String[5][5000];
+            mMap.clear();//지도 클리어
+            // 사용자가 선택한 항목 인덱스번째의 type 값을 가져온다.
+            int j, i=3;
+            for(j=0; j< category_value_array[i].length;j++ ){
+                type[0][j]=category_value_array[i][j];
+            }
+            // 주변 정보를 가져온다
+            for (int k=0; k<j; k++) {
+                getNearbyPlace(type[0][k]);
+
+            }
+            lat_list.clear();
+            lng_list.clear();
+            name_list.clear();
+            vicinity_list.clear();
+            distance_list.clear();
+            locationItem.clear();
         });
 
         button_sights = findViewById(R.id.button_sights);
@@ -207,14 +273,38 @@ public class MyLocationActivity extends AppCompatActivity implements
             button_cvstore.setSelected(false);
             button_shopping.setSelected(false);
             button_sights.setSelected(true);
-            showPlaceInformation_sights(currentPosition);
+            //showPlaceInformation_sights(currentPosition);
+            String type[][] = new String[5][5000];
+            mMap.clear();//지도 클리어
+            // 사용자가 선택한 항목 인덱스번째의 type 값을 가져온다.
+            int j, i=4;
+            for(j=0; j< category_value_array[i].length;j++ ){
+                type[0][j]=category_value_array[i][j];
+            }
+            // 주변 정보를 가져온다
+            for (int k=0; k<j; k++) {
+                getNearbyPlace(type[0][k]);
+
+            }
+            lat_list.clear();
+            lng_list.clear();
+            name_list.clear();
+            vicinity_list.clear();
+            distance_list.clear();
+            locationItem.clear();
         });
 
 
         like_btn = findViewById(R.id.like_btn);
         list_location = findViewById(R.id.list_location);
         list_location.setOnClickListener(v ->{
-            showCategoryList();
+            SlidingUpPanelLayout layout_my_location;
+            layout_my_location=findViewById(R.id.layout_my_location);
+            if(layout_my_location.getPanelState()== SlidingUpPanelLayout.PanelState.EXPANDED){
+                layout_my_location.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }else{
+            layout_my_location.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);}
+            //showCategoryList();
         });
 
         my_location_btn = findViewById(R.id.my_location_btn);
@@ -253,6 +343,8 @@ public class MyLocationActivity extends AppCompatActivity implements
                         startActivity(intent3);
                         break;
                     case R.id.menu_checklist:
+                        Intent intent4 = new Intent(MyLocationActivity.this, CheckListActivity.class);
+                        startActivity(intent4);
                         break;
                     case R.id.menu_travel_log:
                         break;
@@ -269,48 +361,6 @@ public class MyLocationActivity extends AppCompatActivity implements
             popup.show();
         });
 
-    }
-    private void showCategoryList() {
-
-        // 카테고리를 선택 할 수 있는 리스트를 띄운다.
-        AlertDialog.Builder builder=new AlertDialog.Builder(this);
-        builder.setTitle("장소 타입 선택");
-        ArrayAdapter<String> adapter= new ArrayAdapter<String>(
-                this,android.R.layout.simple_list_item_1,category_name_array
-        );
-        DialogListener listener=new DialogListener();
-        builder.setAdapter(adapter,listener);
-        builder.setNegativeButton("취소",null);
-        builder.show();
-
-
-    }
-    // 다이얼로그의 리스너
-    class DialogListener implements DialogInterface.OnClickListener{
-        String type[][] = new String[5][5000];
-
-
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-            mMap.clear();//지도 클리어
-
-            // 사용자가 선택한 항목 인덱스번째의 type 값을 가져온다.
-            int j;
-            for(j=0; j< category_value_array[i].length;j++ ){
-                type[0][j]=category_value_array[i][j];
-            }
-            // 주변 정보를 가져온다
-            for (int k=0; k<j; k++) {
-                getNearbyPlace(type[0][k]);
-
-            }
-            lat_list.clear();
-            lng_list.clear();
-            name_list.clear();
-            vicinity_list.clear();
-            distance_list.clear();
-            locationItem.clear();
-        }
     }
 
     //주변 정보 가져오기
@@ -417,6 +467,7 @@ public class MyLocationActivity extends AppCompatActivity implements
 //            }
 //            markers_list.clear();
             final ListView listView = findViewById(R.id.listView);
+            Collections.sort(locationItem, Comparator.comparingInt(o -> o.distance));
             final LocationAdapter locationAdapter=new LocationAdapter(this, locationItem, listView);
             listView.setAdapter(locationAdapter);
             // 가져온 데이터의 수 만큼 마커 객체를 만들어 표시한다.
@@ -436,10 +487,11 @@ public class MyLocationActivity extends AppCompatActivity implements
                 // 말풍선이 표시될 값 설정
                 options.title(name);
                 options.snippet(vicinity+ "  여기서 "+distance+"m");
-                // 아이콘 설정
-                //BitmapDescriptor icon= BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher);
-                //options.icon(icon);
-                // 마커를 지도에 표시한다.
+                @SuppressLint("UseCompatLoadingForDrawables")
+                BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.mapmarkerblue);
+                Bitmap b=bitmapdraw.getBitmap();
+                Bitmap smallMarker = Bitmap.createScaledBitmap(b, 65, 90, false);
+                options.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
                 Marker marker=mMap.addMarker(options);
                 markers_list.add(marker);
             }
@@ -695,8 +747,6 @@ public class MyLocationActivity extends AppCompatActivity implements
 
 
     public void setDefaultLocation() {
-
-
         //디폴트 위치, Seoul
         LatLng DEFAULT_LOCATION = new LatLng(37.56, 126.97);
         String markerTitle = "위치정보 가져올 수 없음";
@@ -834,7 +884,7 @@ public class MyLocationActivity extends AppCompatActivity implements
     public void onPlacesStart() {
 
     }
-
+    //지금 안쓰는 클래스
     @SuppressLint("ResourceType")
     @Override
     public void onPlacesSuccess(final List<Place> places) {
@@ -871,118 +921,6 @@ public class MyLocationActivity extends AppCompatActivity implements
     public void onPlacesFinished() {
 
     }
-    public void showPlaceInformation_restaurant(LatLng location) {
-        mMap.clear();//지도 클리어
-
-        if (previous_marker != null)
-            previous_marker.clear();//지역정보 마커 클리어
-
-        new NRPlaces.Builder()
-                .listener(MyLocationActivity.this)
-                .key("AIzaSyDdlA0zHcNZ4wC1_DA6k3hg0_2tG91JzX8")
-                //.latlng(location.latitude, location.longitude)//현재 위치
-                .latlng(37.56, 126.97)   //임의로 위치 설정
-                .radius(2000) //2km 내에서 검색
-                .type(PlaceType.RESTAURANT) //음식점
-                .type(PlaceType.BAR)
-                .type(PlaceType.MEAL_DELIVERY)
-                .type(PlaceType.MEAL_TAKEAWAY)
-                .build()
-                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    public void showPlaceInformation_cafe(LatLng location) {
-        mMap.clear();//지도 클리어
-
-        if (previous_marker != null)
-            previous_marker.clear();//지역정보 마커 클리어
-
-        new NRPlaces.Builder()
-                .listener(MyLocationActivity.this)
-                .key("AIzaSyDdlA0zHcNZ4wC1_DA6k3hg0_2tG91JzX8")
-                //.latlng(location.latitude, location.longitude)//현재 위치
-                .latlng(37.56, 126.97)   //임의로 위치 설정
-                .radius(2000) //500 미터 내에서 검색
-                .type(PlaceType.CAFE)
-                .type(PlaceType.BAKERY)
-                .build()
-                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-    public void showPlaceInformation_cvstore(LatLng location) {
-        mMap.clear();//지도 클리어
-
-        if (previous_marker != null)
-            previous_marker.clear();//지역정보 마커 클리어
-
-        new NRPlaces.Builder()
-                .listener(MyLocationActivity.this)
-                .key("AIzaSyDdlA0zHcNZ4wC1_DA6k3hg0_2tG91JzX8")
-                //.latlng(location.latitude, location.longitude)//현재 위치
-                .latlng(37.56, 126.97)   //임의로 위치 설정
-                .radius(2000) //500 미터 내에서 검색
-                .type(PlaceType.CONVENIENCE_STORE)
-                .build()
-                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-    public void showPlaceInformation_shopping(LatLng location) {
-        mMap.clear();//지도 클리어
-
-        if (previous_marker != null)
-            previous_marker.clear();//지역정보 마커 클리어
-
-        new NRPlaces.Builder()
-                .listener(MyLocationActivity.this)
-                .key("AIzaSyDdlA0zHcNZ4wC1_DA6k3hg0_2tG91JzX8")
-                //.latlng(location.latitude, location.longitude)//현재 위치
-                .latlng(37.56, 126.97)   //임의로 위치 설정
-                .radius(2000) //500 미터 내에서 검색
-                .type(PlaceType.DEPARTMENT_STORE)
-                .type(PlaceType.JEWELRY_STORE)
-                .type(PlaceType.CLOTHING_STORE)
-                .type(PlaceType.LIQUOR_STORE)
-                .type(PlaceType.SHOE_STORE)
-                .build()
-                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-    public void showPlaceInformation_sights(LatLng location) {
-        mMap.clear();//지도 클리어
-
-        if (previous_marker != null)
-            previous_marker.clear();//지역정보 마커 클리어
-
-        new NRPlaces.Builder()
-                .listener(MyLocationActivity.this)
-                .key("AIzaSyDdlA0zHcNZ4wC1_DA6k3hg0_2tG91JzX8")
-                //.latlng(location.latitude, location.longitude)//현재 위치
-                .latlng(37.56, 126.97)   //임의로 위치 설정
-                .radius(2000) //500 미터 내에서 검색
-                .type(PlaceType.AMUSEMENT_PARK)
-                .type(PlaceType.MUSEUM)
-                .type(PlaceType.ART_GALLERY)
-                .type(PlaceType.AQUARIUM)
-                .type(PlaceType.MOVIE_THEATER)
-                .type(PlaceType.STADIUM)
-                .type(PlaceType.ZOO)
-                .type(PlaceType.SPA)
-                .type(PlaceType.MOVIE_RENTAL)
-                .type(PlaceType.CASINO)
-                .type(PlaceType.STADIUM)
-                .type(PlaceType.CITY_HALL)
-                .type(PlaceType.PARK)
-                .build()
-                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-//    private void insertData(String lat, String lng) {
-//        if (db != null) {
-//            String sql = "INSERT INTO Location(lat, lng) VALUES(?, ?)";
-//            Object[] params = {lat, lng};
-//            db.execSQL(sql, params);
-//        }
-//    }
-//
-//    public void println (String data) {
-//        textView.append(data + "\n");
-//    }
 
 
 }
