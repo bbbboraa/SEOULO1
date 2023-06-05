@@ -78,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         startActivity(intent4);
                         break;
                     case R.id.menu_travel_log:
+                        Intent intent5 = new Intent(MainActivity.this, PlanActivity.class);
+                        startActivity(intent5);
                         break;
                     case R.id.menu_expense_graph:
                         break;
