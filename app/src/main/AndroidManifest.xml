@@ -23,9 +23,6 @@
         android:theme="@style/Theme.SEOULO1"
         android:usesCleartextTraffic="true"
         tools:targetApi="tiramisu">
-
-
-
         <activity
             android:name=".PlanActivity"
             android:exported="false" />
@@ -46,9 +43,8 @@
             android:exported="true" />
         <activity
             android:name=".RegisterActivity"
-            android:exported="false"
-            android:label="@string/title_activity_register"
-            android:theme="@style/Theme.SEOULO1" />
+            android:exported="false" />
+
         <activity
             android:name=".MypageActivity"
             android:exported="false" />
