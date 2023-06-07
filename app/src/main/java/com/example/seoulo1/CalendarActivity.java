@@ -45,25 +45,25 @@ public class CalendarActivity extends AppCompatActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onPositiveButtonClick(Pair<Long, Long> selection) {
-                // 이 메서드는 날짜 선택기 다이얼로그에서 확인 버튼을 클릭했을 때 실행됩니다.
+                // 이 메서드는 날짜 선택기 다이얼로그에서 확인 버튼을 클릭했을 때 실행
 
-                // SimpleDateFormat 객체를 생성하여 날짜 형식을 지정합니다.
+                // SimpleDateFormat 객체를 생성하여 날짜 형식을 지정
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
-                // 선택된 날짜를 저장할 두 개의 Date 객체를 생성합니다.
+                // 선택된 날짜를 저장할 두 개의 Date 객체를 생성
                 Date date1 = new Date();
                 Date date2 = new Date();
 
-                // 선택된 타임스탬프를 사용하여 Date 객체의 시간을 설정합니다.
+                // 선택된 타임스탬프를 사용하여 Date 객체의 시간을 설정
                 date1.setTime(selection.first);
                 date2.setTime(selection.second);
 
                 Calendar currentDate = Calendar.getInstance();
 
-                // 선택된 날짜 사이의 밀리초 차이를 계산합니다.
+                // 선택된 날짜 사이의 밀리초 차이를 계산
                 long millisecondsDiff = Math.abs(date2.getTime() - date1.getTime());
 
-                // TimeUnit을 사용하여 밀리초를 일 수로 변환하여 일 수 차이를 계산합니다.
+                // TimeUnit을 사용하여 밀리초를 일 수로 변환하여 일 수 차이를 계산
                 long daysDiff = TimeUnit.DAYS.convert(millisecondsDiff, TimeUnit.MILLISECONDS);
 
 

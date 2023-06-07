@@ -74,8 +74,12 @@ public class Path_List_Activity extends AppCompatActivity {
                         startActivity(intent3);
                         break;
                     case R.id.menu_checklist:
+                        Intent intent4 = new Intent(Path_List_Activity.this, CheckListActivity.class);
+                        startActivity(intent4);
                         break;
                     case R.id.menu_travel_log:
+                        Intent intent5 = new Intent(Path_List_Activity.this, PlanActivity.class);
+                        startActivity(intent5);
                         break;
                     case R.id.menu_expense_graph:
                         break;

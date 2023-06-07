@@ -2,11 +2,9 @@ package com.example.seoulo1;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -49,8 +47,12 @@ public class LocalSelectActivity extends AppCompatActivity {
                         startActivity(intent3);
                         break;
                     case R.id.menu_checklist:
+                        Intent intent4 = new Intent(LocalSelectActivity.this, CheckListActivity.class);
+                        startActivity(intent4);
                         break;
                     case R.id.menu_travel_log:
+                        Intent intent5 = new Intent(LocalSelectActivity.this, PlanActivity.class);
+                        startActivity(intent5);
                         break;
                     case R.id.menu_expense_graph:
                         break;

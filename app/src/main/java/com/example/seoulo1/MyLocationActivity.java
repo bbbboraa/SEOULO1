@@ -347,6 +347,8 @@ public class MyLocationActivity extends AppCompatActivity implements
                         startActivity(intent4);
                         break;
                     case R.id.menu_travel_log:
+                        Intent intent5 = new Intent(MyLocationActivity.this, PlanActivity.class);
+                        startActivity(intent5);
                         break;
                     case R.id.menu_expense_graph:
                         break;

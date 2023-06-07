@@ -46,7 +46,6 @@ public class AddrResearchActivity extends AppCompatActivity {
         btn_addr_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //String selectedAddress = getSelectedAddress(); // 선택된 주소를 얻는 메서드 (구현 필요)
 
                 String selectedAddress = mEtAddress.getText().toString();
 

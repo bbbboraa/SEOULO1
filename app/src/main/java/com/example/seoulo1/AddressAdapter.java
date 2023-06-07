@@ -37,7 +37,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int adapterPosition = holder.getAdapterPosition(); // 수정된 부분
+                int adapterPosition = holder.getAdapterPosition();
                 if (adapterPosition != RecyclerView.NO_POSITION) {
                     addressList.remove(adapterPosition); // 목록에서 해당 위치의 항목 삭제
                     notifyItemRemoved(adapterPosition);  // RecyclerView에 항목 삭제 알림
