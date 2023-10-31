@@ -75,5 +75,4 @@ public class LocalSelectActivity extends AppCompatActivity {
 
     }
 
-
 }
