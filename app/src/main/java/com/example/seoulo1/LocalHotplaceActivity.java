@@ -35,8 +35,7 @@ public class LocalHotplaceActivity extends AppCompatActivity {
         listView = findViewById(R.id.listView);
 
         button_restaurant = findViewById(R.id.button_restaurant);
-        button_restaurant.setOnClickListener(v -> {;
-
+        button_restaurant.setOnClickListener(v -> {
             String json = readJSONFile();
             List<String> foodList = extractFoodDataFromJSON(json);
             showDataInListView(foodList);
@@ -116,7 +115,7 @@ public class LocalHotplaceActivity extends AppCompatActivity {
     private String readJSONFile() {
         String json = null;
         try {
-            InputStream inputStream = getAssets().open("seoul_local.json");
+            InputStream inputStream = getAssets().open("jsons/seoul_local.json");
             int size = inputStream.available();
             byte[] buffer = new byte[size];
             inputStream.read(buffer);

@@ -303,7 +303,7 @@ public class MyLocationActivity extends AppCompatActivity implements
             if(layout_my_location.getPanelState()== SlidingUpPanelLayout.PanelState.EXPANDED){
                 layout_my_location.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }else{
-            layout_my_location.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);}
+                layout_my_location.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);}
             //showCategoryList();
         });
 
@@ -539,10 +539,10 @@ public class MyLocationActivity extends AppCompatActivity implements
                 Snackbar.make(mLayout, "이 앱을 실행하려면 위치 접근 권한이 필요합니다.",
                         Snackbar.LENGTH_INDEFINITE).setAction("확인", view -> {
 
-                            // 3-3. 사용자게에 퍼미션 요청을 합니다. 요청 결과는 onRequestPermissionResult에서 수신됩니다.
-                            ActivityCompat.requestPermissions( MyLocationActivity.this, REQUIRED_PERMISSIONS,
-                                    PERMISSIONS_REQUEST_CODE);
-                        }).show();
+                    // 3-3. 사용자게에 퍼미션 요청을 합니다. 요청 결과는 onRequestPermissionResult에서 수신됩니다.
+                    ActivityCompat.requestPermissions( MyLocationActivity.this, REQUIRED_PERMISSIONS,
+                            PERMISSIONS_REQUEST_CODE);
+                }).show();
 
 
             } else {
