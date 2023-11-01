@@ -12,12 +12,14 @@ import androidx.appcompat.app.AppCompatActivity;
 public class SearchActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_ADDR_RESEARCH = 1;
+    private WebView webView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        WebView webView = findViewById(R.id.webView);
+        webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
 
         webView.addJavascriptInterface(new BridgeInterface(), "Android");
@@ -50,10 +52,11 @@ public class SearchActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_ADDR_RESEARCH && resultCode == RESULT_OK && data != null) {
             String address = data.getStringExtra("address");
 
-            // Path_List_Activity로 결과 값 전달
-            Intent intent = new Intent(SearchActivity.this, Path_List_Activity.class);
+            // PathListFragment로 결과 값 전달
+            Intent intent = new Intent();
             intent.putExtra("address", address);
-            startActivity(intent);
+            setResult(RESULT_OK, intent);
+            finish();
         }
     }
 

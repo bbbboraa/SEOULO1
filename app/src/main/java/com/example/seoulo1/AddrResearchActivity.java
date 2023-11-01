@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 public class AddrResearchActivity extends AppCompatActivity {
 
     private EditText mEtAddress;
-    Button btn_addr_save;
 
     private long daysDiff;
 
@@ -22,7 +21,7 @@ public class AddrResearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addr_research);
 
-        btn_addr_save = findViewById(R.id.btn_addr_save);
+        Button btn_addr_save = findViewById(R.id.btn_addr_save);
         mEtAddress = findViewById(R.id.et_address);
 
         // block touch
@@ -49,11 +48,12 @@ public class AddrResearchActivity extends AppCompatActivity {
 
                 String selectedAddress = mEtAddress.getText().toString();
 
-                Intent intent = new Intent(AddrResearchActivity.this, Path_List_Activity.class);
-                intent.putExtra("address", selectedAddress);
-                intent.putExtra("selectDate", getIntent().getLongExtra("selectDate", 0));
-                setResult(RESULT_OK, intent);
+                // 주소를 Intent에 담아 현재 액티비티로 결과를 반환
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("address", selectedAddress);
+                setResult(RESULT_OK, resultIntent);
                 finish();
+
             }
 
         });

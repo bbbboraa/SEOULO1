@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textSize="16sp"
-        android:hint="음식점"
+        android:text="음식점"
         android:gravity="center" />
 
     <!-- 주소 삭제를 위한 이미지 버튼 -->

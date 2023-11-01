@@ -67,10 +67,10 @@ public class CalendarActivity extends AppCompatActivity {
                 long daysDiff = TimeUnit.DAYS.convert(millisecondsDiff, TimeUnit.MILLISECONDS);
 
 
-                // daysDiff와 dateArray 값을 전달하여 Path_List_Activity로 이동
-                Intent intent = new Intent(CalendarActivity.this, Path_List_Activity.class);
-                intent.putExtra("selectDate", daysDiff);
-                intent.putExtra("Date", dateArray);
+                // daysDiff와 dateArray 값을 전달하여 PathListPagerActivity로 이동
+                Intent intent = new Intent(CalendarActivity.this, PathListPagerActivity.class);
+                intent.putExtra("selectDate", daysDiff); // 선택한 날짜 범위의 일 수를 전달
+                intent.putExtra("Date", dateArray); // 선택한 날짜 배열을 전달
                 startActivity(intent);
                 finish();
             }

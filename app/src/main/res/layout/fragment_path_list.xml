@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".CalendarActivity"
-    tools:ignore="ExtraText">
+    tools:context=".PathListFragment">
 
     <!--젤 위에 layout-->
 
@@ -83,47 +82,6 @@
                 tools:layout_conversion_absoluteHeight="48dp"
                 tools:layout_conversion_absoluteWidth="50dp" />
 
-            <!--            <TextView-->
-            <!--                android:id="@+id/Restaurant1"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:text="음식점 1"-->
-            <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintHorizontal_bias="0.30"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toTopOf="parent"-->
-            <!--                app:layout_constraintVertical_bias="0.238"-->
-            <!--                tools:layout_conversion_absoluteHeight="134dp"-->
-            <!--                tools:layout_conversion_absoluteWidth="0dp" />-->
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/Restaurant2"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:text="음식점 2"-->
-            <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintHorizontal_bias="0.30"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toTopOf="parent"-->
-            <!--                app:layout_constraintVertical_bias="0.384"-->
-            <!--                tools:layout_conversion_absoluteHeight="134dp"-->
-            <!--                tools:layout_conversion_absoluteWidth="0dp" />-->
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/Restaurant3"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:text="음식점 3"-->
-            <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintHorizontal_bias="0.30"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toTopOf="parent"-->
-            <!--                app:layout_constraintVertical_bias="0.54"-->
-            <!--                tools:layout_conversion_absoluteHeight="134dp"-->
-            <!--                tools:layout_conversion_absoluteWidth="0dp" />-->
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv1"
@@ -242,47 +200,6 @@
 
             </FrameLayout>
 
-<!--            <TextView-->
-<!--                android:id="@+id/Cafe1"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="카페 1"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.202"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintVertical_bias="0.238"-->
-<!--                tools:layout_conversion_absoluteHeight="134dp"-->
-<!--                tools:layout_conversion_absoluteWidth="0dp" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/Cafe2"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="카페 2"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.202"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintVertical_bias="0.384"-->
-<!--                tools:layout_conversion_absoluteHeight="134dp"-->
-<!--                tools:layout_conversion_absoluteWidth="0dp" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/Cafe3"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="카페 3"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.202"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintVertical_bias="0.54"-->
-<!--                tools:layout_conversion_absoluteHeight="134dp"-->
-<!--                tools:layout_conversion_absoluteWidth="0dp" />-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -346,48 +263,6 @@
                 tools:ignore="MissingConstraints" />
 
 
-            <!--            <TextView-->
-<!--                android:id="@+id/Shopping1"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="쇼핑지 1"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.202"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintVertical_bias="0.238"-->
-<!--                tools:layout_conversion_absoluteHeight="134dp"-->
-<!--                tools:layout_conversion_absoluteWidth="0dp" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/Shopping2"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="쇼핑지 2"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.202"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintVertical_bias="0.384"-->
-<!--                tools:layout_conversion_absoluteHeight="134dp"-->
-<!--                tools:layout_conversion_absoluteWidth="0dp" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/Shopping3"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="쇼핑지 3"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.202"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintVertical_bias="0.54"-->
-<!--                tools:layout_conversion_absoluteHeight="134dp"-->
-<!--                tools:layout_conversion_absoluteWidth="0dp" />-->
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- 문화/관광 layout -->
@@ -442,48 +317,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0"
                 tools:ignore="MissingConstraints" />
-
-<!--            <TextView-->
-<!--                android:id="@+id/Culture_Tour1"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="문화/관광 1"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.236"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintVertical_bias="0.238"-->
-<!--                tools:layout_conversion_absoluteHeight="134dp"-->
-<!--                tools:layout_conversion_absoluteWidth="0dp" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/Culture_Tour2"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="문화/관광 2"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.236"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintVertical_bias="0.387"-->
-<!--                tools:layout_conversion_absoluteHeight="134dp"-->
-<!--                tools:layout_conversion_absoluteWidth="0dp" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/Culture_Tour3"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="문화/관광 3"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.236"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintVertical_bias="0.544"-->
-<!--                tools:layout_conversion_absoluteHeight="134dp"-->
-<!--                tools:layout_conversion_absoluteWidth="0dp" />-->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -540,48 +373,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0"
                 tools:ignore="MissingConstraints" />
-
-<!--            <TextView-->
-<!--                android:id="@+id/Hotel1"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="숙박 1"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.34"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintVertical_bias="0.238"-->
-<!--                tools:layout_conversion_absoluteHeight="134dp"-->
-<!--                tools:layout_conversion_absoluteWidth="0dp" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/Hotel2"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="숙박 2"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.34"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintVertical_bias="0.387"-->
-<!--                tools:layout_conversion_absoluteHeight="134dp"-->
-<!--                tools:layout_conversion_absoluteWidth="0dp" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/Hotel3"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="숙박 3"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.34"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintVertical_bias="0.544"-->
-<!--                tools:layout_conversion_absoluteHeight="134dp"-->
-<!--                tools:layout_conversion_absoluteWidth="0dp" />-->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
