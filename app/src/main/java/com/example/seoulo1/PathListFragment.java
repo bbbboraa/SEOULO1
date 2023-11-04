@@ -168,11 +168,11 @@ public class PathListFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // 루트 추천 버튼 클릭 시 실행할 로직 추가
+                Intent intent = new Intent(requireContext(), AddrSetActivity.class);
+                startActivity(intent);
             }
         });
 
-
-        // setupRecyclerView(); (Path_List_Activity에 있는 원래 코드)
 
 
         // 나머지 버튼과 메뉴 버튼 관련 코드 추가
