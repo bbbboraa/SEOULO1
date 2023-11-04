@@ -54,13 +54,16 @@ public class AddrSetActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String StartAddress = DepartureAddr.getText().toString();
+                // String StartAddress = DepartureAddr.getText().toString();
 
-                // 주소를 Intent에 담아 현재 액티비티로 결과를 반환
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("address", StartAddress);
-                setResult(RESULT_OK, resultIntent);
-                finish();
+                Intent intent = new Intent(AddrSetActivity.this, RouteRecommActivity.class);
+                startForResult.launch(intent);
+
+//                // 주소를 Intent에 담아 현재 액티비티로 결과를 반환
+//                Intent resultIntent = new Intent();
+//                resultIntent.putExtra("address", StartAddress);
+//                setResult(RESULT_OK, resultIntent);
+//                finish();
 
             }
 

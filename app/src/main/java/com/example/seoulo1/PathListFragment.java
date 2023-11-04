@@ -127,7 +127,7 @@ public class PathListFragment extends Fragment {
         Button btn_AddrReserch_move3 = view.findViewById(R.id.btn_AddrReserch_move3);
         Button btn_AddrReserch_move4 = view.findViewById(R.id.btn_AddrReserch_move4);
         Button btn_AddrReserch_move5 = view.findViewById(R.id.btn_AddrReserch_move5);
-        Button Route_Recom = view.findViewById(R.id.Route_Recom);
+        Button Route_Recomm = view.findViewById(R.id.Route_Recomm);
 
         btn_AddrReserch_move.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,7 +164,7 @@ public class PathListFragment extends Fragment {
             }
         });
 
-        Route_Recom.setOnClickListener(new View.OnClickListener() {
+        Route_Recomm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // 루트 추천 버튼 클릭 시 실행할 로직 추가
