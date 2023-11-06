@@ -68,6 +68,21 @@ public class DBHelper extends SQLiteOpenHelper {
         db.insert(TABLE_NAME, null, contentValues);
     }
 
+    public void updateContent(String info, String state){
+        ContentValues contentValues=new ContentValues();
+        SQLiteDatabase db=getWritableDatabase(); // 데이터베이스를 수정할 때는 getWritableDatabase(), 데이터를 읽을 떄는 getReadableDatabase()를 씁니다
+        contentValues.put(INFO, info);
+        contentValues.put(STATE, state);
+        db.update(TABLE_NAME,contentValues, "INFO=?", new String[] {info});
+    }
+
+
+    //데이터 삭제하기
+    public int deleteData(String info){
+        SQLiteDatabase db=getWritableDatabase(); // 데이터베이스를 수정할 때는 getWritableDatabase(), 데이터를 읽을 떄는 getReadableDatabase()를 씁니다
+        return db.delete(TABLE_NAME, "INFO = ?", new String[] {info});
+    }
+
     // 데이터베이스에 값 일괄적으로 삽입
     public void loadContent(SQLiteDatabase db){
        }

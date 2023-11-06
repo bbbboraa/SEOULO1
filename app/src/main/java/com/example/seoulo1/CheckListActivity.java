@@ -9,7 +9,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.AbsListView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -24,8 +26,10 @@ public class CheckListActivity extends AppCompatActivity implements myCheckListA
     ArrayList<PreparationItem> items= new ArrayList<>();
 
     //int count=0;
-    ImageButton plus, btn_delete;
-    EditText editText, editText_delete;
+    ImageButton plus;
+
+    CheckBox checkbox;
+    EditText editText, editText_second;
     SharedPreferences sp;
     String  s;
     boolean b;
@@ -43,10 +47,9 @@ public class CheckListActivity extends AppCompatActivity implements myCheckListA
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_list);
         plus = findViewById(R.id.btn_checkplus);
-        editText_delete=findViewById(R.id.item_edit);
+        editText_second=findViewById(R.id.item_edit);
         editText = findViewById(R.id.item_edit_first);
         editText.setText("");
-        sp = getSharedPreferences("temp", MODE_PRIVATE);
         dbHelper=new DBHelper(this);
         db=openOrCreateDatabase(DB_NAME, MODE_PRIVATE, null);
         db=dbHelper.getReadableDatabase();
@@ -54,33 +57,24 @@ public class CheckListActivity extends AppCompatActivity implements myCheckListA
         adapter=new myCheckListAdapter(this, R.layout.checklist_items,dbHelper.SelectAll(), this);
         final ListView listview = findViewById(R.id.listview);
         listview.setAdapter(adapter);
-        //show(listview);
-//        if(count==0 && !Objects.equals(s, "")){
-//            items.add(new PreparationItem(b,s));
-//            showlist(count, listview);
-//        }
+        show(listview);
 
-        s = sp.getString("id", "");
-        b = sp.getBoolean("cb", false);
+
 
         plus.setOnClickListener(v -> {
             db=dbHelper.getWritableDatabase();
             items.add(new PreparationItem(false,editText.getText().toString()));
+            Log.d(TAG, items +" ###### 단어 등록 성공 ++++++++++++++");
             dbHelper.insertContent(editText.getText().toString(), String.valueOf(false));
-            //setpref(b,editText.getText().toString());
-            //s=editText.getText().toString();
-            //count++;
-            //showlist(count, listview);
             editText.setText("");
             show(listview);
         });
-//        myCheckListAdapter adapter=new myCheckListAdapter(this, R.layout.checklist_items,dbHelper.SelectAll(), this);
-//        checkList=dbHelper.SelectAll();
-//        delete = findViewById(R.id.btn_delete);
-//        delete.setOnClickListener(v->{
-//
-//            //show(listview);
-//        });
+
+        editText.setOnKeyListener((v, keyCode, event) -> {
+            if(keyCode==KeyEvent.KEYCODE_ENTER && event.getAction()==KeyEvent.ACTION_UP)
+                plus.callOnClick();
+            return false;
+        });
 
         listview.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -94,28 +88,59 @@ public class CheckListActivity extends AppCompatActivity implements myCheckListA
             }
         });
 
-//        checkBox.setOnClickListener(v -> {
-//            if (checkBox.isChecked()) {
-//                // TODO : CheckBox is checked.
-//            } else {
-//                // TODO : CheckBox is unchecked.
-//            }
-//        });
 
     }
+    @SuppressLint({"NonConstantResourceId", "Range"})
     @Override
     public void onListBtnClick(int position, int resourceid) {
         //Object selected =  checkList.get(position);
-        switch(resourceid){
-            case  R.id.btn_delete:
-                if(dbHelper!=null)
-                    db=dbHelper.getWritableDatabase();
-                    s=editText_delete.getText().toString();
-                    db.execSQL("delete from "+TABLE_NAME+" WHERE INFO ="+ s);
-                    myCheckListAdapter adapter=new myCheckListAdapter(this, R.layout.checklist_items,dbHelper.SelectAll(), this);
+        sp = getSharedPreferences("temp", MODE_PRIVATE);
+        @SuppressLint("Recycle") Cursor c=db.rawQuery("select * from "+ TABLE_NAME, null);
+        Log.d(TAG, position + "!!!!!! 리스트뷰 누름 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+        switch (resourceid) {
+            case R.id.btn_delete -> {
+                if (dbHelper != null)
+                    db = dbHelper.getWritableDatabase();
+                //s=editText_second.getText().toString();
+                if (c != null) c.moveToPosition(position);
+                assert c != null;
+                s = c.getString(c.getColumnIndex(INFO));
+                b = Boolean.parseBoolean(c.getString(c.getColumnIndex(STATE)));
+                Log.d(TAG, s + " ###### 단어 삭제 성공 ???????");
+                //db.execSQL("delete from "+TABLE_NAME+" WHERE INFO="+s);
+                dbHelper.deleteData(s);
+                myCheckListAdapter adapter = new myCheckListAdapter(this, R.layout.checklist_items, dbHelper.SelectAll(), this);
+                @SuppressLint("CutPasteId") ListView listview = findViewById(R.id.listview);
+                adapter.remove(position);
+                listview.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+                show(listview);
+            }
+            case R.id.checkbox -> {
+                Log.d(TAG, position + "!!!!!! 체크박스 버튼 누름 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                if (dbHelper != null)
+                    db = dbHelper.getWritableDatabase();
+                if (c != null) c.moveToPosition(position);
+                assert c != null;
+                s = c.getString(c.getColumnIndex(INFO));
+                b = Boolean.parseBoolean(c.getString(c.getColumnIndex(STATE)));
+                if (!b) {
+                    //dbHelper.updateContent(s, String.valueOf(b));
+                    dbHelper.updateContent(s, String.valueOf(true));
+                    myCheckListAdapter adapter = new myCheckListAdapter(this, R.layout.checklist_items, dbHelper.SelectAll(), this);
                     ListView listview = findViewById(R.id.listview);
                     listview.setAdapter(adapter);
-                    break;
+                    adapter.notifyDataSetChanged();
+                    show(listview);
+                } else {
+                    dbHelper.updateContent(s, String.valueOf(false));
+                    myCheckListAdapter adapter = new myCheckListAdapter(this, R.layout.checklist_items, dbHelper.SelectAll(), this);
+                    ListView listview = findViewById(R.id.listview);
+                    listview.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    show(listview);}
+            }
         }
     }
     public void show(ListView listView) {
@@ -166,49 +191,4 @@ public class CheckListActivity extends AppCompatActivity implements myCheckListA
         }
     }
 
-
-    public void showlist(int count, ListView listview){
-        if(count!=0){
-            //final PreparationAdapter preparationAdapter = new PreparationAdapter(this, items, listview);
-            // 6. ListView 객체에 adapter 객체를 연결합니다.
-            final PreparationAdapter preparationAdapter = new PreparationAdapter(this, items, listview);
-            // 6. ListView 객체에 adapter 객체를 연결합니다.
-            listview.setAdapter(preparationAdapter);
-            Log.d(TAG, "저장소 :id  "+ sp.getString("id", "")+ "???"+sp.getBoolean("cb", false));
-        }
-
-    }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-//        try{sp = getSharedPreferences("temp", MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sp.edit();
-//        editor.putString("id", editText.getText().toString());
-//        editor.putBoolean("cb", false);
-//        editor.apply();
-//            Log.d(TAG, "onDestroy: 저장"+editText.getText());
-//        }
-//        catch (NullPointerException e){
-//            Log.d(TAG, "onStop: ddddd"+ e);
-//        }
-    }
-    public void setpref(boolean a, String b) {
-        try{sp = getSharedPreferences("temp", MODE_PRIVATE);
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putString("id", b);
-            editor.putBoolean("cb", a);
-            editor.apply();
-            Log.d(TAG, " setpref() 저장"+editText.getText());
-        }
-        catch (NullPointerException e){
-            Log.d(TAG, "onStop: ddddd"+ e);
-        }
-    }
-//    private void settingPrefs(){
-//        sp = getSharedPreferences("temp", MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sp.edit();
-//        s=sp.getString("id", null);
-//
-//    }
 }

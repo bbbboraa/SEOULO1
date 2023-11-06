@@ -20,6 +20,9 @@ public class myCheckListAdapter extends ArrayAdapter implements View.OnClickList
     private CheckBox checkBox ;
     private EditText item_edit ;
     private ImageButton btn_delete;
+
+    private List<PreparationItem> preparationItems;
+
     public interface ListBtnClickListener {
 
         void onListBtnClick(int position, int resourceid) ;
@@ -28,6 +31,8 @@ public class myCheckListAdapter extends ArrayAdapter implements View.OnClickList
     public myCheckListAdapter(@NonNull Context context, int resource, @NonNull List objects, ListBtnClickListener listBtnClickListener) {
         super(context, resource, objects);
         this.listBtnClickListener = listBtnClickListener;
+        this.preparationItems = objects;
+
     }
     @NonNull
 
@@ -46,6 +51,7 @@ public class myCheckListAdapter extends ArrayAdapter implements View.OnClickList
         PreparationItem checklist_items = (PreparationItem) getItem(position);
         checkBox.setTag(pos);
         checkBox.setOnClickListener(this);
+        //checkBox.setOnClickListener(v -> checklist_items.getChecked());
         btn_delete.setTag(pos);
         btn_delete.setOnClickListener(this);
         btn_delete.setVisibility(View.VISIBLE);
@@ -56,7 +62,15 @@ public class myCheckListAdapter extends ArrayAdapter implements View.OnClickList
 
     public void onClick(View view) {
         if (this.listBtnClickListener != null) {
-            this.listBtnClickListener.onListBtnClick((int)view.getTag(), view.getId()) ;
+            int position = (int) view.getTag();
+            int resourceId = view.getId();
+            this.listBtnClickListener.onListBtnClick(position, resourceId) ;
+            if (resourceId == R.id.checkbox) {
+                PreparationItem item = preparationItems.get(position);
+                item.setChecked(!item.isChecked());
+            }
+
         }
+
     }
 }

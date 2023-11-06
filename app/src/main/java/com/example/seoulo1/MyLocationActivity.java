@@ -12,6 +12,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
@@ -389,13 +390,14 @@ public class MyLocationActivity extends AppCompatActivity implements
 
                 //밑에 위도 경도에 원래 이거 넣기 mCurrentLocation.getLatitude()
                 // 접속할 페이지 주소
-                String site="https://maps.googleapis.com/maps/api/place/nearbysearch/json";
-                site+="?location="+37.56+","
+                String site="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+37.56+","
                         +126.97
                         +"&radius=2000&sensor=false&language=ko"
-                        +"&key=AIzaSyDdlA0zHcNZ4wC1_DA6k3hg0_2tG91JzX8";
+                        +"&key=AIzaSyC4KSNnjRcOOrDmEnkPbiRsBJ8X2czcesY";
                 if(type_keyword!=null && type_keyword.equals("all")==false){
                     site+="&types="+type_keyword;
+                    Log.d(TAG, " 장소 항목 누름 !!!!!!!!!! if 들어옴"+ type_keyword);
+
                 }
                 // 접속
                 URL url=new URL(site);
@@ -453,7 +455,14 @@ public class MyLocationActivity extends AppCompatActivity implements
 
                 }
                 else{
-                    Toast.makeText(getApplicationContext(),"가져온 데이터가 없습니다.",Toast.LENGTH_LONG).show();
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run()
+                        {
+                            Toast.makeText(getApplicationContext(),"가져온 데이터가 없습니다.",Toast.LENGTH_LONG).show();
+                        }
+                    }, 0);
                 }
 
             }catch (Exception e){e.printStackTrace();}
