@@ -21,6 +21,7 @@ public class RouteRecommActivity extends AppCompatActivity implements OnMapReady
         mapView = findViewById(R.id.Route_mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
     }
 
     @Override
