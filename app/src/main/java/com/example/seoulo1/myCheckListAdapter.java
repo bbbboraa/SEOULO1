@@ -7,19 +7,18 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.List;
-
 public class myCheckListAdapter extends ArrayAdapter implements View.OnClickListener{
     private ListBtnClickListener listBtnClickListener = null ;
 
     private CheckBox checkBox ;
     private EditText item_edit ;
-    private ImageButton btn_delete;
+    private ImageView btn_delete;
 
     private List<PreparationItem> preparationItems;
 

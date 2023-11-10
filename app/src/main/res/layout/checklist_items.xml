@@ -6,13 +6,16 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:descendantFocusability="blocksDescendants"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal">
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:checked="false"
+            android:focusable="true"
+            android:clickable="true"
+            android:focusableInTouchMode="true"
             android:gravity="center"
             android:id="@+id/checkbox"/>
 
@@ -22,12 +25,18 @@
             android:layout_height="match_parent"
             android:layout_gravity="center|start"
             android:layout_marginStart="10dp"
+            android:focusable="true"
+            android:clickable="true"
+            android:focusableInTouchMode="true"
             android:inputType="text"
             android:textSize="20sp"
             tools:ignore="LabelFor" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btn_delete"
+            android:focusable="true"
+            android:clickable="true"
+            android:focusableInTouchMode="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -36,14 +45,6 @@
             android:scaleType="centerInside"
             android:src="@drawable/delete"
             android:contentDescription="@string/send"/>
-        <!--        <TextView-->
-        <!--            android:id="@+id/item_text"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="match_parent"-->
-        <!--            android:layout_gravity="center|start"-->
-        <!--            android:layout_marginStart="10dp"-->
-        <!--            android:textSize="20sp"-->
-        <!--            android:visibility="visible"/>-->
 
     </LinearLayout>
 
