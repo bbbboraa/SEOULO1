@@ -13,11 +13,15 @@ public class SearchActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_ADDR_RESEARCH = 1;
     private WebView webView;
+    private AppDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        // 데이터베이스 초기화
+        database = DatabaseInitializer.getDatabase(this);
 
         webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -39,6 +43,14 @@ public class SearchActivity extends AppCompatActivity {
         @JavascriptInterface
         public void processDATA(String data) {
             // 다음(카카오) 주소 검색 API 결과 값이 브릿지 통로를 통해 전달 받는다. (from Javascript)
+
+            // 주소 정보 생성
+            PlaceEntity place = new PlaceEntity();
+            place.setAddress(data);
+
+            // 주소 정보 저장
+            database.placeDao().insert(place);
+
             Intent intent = new Intent();
             intent.putExtra("data", data);
             setResult(RESULT_OK, intent);

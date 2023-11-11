@@ -1,0 +1,35 @@
+package com.example.seoulo1;
+
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+// PlaceEntity.java (엔터티(테이블) 클래스 생성)
+// 주소 정보를 저장할 엔터티 클래스 생성
+// Room Database의 테이블 역할
+
+@Entity(tableName = "places")
+public class PlaceEntity {
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
+    private String address;
+
+    // 생성자, getter, setter 등 필요한 메소드 구현
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+}
