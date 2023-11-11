@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -50,6 +51,7 @@ import com.google.maps.android.SphericalUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -76,12 +78,16 @@ public class MyLocationActivity extends AppCompatActivity implements
 
     private GoogleMap mMap;
     private ImageButton like_btn, menu_btn,my_location_btn, list_location;
+    private ImageView like;
+    private boolean isImage1 = true;
+
     ArrayList<Double> lat_list;
     ArrayList<Double> lng_list;
     ArrayList<Integer> distance_list;
-    ArrayList<String> name_list;
-    ArrayList<String> vicinity_list;
+    ArrayList<String> name_list, placeId_list, vicinity_list, pNum_list, open_now_list, rating_list;
+
     ArrayList<Marker> markers_list;
+
     String[] category_name_array={"맛집", "카페", "편의점","쇼핑","관광/문화"};
     String[][] category_value_array={{"restaurant", "bar", "meal_delivery", "meal_takeaway"}, {"cafe", "bakery"}, {"convenience_store"},{"department_store", "jewelry_store", "clothing_store", "liquor_store", "shoe_store", "shopping_mall"}, {"tourist_attraction","amusement_park", "park","museum", "art_gallery", "aquarium", "movie_theater", "stadium", "zoo", "movie_rental", "casino", "stadium", "city_hall"} };
     final List<LocationItem> locationItem = new ArrayList<>();
@@ -153,6 +159,10 @@ public class MyLocationActivity extends AppCompatActivity implements
         vicinity_list= new ArrayList<>();
         distance_list= new ArrayList<>();
         markers_list=new ArrayList<>();
+        placeId_list=new ArrayList<>();
+        pNum_list = new ArrayList<>();
+        open_now_list = new ArrayList<>();
+        rating_list = new ArrayList<>();
 
 
         button_restaurant = findViewById(R.id.button_restaurant);
@@ -180,7 +190,12 @@ public class MyLocationActivity extends AppCompatActivity implements
             name_list.clear();
             vicinity_list.clear();
             distance_list.clear();
+            placeId_list.clear();
+            pNum_list.clear();
             locationItem.clear();
+            open_now_list.clear();
+            rating_list.clear();
+
         });
 
         button_cafe = findViewById(R.id.button_cafe);
@@ -205,9 +220,13 @@ public class MyLocationActivity extends AppCompatActivity implements
             }
             lat_list.clear();
             lng_list.clear();
+            placeId_list.clear();
             name_list.clear();
             vicinity_list.clear();
             distance_list.clear();
+            pNum_list.clear();
+            open_now_list.clear();
+            rating_list.clear();
             locationItem.clear();
         });
 
@@ -232,11 +251,16 @@ public class MyLocationActivity extends AppCompatActivity implements
 
             }
             lat_list.clear();
+            placeId_list.clear();
             lng_list.clear();
             name_list.clear();
             vicinity_list.clear();
             distance_list.clear();
+            pNum_list.clear();
             locationItem.clear();
+            open_now_list.clear();
+            rating_list.clear();
+
         });
 
         button_shopping = findViewById(R.id.button_shopping);
@@ -261,10 +285,15 @@ public class MyLocationActivity extends AppCompatActivity implements
             }
             lat_list.clear();
             lng_list.clear();
+            placeId_list.clear();
             name_list.clear();
             vicinity_list.clear();
             distance_list.clear();
+            pNum_list.clear();
             locationItem.clear();
+            open_now_list.clear();
+            rating_list.clear();
+
         });
 
         button_sights = findViewById(R.id.button_sights);
@@ -289,14 +318,28 @@ public class MyLocationActivity extends AppCompatActivity implements
             }
             lat_list.clear();
             lng_list.clear();
+            placeId_list.clear();
             name_list.clear();
             vicinity_list.clear();
             distance_list.clear();
-            locationItem.clear();
+            pNum_list.clear();
+            locationItem.clear();open_now_list.clear();
+            rating_list.clear();
+
         });
 
 
         like_btn = findViewById(R.id.like_btn);
+        like_btn.setOnClickListener(v->{
+               // 클릭할 때마다 이미지 변경
+            if (isImage1) {
+                like.setImageResource(R.drawable.filled_heart); // 새로운 이미지로 변경
+            } else {
+                like.setImageResource(R.drawable.nonfilled_heart); // 다시 처음 이미지로 변경
+            }
+            isImage1 = !isImage1; // 상태를 반전
+        });
+
         list_location = findViewById(R.id.list_location);
         list_location.setOnClickListener(v ->{
             SlidingUpPanelLayout layout_my_location;
@@ -382,12 +425,6 @@ public class MyLocationActivity extends AppCompatActivity implements
         public void run() {
             try{
                 //데이터를 담아놓을 리스트를 초기화한다.
-//                lat_list.clear();
-//                lng_list.clear();
-//                name_list.clear();
-//                vicinity_list.clear();
-//                distance_list.clear();
-
                 //밑에 위도 경도에 원래 이거 넣기 mCurrentLocation.getLatitude()
                 // 접속할 페이지 주소
                 String site="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+37.56+","
@@ -401,6 +438,7 @@ public class MyLocationActivity extends AppCompatActivity implements
                 }
                 // 접속
                 URL url=new URL(site);
+                Log.d(TAG, site  +" 여기 site 주소");
                 URLConnection conn=url.openConnection();
                 // 스트림 추출
                 InputStream is=conn.getInputStream();
@@ -440,18 +478,24 @@ public class MyLocationActivity extends AppCompatActivity implements
                         currentPosition= new LatLng(37.56, 126.97);   //현재 위치로 임의 설정, gps 쓸 시 주석처리
                         LatLng obj1Position = new LatLng(lat, lng);
                         double distance = SphericalUtil.computeDistanceBetween(currentPosition, obj1Position);
-
+                        String placeId = obj1.getString("place_id");
+                        Log.d(TAG, placeId + "place id %%%%%%%%");
                         // 데이터를 담는다.
-                        lat_list.add(lat);
-                        lng_list.add(lng);
-                        name_list.add(name);
-                        vicinity_list.add(vicinity);
-                        distance_list.add((int)distance);
-                        locationItem.add(new LocationItem(name, type_keyword,vicinity, (int) distance));
-                        Log.d(TAG, "typekeyword !!!!!!!!!!!!!!!!!!======="+ type_keyword);
+//                        lat_list.add(lat);
+//                        lng_list.add(lng);
+//                        name_list.add(name);
+//                        vicinity_list.add(vicinity);
+//                        distance_list.add((int)distance);
+                        placeId_list.add(placeId);
+                        getPlaceDetails(placeId);
+                       // locationItem.add(new LocationItem(placeId, name, type_keyword,vicinity, (int) distance));
+                        //Log.d(TAG, "typekeyword !!!!!!!!!!!!!!!!!!======="+ type_keyword);
 
                     }
-                    showMarker();
+//                    for(int i=0; i<results.length() ; i++){
+//                        getPlaceDetails(placeId_list.get(i));
+//                    }
+                    //showMarker();
 
                 }
                 else{
@@ -460,14 +504,124 @@ public class MyLocationActivity extends AppCompatActivity implements
                         @Override
                         public void run()
                         {
-                            Toast.makeText(getApplicationContext(),"가져온 데이터가 없습니다.",Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getApplicationContext(),"가져온 데이터가 없습니다.",Toast.LENGTH_LONG).show();
                         }
                     }, 0);
                 }
 
             }catch (Exception e){e.printStackTrace();}
         }
+
+
+
+        private void getPlaceDetails(String placeId) throws IOException, JSONException {
+            String site2 = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + "AIzaSyC4KSNnjRcOOrDmEnkPbiRsBJ8X2czcesY";
+            Log.d(TAG, site2  +" 여기 site 주소");
+            URL url2=new URL(site2);
+            URLConnection conn=url2.openConnection();
+            // 스트림 추출
+            InputStream is=conn.getInputStream();
+            InputStreamReader isr =new InputStreamReader(is,"utf-8");
+            BufferedReader br=new BufferedReader(isr);
+            String str=null;
+            StringBuffer buf=new StringBuffer();
+            // 읽어온다
+            do{
+                str=br.readLine();
+                if(str!=null){
+                    buf.append(str);
+                }
+            }while(str!=null);
+            String rec_data=buf.toString();
+            Log.d(TAG, "111111111111111 getPlaceDetails: " + rec_data);
+            // JSON 데이터 분석
+            JSONObject root=new JSONObject(rec_data);
+            //status 값을 추출한다.
+            String status=root.getString("status");
+            Log.d(TAG, "2222222 getPlaceDetails: " + status);
+
+            // 가져온 값이 있을 경우에 지도에 표시한다.
+            if(status.equals("OK")){
+                //results 배열을 가져온다
+                JSONObject result=root.getJSONObject("result");
+                // 개수만큼 반복한다.
+                //for(int i=0; i<result.length() ; i++){
+                    // 객체를 추출한다.(장소하나의 정보)
+                    //JSONObject obj1=result.getJSONObject(i);
+                    // 위도 경도 추출
+                    //JSONObject geometry=obj1.getJSONObject("geometry");
+//                    JSONObject location=geometry.getJSONObject("location");
+//                    double lat=location.getDouble("lat");
+//                    double lng=location.getDouble("lng");
+//                    // 장소 이름 추출
+//                    String name=obj1.getString("name");
+//                    // 대략적인 주소 추출
+//                    String vicinity=obj1.getString("vicinity");
+//                    currentPosition= new LatLng(37.56, 126.97);   //현재 위치로 임의 설정, gps 쓸 시 주석처리
+//                    LatLng obj1Position = new LatLng(lat, lng);
+//                    double distance = SphericalUtil.computeDistanceBetween(currentPosition, obj1Position);
+//                    String pNum = obj1.getString("formatted_phone_number");
+                double lat = result.getJSONObject("geometry").getJSONObject("location").getDouble("lat");
+                double lng = result.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
+                String name = result.getString("name");
+                String vicinity = result.getString("vicinity");
+                String pNum = result.optString("formatted_phone_number", ""); // formatted_phone_number가 없을 경우 빈 문자열 반환
+                String open_now;
+                if (result.has("current_opening_hours")) {
+                    JSONObject openingHours = result.getJSONObject("current_opening_hours");
+                    if (openingHours.has("open_now")) {
+                        if (openingHours.getBoolean("open_now")) {
+                            open_now = "영업 중";
+                        } else {
+                            open_now = "영업 종료";
+                        }
+                    } else {
+                        open_now = ""; // "open_now" 키가 없는 경우
+                    }
+                } else {
+                    open_now = ""; // "current_opening_hours" 키가 없는 경우
+                }
+                String rating;
+                if (result.has("rating")) {
+                    rating = String.valueOf(result.getDouble("rating"));
+                } else {
+                    rating = ""; // "rating" 키가 없는 경우
+                }
+                currentPosition= new LatLng(37.56, 126.97);   //현재 위치로 임의 설정, gps 쓸 시 주석처리
+                LatLng obj1Position = new LatLng(lat, lng);
+                double distance = SphericalUtil.computeDistanceBetween(currentPosition, obj1Position);
+                    // 데이터를 담는다.
+                    lat_list.add(lat);
+                    lng_list.add(lng);
+                    name_list.add(name);
+                    vicinity_list.add(vicinity);
+                    distance_list.add((int)distance);
+                    open_now_list.add(open_now);
+                    rating_list.add(rating);
+                    pNum_list.add(pNum);
+                    locationItem.add(new LocationItem(placeId, name, type_keyword,vicinity, (int) distance, pNum, open_now, rating));
+                    Log.d(TAG, "item 추가 !!!!!!!!!!!!!!!!!!=======" + name);
+
+                //}
+                showMarker();
+
+            }
+            else{
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run()
+                    {
+                        Toast.makeText(getApplicationContext(),"가져온 데이터가 없습니다.",Toast.LENGTH_LONG).show();
+                    }
+                }, 0);
+            }
+
+        }
+        //catch (Exception e){e.printStackTrace();}
+
     }
+
 
     public void showMarker(){
         runOnUiThread(() -> {
@@ -489,6 +643,7 @@ public class MyLocationActivity extends AppCompatActivity implements
                 String name=name_list.get(i);
                 String vicinity=vicinity_list.get(i);
                 int distance=distance_list.get(i);
+
 
                 // 생성할 마커의 정보를 가지고 있는 객체를 생성
                 MarkerOptions options=new MarkerOptions();
@@ -932,6 +1087,8 @@ public class MyLocationActivity extends AppCompatActivity implements
     public void onPlacesFinished() {
 
     }
+
+
 
 
 }

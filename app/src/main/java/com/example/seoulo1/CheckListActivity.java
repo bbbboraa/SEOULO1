@@ -20,7 +20,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
-
 public class CheckListActivity extends AppCompatActivity implements myCheckListAdapter.ListBtnClickListener {
     ArrayList checkList=null;
     ArrayList<PreparationItem> items= new ArrayList<>();

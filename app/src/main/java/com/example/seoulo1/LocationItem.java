@@ -2,16 +2,26 @@ package com.example.seoulo1;
 
 public class LocationItem {
     String category_name;
-    String name;
+    String name, placeId, pNum;
     int distance;
     String vicinity;
-
-    public LocationItem(String name, String category_name, String vicinity, int distance){
+    String open_now, rating;
+    public LocationItem(String placeId, String name, String category_name, String vicinity, int distance, String pNum, String open_now, String rating){
+        this.placeId=placeId;
         this.name=name;
         this.category_name=category_name;
         this.vicinity=vicinity;
         this.distance=distance;
+        this.pNum= pNum;
+        this.open_now= open_now;
+        this.rating= rating;
     }
+    public String getOpen_now() {return open_now;}
+    public String getRating() {return rating;}
+
+    public String getPlaceId() {return placeId;}
+    public String getpNum() {return pNum;}
+
     public String getLName() {
         return name;
     }

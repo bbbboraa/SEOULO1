@@ -22,7 +22,7 @@ public class LocationAdapter extends ArrayAdapter<LocationItem> {
         public TextView category_name;
         public TextView name;
         public TextView distance;
-        public TextView vicinity;
+        public TextView vicinity, open_now, rating;
     }
 
     public LocationAdapter(Context context, List<LocationItem> list, ListView listView) {
@@ -64,9 +64,11 @@ public class LocationAdapter extends ArrayAdapter<LocationItem> {
             viewHolder.name = (TextView) rowView.findViewById(
                     R.id.textview_name // 한 줄에 대한 레이아웃 파일(R.layout.list_item)의 구성요소,
             );
-            viewHolder.category_name = (TextView) rowView.findViewById(R.id.textview_category_name);
+            //viewHolder.category_name = (TextView) rowView.findViewById(R.id.textview_category_name);
             viewHolder.vicinity = (TextView) rowView.findViewById(R.id.textview_vicinity);
             viewHolder.distance = (TextView) rowView.findViewById(R.id.textview_distance);
+            viewHolder.open_now = (TextView) rowView.findViewById(R.id.textview_open_now);
+            viewHolder.rating = (TextView) rowView.findViewById(R.id.textview_rating);
 
             rowView.setTag(viewHolder);
 
@@ -87,11 +89,13 @@ public class LocationAdapter extends ArrayAdapter<LocationItem> {
         LocationItem locationItem = (LocationItem) mList.get(position);
         //현재 선택된 Vocal 객체를 화면에 보여주기 위해서 앞에서 미리 찾아 놓은 뷰에 데이터를 집어넣습니다.
         viewHolder.name.setText(locationItem.getLName());
-        viewHolder.category_name.setText(locationItem.getCategory_name());
+        //viewHolder.category_name.setText(locationItem.getCategory_name());
         //viewHolder.itemIndex.setText("Voca[" + position + "]");
         viewHolder.vicinity.setText(locationItem.getVicinity());
         String dis=locationItem.getDistance() + "m";
         viewHolder.distance.setText(dis);
+        viewHolder.open_now.setText(locationItem.getOpen_now());
+        viewHolder.rating.setText(locationItem.getRating());
         this.notifyDataSetChanged();
 
         Log.d("@@@", "locationitem[" + position + "]" + " row view is " + Status + ", tag = " + tag);
