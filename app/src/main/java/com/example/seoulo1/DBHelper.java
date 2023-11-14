@@ -32,6 +32,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(createQuery);
+        sqLiteDatabase.execSQL(createFavoritesQuery); // 추가된 부분
     }
 
     //    데이터베이스 업데이트
@@ -109,4 +110,73 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return all_item_db;
     }
+
+
+    private final String FAVORITES_TABLE = "favorites_table";
+    private final String FAVORITES_ID = "favorites_id";
+    private final String FAVORITES_CATEGORY_NAME = "favorites_category_name";
+    private final String FAVORITES_NAME = "favorites_name";
+    private final String FAVORITES_PLACEID = "favorites_placeId";
+    private final String FAVORITES_PNUM = "favorites_pNum";
+    private final String FAVORITES_DISTANCE = "favorites_distance";
+    private final String FAVORITES_VICINITY = "favorites_vicinity";
+    private final String FAVORITES_OPENNOW = "favorites_open_now";
+    private final String FAVORITES_RATING = "favorites_rating";
+    private final String FAVORITES_LAT = "favorites_lat";
+    private final String FAVORITES_LNG = "favorites_lng";
+
+    private final String createFavoritesQuery = "CREATE TABLE IF NOT EXISTS " + FAVORITES_TABLE + "(" +
+            FAVORITES_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            FAVORITES_CATEGORY_NAME + " TEXT, " +
+            FAVORITES_NAME + " TEXT," + FAVORITES_PLACEID + " TEXT, "+
+            FAVORITES_PNUM + " TEXT," +
+            FAVORITES_DISTANCE + " INTEGER DEFAULT 0, " +
+            FAVORITES_VICINITY + " TEXT, "+
+            FAVORITES_OPENNOW + " TEXT, "+
+            FAVORITES_RATING + " TEXT, "+FAVORITES_LAT + " DOUBLE DEFAULT 0, "+ FAVORITES_LNG + " DOUBLE DEFAULT 0) " ;
+
+
+    // 추가된 메서드
+    public void insertFavorite(String favorites_category_name, String favorites_name, String favorites_placeId, String favorites_pNum, int favorites_distance, String favorites_vicinity, String favorites_open_now, String favorites_rating, Double favorites_lat, Double favorites_lng) {
+        ContentValues contentValues = new ContentValues();
+        SQLiteDatabase db = getWritableDatabase();
+        contentValues.put(FAVORITES_CATEGORY_NAME, favorites_category_name);
+        contentValues.put(FAVORITES_NAME, favorites_name);
+        contentValues.put(FAVORITES_PLACEID, favorites_placeId);
+        contentValues.put(FAVORITES_PNUM, favorites_pNum);
+        contentValues.put(FAVORITES_DISTANCE, favorites_distance);
+        contentValues.put(FAVORITES_VICINITY, favorites_vicinity);
+        contentValues.put(FAVORITES_OPENNOW, favorites_open_now);
+        contentValues.put(FAVORITES_RATING, favorites_rating);
+        contentValues.put(FAVORITES_LAT, favorites_lat);
+        contentValues.put(FAVORITES_LNG, favorites_lng);
+
+        db.insert(FAVORITES_TABLE, null, contentValues);
+    }
+
+    // 추가된 메서드
+    public ArrayList<LocationItem> selectAllFavorites() {
+        ArrayList<LocationItem> allFavorites = new ArrayList<>();
+        Cursor c = getWritableDatabase().rawQuery("select * from " + FAVORITES_TABLE, null);
+        if (c != null && c.moveToFirst()) {
+            do {
+                @SuppressLint("Range") String favorites_category_name= c.getString(c.getColumnIndex(FAVORITES_CATEGORY_NAME));;
+                @SuppressLint("Range") String favorites_name= c.getString(c.getColumnIndex(FAVORITES_CATEGORY_NAME));
+                @SuppressLint("Range") String favorites_placeId= c.getString(c.getColumnIndex(FAVORITES_PLACEID));
+                @SuppressLint("Range") String favorites_pNum= c.getString(c.getColumnIndex(FAVORITES_PNUM));
+                @SuppressLint("Range") int favorites_distance= c.getInt(c.getColumnIndex(FAVORITES_DISTANCE));
+                @SuppressLint("Range") String favorites_vicinity= c.getString(c.getColumnIndex(FAVORITES_VICINITY));
+                @SuppressLint("Range") String favorites_open_now= c.getString(c.getColumnIndex(FAVORITES_OPENNOW));
+                @SuppressLint("Range") String favorites_rating= c.getString(c.getColumnIndex(FAVORITES_RATING));
+                @SuppressLint("Range") double favorites_lat= c.getDouble(c.getColumnIndex(FAVORITES_LAT));
+                @SuppressLint("Range") double favorites_lng= c.getDouble(c.getColumnIndex(FAVORITES_LNG));
+                Log.d(TAG, favorites_name + "///select all favorites////" + favorites_open_now);
+
+                allFavorites.add(new LocationItem(favorites_placeId, favorites_name, favorites_category_name,favorites_vicinity, favorites_distance, favorites_pNum, favorites_open_now, favorites_rating, favorites_lat, favorites_lng));
+
+            } while (c.moveToNext());
+        }
+        return allFavorites;
+    }
+
 }

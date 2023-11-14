@@ -15,17 +15,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.io.BufferedReader;
@@ -33,7 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class LocalHotplaceActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -162,7 +157,7 @@ public class LocalHotplaceActivity extends FragmentActivity implements OnMapRead
 
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                getLatLngFromAddress(line, fileName);
+                //학교getLatLngFromAddress(line, fileName);
             }
 
             bufferedReader.close();
@@ -173,40 +168,40 @@ public class LocalHotplaceActivity extends FragmentActivity implements OnMapRead
     }
 
     // getLatLngFromAddress 메소드 내부에서 마커를 추가할 때 마커에 정보를 추가합니다.
-    private void getLatLngFromAddress(String address, String fileName) {
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.LAT_LNG, Place.Field.NAME, Place.Field.ADDRESS);
-
-        FetchPlaceRequest request = FetchPlaceRequest.builder(address, placeFields).build();
-        placesClient.fetchPlace(request)
-                .addOnSuccessListener((response) -> {
-                    Place place = response.getPlace();
-                    LatLng location = place.getLatLng();
-
-                    if (location != null) {
-                        // 서울 강서구에 속하는지 확인
-                        if (isInGangseoGu(location)) {
-                            // 마커 추가
-                            MarkerOptions markerOptions = new MarkerOptions()
-                                    .position(location)
-                                    .title(place.getName()) // 장소명을 마커의 제목으로 설정
-                                    .snippet(place.getAddress()); // 주소를 마커의 부제목으로 설정
-                            mMap.addMarker(markerOptions);
-
-                            // 카메라 이동
-                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(location, 15);
-                            mMap.animateCamera(cameraUpdate);
-                        }
-                    }
-                })
-                .addOnFailureListener((exception) -> {
-                    if (exception instanceof ApiException) {
-                        ApiException apiException = (ApiException) exception;
-                        int statusCode = apiException.getStatusCode();
-                        Log.e("Geocoding", "Place not found: " + exception.getMessage());
-                        Toast.makeText(this, "장소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
+//    private void getLatLngFromAddress(String address, String fileName) {
+//        List<Place.Field> placeFields = Arrays.asList(Place.Field.LAT_LNG, Place.Field.NAME, Place.Field.ADDRESS);
+//
+//        FetchPlaceRequest request = FetchPlaceRequest.builder(address, placeFields).build();
+//        placesClient.fetchPlace(request)
+//                .addOnSuccessListener((response) -> {
+//                    Place place = response.getPlace();
+//                    LatLng location = place.getLatLng();
+//
+//                    if (location != null) {
+//                        // 서울 강서구에 속하는지 확인
+//                        if (isInGangseoGu(location)) {
+//                            // 마커 추가
+//                            MarkerOptions markerOptions = new MarkerOptions()
+//                                    .position(location)
+//                                    .title(place.getName()) // 장소명을 마커의 제목으로 설정
+//                                    .snippet(place.getAddress()); // 주소를 마커의 부제목으로 설정
+//                            mMap.addMarker(markerOptions);
+//
+//                            // 카메라 이동
+//                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(location, 15);
+//                            mMap.animateCamera(cameraUpdate);
+//                        }
+//                    }
+//                })
+//                .addOnFailureListener((exception) -> {
+//                    if (exception instanceof ApiException) {
+//                        ApiException apiException = (ApiException) exception;
+//                        int statusCode = apiException.getStatusCode();
+//                        Log.e("Geocoding", "Place not found: " + exception.getMessage());
+//                        Toast.makeText(this, "장소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
 
     private boolean isInGangseoGu(LatLng location) {
         // 강서구의 경계 좌표를 정의합니다. 예를 들어 강서구의 서쪽 경계 좌표와 동쪽 경계 좌표를 사용합니다.

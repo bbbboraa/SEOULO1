@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,7 +13,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
@@ -50,19 +50,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.maps.android.SphericalUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -71,76 +60,84 @@ import noman.googleplaces.Place;
 import noman.googleplaces.PlacesException;
 import noman.googleplaces.PlacesListener;
 
-public class MyLocationActivity extends AppCompatActivity implements
+public class LikeActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         ActivityCompat.OnRequestPermissionsResultCallback,
-        PlacesListener, GoogleMap.OnMarkerClickListener, myLocationAdapter.ListBtnClickListener {
-
-    private GoogleMap mMap;
+        PlacesListener, GoogleMap.OnMarkerClickListener, LikeAdapter.LikeListBtnClickListener{
+    private ListView likeListView;
     static final String DB_NAME = "Like.db";
-    private ImageButton like_btn, menu_btn,my_location_btn, list_location, button_sort;
-    private ImageView like;
-    private boolean isImage1 = true;
-
+    SQLiteDatabase db;
+    private GoogleMap mMap;
+    List<Marker> previous_marker = null;
     ArrayList<Double> lat_list;
     ArrayList<Double> lng_list;
     ArrayList<Integer> distance_list;
     ArrayList<String> name_list, placeId_list, vicinity_list, pNum_list, open_now_list, rating_list;
 
     ArrayList<Marker> markers_list;
-
-    String[] category_name_array={"맛집", "카페", "편의점","쇼핑","관광/문화"};
+    private Location location;
+    Location mCurrentLocation;
+    LatLng currentPosition;
     String[][] category_value_array={{"restaurant", "bar", "meal_delivery", "meal_takeaway"}, {"cafe", "bakery"}, {"convenience_store"},{"department_store", "jewelry_store", "clothing_store", "liquor_store", "shoe_store", "shopping_mall"}, {"tourist_attraction","amusement_park", "park","museum", "art_gallery", "aquarium", "movie_theater", "stadium", "zoo", "movie_rental", "casino", "stadium", "city_hall"} };
-    final List<LocationItem> locationItem = new ArrayList<>();
 
     private Button button_restaurant, button_cafe, button_cvstore, button_shopping, button_sights;
     private Marker currentMarker = null;
+    private ImageButton menu_btn,my_location_btn, list_location;
+    private ImageView like;
+    private boolean isImage1 = true;
 
-    public static final String TABLE_NAME = "Location";
-    SQLiteDatabase db;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private LocationRequest locationRequest;
+    private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
+    final List<LocationItem> locationItem = new ArrayList<>();
     private static final String TAG = "googlemap_example";
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
-    private static final int UPDATE_INTERVAL_MS = 1000;  // 1초
-    private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
-
-    // onRequestPermissionsResult에서 수신된 결과에서 ActivityCompat.requestPermissions를 사용한 퍼미션 요청을 구별하기 위해 사용됩니다.
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     boolean needRequest = false;
     // 앱을 실행하기 위해 필요한 퍼미션을 정의합니다.
     String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};  // 외부 저장소
+    private DBHelper dbHelper;
 
 
-    Location mCurrentLocation;
-    LatLng currentPosition;
-    private FusedLocationProviderClient mFusedLocationClient;
-    private LocationRequest locationRequest;
-    private Location location;
+    static final String TABLE_NAME = "favorites_table";
+    private final String FAVORITES_ID = "favorites_id";
+    private final String FAVORITES_CATEGORY_NAME = "favorites_category_name";
+    private final String FAVORITES_NAME = "favorites_name";
+    private final String FAVORITES_PLACEID = "favorites_placeId";
+    private final String FAVORITES_PNUM = "favorites_pNum";
+    private final String FAVORITES_DISTANCE = "favorites_distance";
+    private final String FAVORITES_VICINITY = "favorites_vicinity";
+    private final String FAVORITES_OPENNOW = "favorites_open_now";
+    private final String FAVORITES_RATING = "favorites_rating";
+    private final String FAVORITES_LAT = "favorites_lat";
+    private final String FAVORITES_LNG = "favorites_lng";
 
-    myLocationAdapter adapter;
-    private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
-    // (참고로 Toast에서는 Context가 필요했습니다.)
 
-    List<Marker> previous_marker = null;
+    LikeAdapter adapter;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_location);
+        setContentView(R.layout.activity_like);
 
-        final ListView listView = findViewById(R.id.listView);
-        adapter=new myLocationAdapter(this, R.layout.list_view_items, locationItem, this, listView);
-        listView.setAdapter(adapter);
+        likeListView = findViewById(R.id.likeListView);
+        adapter=new LikeAdapter(this, 0, locationItem, this, likeListView);
+        likeListView.setAdapter(adapter);
         db=openOrCreateDatabase(DB_NAME, MODE_PRIVATE, null);
+        dbHelper=new DBHelper(this);
+        db=dbHelper.getReadableDatabase();
+        ArrayList<LocationItem> favorites = dbHelper.selectAllFavorites();
+
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map_my_location);
+                .findFragmentById(R.id.map_like);
         //assert mapFragment != null;
         assert mapFragment != null;
-        mapFragment.getMapAsync(this);
+        mapFragment.getMapAsync((OnMapReadyCallback) this);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        mLayout = findViewById(R.id.layout_my_location);
-
+        mLayout = findViewById(R.id.layout_like);
 
         locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100)
                 .setWaitForAccurateLocation(false)
@@ -156,17 +153,6 @@ public class MyLocationActivity extends AppCompatActivity implements
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         previous_marker = new ArrayList<>();
-        lat_list= new ArrayList<>();
-        lng_list= new ArrayList<>();
-        name_list= new ArrayList<>();
-        vicinity_list= new ArrayList<>();
-        distance_list= new ArrayList<>();
-        markers_list=new ArrayList<>();
-        placeId_list=new ArrayList<>();
-        pNum_list = new ArrayList<>();
-        open_now_list = new ArrayList<>();
-        rating_list = new ArrayList<>();
-
 
         button_restaurant = findViewById(R.id.button_restaurant);
         button_restaurant.setOnClickListener(v -> {
@@ -183,22 +169,17 @@ public class MyLocationActivity extends AppCompatActivity implements
             for(j=0; j< category_value_array[i].length;j++ ){
                 type[0][j]=category_value_array[i][j];
             }
-            // 주변 정보를 가져온다
-            for (int k=0; k<j; k++) {
-                getNearbyPlace(type[0][k]);
-
+            ArrayList<LocationItem> filteredFavorites = new ArrayList<>();
+            for(int k = 0; k<j ; k++){
+                //filterFavoritesByCategory(type[0][k]);
+                Log.d(TAG, type[0][k] + "onCreate: ");
+                showMarkerByCategory(type[0][k]);
             }
-            lat_list.clear();
-            lng_list.clear();
-            name_list.clear();
-            vicinity_list.clear();
-            distance_list.clear();
-            placeId_list.clear();
-            pNum_list.clear();
-            locationItem.clear();
-            open_now_list.clear();
-            rating_list.clear();
 
+            //myLocationAdapter adapter = new myLocationAdapter(this, 0, filteredFavorites, this, likeListView);
+            //likeListView.setAdapter(adapter);
+            //adapter.notifyDataSetChanged();
+            // 주변 정보를 가져온다
         });
 
         button_cafe = findViewById(R.id.button_cafe);
@@ -216,21 +197,11 @@ public class MyLocationActivity extends AppCompatActivity implements
             for(j=0; j< category_value_array[i].length;j++ ){
                 type[0][j]=category_value_array[i][j];
             }
-            // 주변 정보를 가져온다
-            for (int k=0; k<j; k++) {
-                getNearbyPlace(type[0][k]);
-
+            for(int k = 0; k<j ; k++){
+                //filterFavoritesByCategory(type[0][k]);
+                Log.d(TAG, type[0][k] + "onCreate: ");
+                showMarkerByCategory(type[0][k]);
             }
-            lat_list.clear();
-            lng_list.clear();
-            placeId_list.clear();
-            name_list.clear();
-            vicinity_list.clear();
-            distance_list.clear();
-            pNum_list.clear();
-            open_now_list.clear();
-            rating_list.clear();
-            locationItem.clear();
         });
 
         button_cvstore = findViewById(R.id.button_cvstore);
@@ -248,21 +219,11 @@ public class MyLocationActivity extends AppCompatActivity implements
             for(j=0; j< category_value_array[i].length;j++ ){
                 type[0][j]=category_value_array[i][j];
             }
-            // 주변 정보를 가져온다
-            for (int k=0; k<j; k++) {
-                getNearbyPlace(type[0][k]);
-
+            for(int k = 0; k<j ; k++){
+                //filterFavoritesByCategory(type[0][k]);
+                Log.d(TAG, type[0][k] + "onCreate: ");
+                showMarkerByCategory(type[0][k]);
             }
-            lat_list.clear();
-            placeId_list.clear();
-            lng_list.clear();
-            name_list.clear();
-            vicinity_list.clear();
-            distance_list.clear();
-            pNum_list.clear();
-            locationItem.clear();
-            open_now_list.clear();
-            rating_list.clear();
 
         });
 
@@ -281,22 +242,11 @@ public class MyLocationActivity extends AppCompatActivity implements
             for(j=0; j< category_value_array[i].length;j++ ){
                 type[0][j]=category_value_array[i][j];
             }
-            // 주변 정보를 가져온다
-            for (int k=0; k<j; k++) {
-                getNearbyPlace(type[0][k]);
-
+            for(int k = 0; k<j ; k++){
+                //filterFavoritesByCategory(type[0][k]);
+                Log.d(TAG, type[0][k] + "onCreate: ");
+                showMarkerByCategory(type[0][k]);
             }
-            lat_list.clear();
-            lng_list.clear();
-            placeId_list.clear();
-            name_list.clear();
-            vicinity_list.clear();
-            distance_list.clear();
-            pNum_list.clear();
-            locationItem.clear();
-            open_now_list.clear();
-            rating_list.clear();
-
         });
 
         button_sights = findViewById(R.id.button_sights);
@@ -314,89 +264,39 @@ public class MyLocationActivity extends AppCompatActivity implements
             for(j=0; j< category_value_array[i].length;j++ ){
                 type[0][j]=category_value_array[i][j];
             }
-            // 주변 정보를 가져온다
-            for (int k=0; k<j; k++) {
-                getNearbyPlace(type[0][k]);
-
+            for(int k = 0; k<j ; k++){
+                //filterFavoritesByCategory(type[0][k]);
+                Log.d(TAG, type[0][k] + "onCreate: ");
+                showMarkerByCategory(type[0][k]);
             }
-            lat_list.clear();
-            lng_list.clear();
-            placeId_list.clear();
-            name_list.clear();
-            vicinity_list.clear();
-            distance_list.clear();
-            pNum_list.clear();
-            locationItem.clear();open_now_list.clear();
-            rating_list.clear();
-
         });
 
-
-        like_btn = findViewById(R.id.like_btn);
-        like_btn.setOnClickListener(view ->{
-            Intent intent5 = new Intent(MyLocationActivity.this, LikeActivity.class);
-            startActivity(intent5);
-        });
 
         list_location = findViewById(R.id.list_location);
         list_location.setOnClickListener(v ->{
-            SlidingUpPanelLayout layout_my_location;
-            layout_my_location=findViewById(R.id.layout_my_location);
-            if(layout_my_location.getPanelState()== SlidingUpPanelLayout.PanelState.EXPANDED){
-                layout_my_location.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            SlidingUpPanelLayout layout_like;
+            layout_like=findViewById(R.id.layout_like);
+            if(layout_like.getPanelState()== SlidingUpPanelLayout.PanelState.EXPANDED){
+                layout_like.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }else{
-                layout_my_location.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);}
+                layout_like.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);}
             //showCategoryList();
         });
 
         my_location_btn = findViewById(R.id.my_location_btn);
         my_location_btn.setOnClickListener(v -> {
-            Intent intent1 = new Intent(MyLocationActivity.this, MyLocationActivity.class);
+            Intent intent1 = new Intent(LikeActivity.this, MyLocationActivity.class);
             intent1.addFlags (Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent1);
         });
 
-        button_sort = findViewById(R.id.button_sort);
-        button_sort.setOnClickListener(view->{
-            PopupMenu popup= new PopupMenu(MyLocationActivity.this, view); //두 번째 파라미터가 팝업메뉴가 붙을 뷰
-            //PopupMenu popup= new PopupMenu(MainActivity.this, btn2); //첫번째 버튼을 눌렀지만 팝업메뉴는 btn2에 붙어서 나타남
-            getMenuInflater().inflate(R.menu.popup_sort, popup.getMenu());
 
-            //팝업메뉴의 메뉴아이템을 선택하는 것을 듣는 리스너 객체 생성 및 설정
-            popup.setOnMenuItemClickListener(menuItem -> {
-
-                switch (menuItem.getItemId()){
-                    case R.id.menu_rating:
-                        Collections.sort(locationItem, Collections.reverseOrder(Comparator.comparingDouble(o -> {
-                            if (o.rating != null && !o.rating.isEmpty()) {
-                                return Double.parseDouble(o.rating);
-                            } else {
-                                return -1;
-                            }
-                        })));
-                        break;
-
-                    case R.id.menu_distance:
-                        Collections.sort(locationItem, Comparator.comparingInt(o -> o.distance));
-                        break;
-                }
-                //final ListView listView = findViewById(R.id.listView);
-                showMarker();
-                final myLocationAdapter adapter=new myLocationAdapter(this,0, locationItem,this, listView);
-                listView.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-
-                //return false;
-                return false;
-            });
-            popup.show();
-        });
 
         menu_btn = findViewById(R.id.menu_btn);
         menu_btn.setOnClickListener(view -> {
 
             //PopupMenu 객체 생성
-            PopupMenu popup= new PopupMenu(MyLocationActivity.this, view); //두 번째 파라미터가 팝업메뉴가 붙을 뷰
+            PopupMenu popup= new PopupMenu(LikeActivity.this, view); //두 번째 파라미터가 팝업메뉴가 붙을 뷰
             //PopupMenu popup= new PopupMenu(MainActivity.this, btn2); //첫번째 버튼을 눌렀지만 팝업메뉴는 btn2에 붙어서 나타남
             getMenuInflater().inflate(R.menu.popup, popup.getMenu());
 
@@ -405,31 +305,31 @@ public class MyLocationActivity extends AppCompatActivity implements
 
                 switch (menuItem.getItemId()){
                     case R.id.menu_my_location:
-                        Intent intent1 = new Intent(MyLocationActivity.this, MyLocationActivity.class);
+                        Intent intent1 = new Intent(LikeActivity.this, MyLocationActivity.class);
                         startActivity(intent1);
                         break;
 
                     case R.id.menu_hot_place:
-                        Intent intent2 = new Intent(MyLocationActivity.this, LocalSelectActivity.class);
+                        Intent intent2 = new Intent(LikeActivity.this, LocalSelectActivity.class);
                         startActivity(intent2);
                         break;
 
                     case R.id.menu_route:
-                        Intent intent3 = new Intent(MyLocationActivity.this, CalendarActivity.class);
+                        Intent intent3 = new Intent(LikeActivity.this, CalendarActivity.class);
                         startActivity(intent3);
                         break;
                     case R.id.menu_checklist:
-                        Intent intent4 = new Intent(MyLocationActivity.this, CheckListActivity.class);
+                        Intent intent4 = new Intent(LikeActivity.this, CheckListActivity.class);
                         startActivity(intent4);
                         break;
                     case R.id.menu_travel_log:
-                        Intent intent5 = new Intent(MyLocationActivity.this, PlanActivity.class);
+                        Intent intent5 = new Intent(LikeActivity.this, PlanActivity.class);
                         startActivity(intent5);
                         break;
                     case R.id.menu_expense_graph:
                         break;
                     case R.id.menu_mypage:
-                        Intent intent7 = new Intent(MyLocationActivity.this, MypageActivity.class);
+                        Intent intent7 = new Intent(LikeActivity.this, MypageActivity.class);
                         startActivity(intent7);
                         break;
                 }
@@ -439,248 +339,129 @@ public class MyLocationActivity extends AppCompatActivity implements
             popup.show();
         });
 
-    }
-
-    //주변 정보 가져오기
-    public void getNearbyPlace(String type_keyword){
-        NetworkThread thread=new NetworkThread(type_keyword);
-        thread.start();
-
-    }
-    class NetworkThread extends Thread{
-
-        String type_keyword;
-        public NetworkThread(String type_keyword){
-            this.type_keyword=type_keyword;
-        }
-        @Override
-        public void run() {
-            try{
-                //데이터를 담아놓을 리스트를 초기화한다.
-                //밑에 위도 경도에 원래 이거 넣기 mCurrentLocation.getLatitude()
-                // 접속할 페이지 주소
-                String site="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+37.56+","
-                        +126.97
-                        +"&radius=2000&sensor=false&language=ko"
-                        +"&key=AIzaSyC4KSNnjRcOOrDmEnkPbiRsBJ8X2czcesY";
-                if(type_keyword!=null && type_keyword.equals("all")==false){
-                    site+="&types="+type_keyword;
-                    Log.d(TAG, " 장소 항목 누름 !!!!!!!!!! if 들어옴"+ type_keyword);
-
-                }
-                // 접속
-                URL url=new URL(site);
-                Log.d(TAG, site  +" 여기 site 주소");
-                URLConnection conn=url.openConnection();
-                // 스트림 추출
-                InputStream is=conn.getInputStream();
-                InputStreamReader isr =new InputStreamReader(is,"utf-8");
-                BufferedReader br=new BufferedReader(isr);
-                String str=null;
-                StringBuffer buf=new StringBuffer();
-                // 읽어온다
-                do{
-                    str=br.readLine();
-                    if(str!=null){
-                        buf.append(str);
-                    }
-                }while(str!=null);
-                String rec_data=buf.toString();
-                // JSON 데이터 분석
-                JSONObject root=new JSONObject(rec_data);
-                //status 값을 추출한다.
-                String status=root.getString("status");
-                // 가져온 값이 있을 경우에 지도에 표시한다.
-                if(status.equals("OK")){
-                    //results 배열을 가져온다
-                    JSONArray results=root.getJSONArray("results");
-                    // 개수만큼 반복한다.
-                    for(int i=0; i<results.length() ; i++){
-                        // 객체를 추출한다.(장소하나의 정보)
-                        JSONObject obj1=results.getJSONObject(i);
-                        // 위도 경도 추출
-                        JSONObject geometry=obj1.getJSONObject("geometry");
-                        JSONObject location=geometry.getJSONObject("location");
-                        double lat=location.getDouble("lat");
-                        double lng=location.getDouble("lng");
-                        // 장소 이름 추출
-                        String name=obj1.getString("name");
-                        // 대략적인 주소 추출
-                        String vicinity=obj1.getString("vicinity");
-                        currentPosition= new LatLng(37.56, 126.97);   //현재 위치로 임의 설정, gps 쓸 시 주석처리
-                        LatLng obj1Position = new LatLng(lat, lng);
-                        double distance = SphericalUtil.computeDistanceBetween(currentPosition, obj1Position);
-                        String placeId = obj1.getString("place_id");
-                        Log.d(TAG, placeId + "place id %%%%%%%%");
-                        // 데이터를 담는다.
-//                        lat_list.add(lat);
-//                        lng_list.add(lng);
-//                        name_list.add(name);
-//                        vicinity_list.add(vicinity);
-//                        distance_list.add((int)distance);
-                        placeId_list.add(placeId);
-                        getPlaceDetails(placeId);
-                       // locationItem.add(new LocationItem(placeId, name, type_keyword,vicinity, (int) distance));
-                        //Log.d(TAG, "typekeyword !!!!!!!!!!!!!!!!!!======="+ type_keyword);
-
-                    }
-//                    for(int i=0; i<results.length() ; i++){
-//                        getPlaceDetails(placeId_list.get(i));
-//                    }
-                    //showMarker();
-
-                }
-                else{
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run()
-                        {
-                            //Toast.makeText(getApplicationContext(),"가져온 데이터가 없습니다.",Toast.LENGTH_LONG).show();
-                        }
-                    }, 0);
-                }
-
-            }catch (Exception e){e.printStackTrace();}
-        }
 
 
-
-        private void getPlaceDetails(String placeId) throws IOException, JSONException {
-            String site2 = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&key=" + "AIzaSyC4KSNnjRcOOrDmEnkPbiRsBJ8X2czcesY";
-            Log.d(TAG, site2  +" 여기 site 주소");
-            URL url2=new URL(site2);
-            URLConnection conn=url2.openConnection();
-            // 스트림 추출
-            InputStream is=conn.getInputStream();
-            InputStreamReader isr =new InputStreamReader(is,"utf-8");
-            BufferedReader br=new BufferedReader(isr);
-            String str=null;
-            StringBuffer buf=new StringBuffer();
-            // 읽어온다
-            do{
-                str=br.readLine();
-                if(str!=null){
-                    buf.append(str);
-                }
-            }while(str!=null);
-            String rec_data=buf.toString();
-            Log.d(TAG, "111111111111111 getPlaceDetails: " + rec_data);
-            // JSON 데이터 분석
-            JSONObject root=new JSONObject(rec_data);
-            //status 값을 추출한다.
-            String status=root.getString("status");
-            Log.d(TAG, "2222222 getPlaceDetails: " + status);
-
-            // 가져온 값이 있을 경우에 지도에 표시한다.
-            if(status.equals("OK")){
-                //results 배열을 가져온다
-                JSONObject result=root.getJSONObject("result");
-                double lat = result.getJSONObject("geometry").getJSONObject("location").getDouble("lat");
-                double lng = result.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
-                String name = result.getString("name");
-                String vicinity = result.getString("vicinity");
-                String pNum = result.optString("formatted_phone_number", ""); // formatted_phone_number가 없을 경우 빈 문자열 반환
-                String open_now;
-                if (result.has("current_opening_hours")) {
-                    JSONObject openingHours = result.getJSONObject("current_opening_hours");
-                    if (openingHours.has("open_now")) {
-                        if (openingHours.getBoolean("open_now")) {
-                            open_now = "영업 중";
-                        } else {
-                            open_now = "영업 종료";
-                        }
-                    } else {
-                        open_now = ""; // "open_now" 키가 없는 경우
-                    }
-                } else {
-                    open_now = ""; // "current_opening_hours" 키가 없는 경우
-                }
-                String rating;
-                if (result.has("rating")) {
-                    rating = String.valueOf(result.getDouble("rating"));
-                } else {
-                    rating = ""; // "rating" 키가 없는 경우
-                }
-                currentPosition= new LatLng(37.56, 126.97);   //현재 위치로 임의 설정, gps 쓸 시 주석처리
-                LatLng obj1Position = new LatLng(lat, lng);
-                double distance = SphericalUtil.computeDistanceBetween(currentPosition, obj1Position);
-                    // 데이터를 담는다.
-                    lat_list.add(lat);
-                    lng_list.add(lng);
-                    name_list.add(name);
-                    vicinity_list.add(vicinity);
-                    distance_list.add((int)distance);
-                    open_now_list.add(open_now);
-                    rating_list.add(rating);
-                    pNum_list.add(pNum);
-                    locationItem.add(new LocationItem(placeId, name, type_keyword,vicinity, (int) distance, pNum, open_now, rating, lat, lng));
-                    Log.d(TAG, "item 추가 !!!!!!!!!!!!!!!!!!=======" + name);
-
-                //}
-                showMarker();
-
-            }
-            else{
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run()
-                    {
-                        Toast.makeText(getApplicationContext(),"가져온 데이터가 없습니다.",Toast.LENGTH_LONG).show();
-                    }
-                }, 0);
-            }
-
-        }
-        //catch (Exception e){e.printStackTrace();}
-
-    }
-
-
-    public void showMarker(){
-        runOnUiThread(() -> {
-            // 지도에 마커를 표시한다.
-            // 지도에 표시되어있는 마커를 모두 제거한다.
-//            for(Marker marker : markers_list){
-//                marker.remove();
+//        Intent intent = getIntent();
+//        if (intent != null && intent.hasExtra("likedLocations")) {
+//            ArrayList<LocationItem> likedLocations = (ArrayList<LocationItem>) intent.getSerializableExtra("likedLocations");
+//
+//            // 받아온 데이터를 리스트뷰에 표시
+//            if (likedLocations != null) {
+//                Log.d(TAG, likedLocations + "likelistview");
+//                LikeAdapter adapter = new LikeAdapter(this, likedLocations);
+//                likeListView.setAdapter(adapter);
 //            }
-//            markers_list.clear();
-            final ListView listView = findViewById(R.id.listView);
-            //Collections.sort(locationItem, Comparator.comparingInt(o -> o.distance));
-            final myLocationAdapter adapter=new myLocationAdapter(this,0, locationItem,this, listView);
-            listView.setAdapter(adapter);
+//        }
+    }
+    private ArrayList<LocationItem> filterFavoritesByCategory(String selectedCategory) {
+        ArrayList<LocationItem> filteredFavorites = new ArrayList<>();
+        db=dbHelper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + FAVORITES_CATEGORY_NAME + " = ?", new String[]{selectedCategory});
+        if (c != null && c.moveToFirst()) {
+            do {
+                @SuppressLint("Range") String favorites_name = c.getString(c.getColumnIndex(FAVORITES_NAME));
+                @SuppressLint("Range") String favorites_placeId = c.getString(c.getColumnIndex(FAVORITES_PLACEID));
+                @SuppressLint("Range") String favorites_pNum = c.getString(c.getColumnIndex(FAVORITES_PNUM));
+                @SuppressLint("Range") int favorites_distance = c.getInt(c.getColumnIndex(FAVORITES_DISTANCE));
+                @SuppressLint("Range") String favorites_vicinity = c.getString(c.getColumnIndex(FAVORITES_VICINITY));
+                @SuppressLint("Range") String favorites_open_now = c.getString(c.getColumnIndex(FAVORITES_OPENNOW));
+                @SuppressLint("Range") String favorites_rating = c.getString(c.getColumnIndex(FAVORITES_RATING));
+                @SuppressLint("Range") double favorites_lat= c.getDouble(c.getColumnIndex(FAVORITES_LAT));
+                @SuppressLint("Range") double favorites_lng= c.getDouble(c.getColumnIndex(FAVORITES_LNG));
+                Log.d(TAG, favorites_name + "///select all favorites////" + favorites_open_now);
+
+                filteredFavorites.add(new LocationItem(favorites_placeId, favorites_name, selectedCategory, favorites_vicinity, favorites_distance, favorites_pNum, favorites_open_now, favorites_rating, favorites_lat, favorites_lng));
+
+            } while (c.moveToNext());
+        }
+        return filteredFavorites;
+    }
+    public void showMarkerByCategory(String category) {
+        runOnUiThread(() -> {
+            final ListView likeListView = findViewById(R.id.likeListView);
+            ArrayList<LocationItem> filteredList = new ArrayList<>();
+
+            // 해당 카테고리에 속하는 데이터만 필터링
+            for (LocationItem item : locationItem) {
+                if (item.getCategory_name().equals(category)) {
+                    Log.d(TAG, item + "   !!!!showMarkerByCategory: ");
+                    filteredList.add(item);
+
+                }
+            }
+
+            final LikeAdapter adapter = new LikeAdapter(this,  0, filteredList,this, likeListView);
+            likeListView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
 
-            // 가져온 데
-            // 이터의 수 만큼 마커 객체를 만들어 표시한다.
-            for(int i= 0 ; i< lat_list.size() ; i++){
+            // 가져온 데이터의 수 만큼 마커 객체를 만들어 표시한다.
+            for (LocationItem item : filteredList) {
                 // 값 추출
-                double lat= lat_list.get(i);
-                double lng=lng_list.get(i);
-                String name=name_list.get(i);
-                String vicinity=vicinity_list.get(i);
-                int distance=distance_list.get(i);
-
+                double lat = item.getLat();
+                double lng = item.getLng();
+                String name = item.getLName();
+                String vicinity = item.getVicinity();
+                int distance = item.getDistance();
 
                 // 생성할 마커의 정보를 가지고 있는 객체를 생성
-                MarkerOptions options=new MarkerOptions();
+                MarkerOptions options = new MarkerOptions();
                 // 위치설정
-                LatLng pos=new LatLng(lat,lng);
+                LatLng pos = new LatLng(lat, lng);
                 options.position(pos);
                 // 말풍선이 표시될 값 설정
                 options.title(name);
-                options.snippet(vicinity+ "  여기서 "+distance+"m");
+                options.snippet(vicinity + "  여기서 " + distance + "m");
                 @SuppressLint("UseCompatLoadingForDrawables")
-                BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.mapmarkerblue);
-                Bitmap b=bitmapdraw.getBitmap();
+                BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.mapmarkerblue);
+                Bitmap b = bitmapdraw.getBitmap();
                 Bitmap smallMarker = Bitmap.createScaledBitmap(b, 65, 90, false);
                 options.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-                Marker marker=mMap.addMarker(options);
+                Marker marker = mMap.addMarker(options);
                 markers_list.add(marker);
             }
         });
     }
+//    public void showMarker(){
+//        runOnUiThread(() -> {
+//            // 지도에 마커를 표시한다.
+//            // 지도에 표시되어있는 마커를 모두 제거한다.
+////            for(Marker marker : markers_list){
+////                marker.remove();
+////            }
+////            markers_list.clear();
+//            final ListView likeListView = findViewById(R.id.likeListView);
+//            //Collections.sort(locationItem, Comparator.comparingInt(o -> o.distance));
+//            final myLocationAdapter adapter=new myLocationAdapter(this,0, locationItem,this, likeListView);
+//            likeListView.setAdapter(adapter);
+//            adapter.notifyDataSetChanged();
+//            // 가져온 데이터의 수 만큼 마커 객체를 만들어 표시한다.
+//            for(int i= 0 ; i< lat_list.size() ; i++){
+//                // 값 추출
+//                double lat= lat_list.get(i);
+//                double lng=lng_list.get(i);
+//                String name=name_list.get(i);
+//                String vicinity=vicinity_list.get(i);
+//                int distance=distance_list.get(i);
+//
+//
+//                // 생성할 마커의 정보를 가지고 있는 객체를 생성
+//                MarkerOptions options=new MarkerOptions();
+//                // 위치설정
+//                LatLng pos=new LatLng(lat,lng);
+//                options.position(pos);
+//                // 말풍선이 표시될 값 설정
+//                options.title(name);
+//                options.snippet(vicinity+ "  여기서 "+distance+"m");
+//                @SuppressLint("UseCompatLoadingForDrawables")
+//                BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.mapmarkerblue);
+//                Bitmap b=bitmapdraw.getBitmap();
+//                Bitmap smallMarker = Bitmap.createScaledBitmap(b, 65, 90, false);
+//                options.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+//                Marker marker=mMap.addMarker(options);
+//                markers_list.add(marker);
+//            }
+//        });
+//    }
 
 
     @Override
@@ -688,7 +469,7 @@ public class MyLocationActivity extends AppCompatActivity implements
         Log.d(TAG, "onMapReady :");
 
         mMap = googleMap;
-        mMap.setOnMarkerClickListener(this);
+        mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
         //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에
         //지도의 초기위치를 서울로 이동
         setDefaultLocation();
@@ -696,9 +477,9 @@ public class MyLocationActivity extends AppCompatActivity implements
         //런타임 퍼미션 처리
         // 1. 위치 퍼미션을 가지고 있는지 체크합니다.
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
+                android.Manifest.permission.ACCESS_FINE_LOCATION);
         int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION);
+                android.Manifest.permission.ACCESS_COARSE_LOCATION);
 
 
 
@@ -722,7 +503,7 @@ public class MyLocationActivity extends AppCompatActivity implements
                         Snackbar.LENGTH_INDEFINITE).setAction("확인", view -> {
 
                     // 3-3. 사용자게에 퍼미션 요청을 합니다. 요청 결과는 onRequestPermissionResult에서 수신됩니다.
-                    ActivityCompat.requestPermissions( MyLocationActivity.this, REQUIRED_PERMISSIONS,
+                    ActivityCompat.requestPermissions( LikeActivity.this, REQUIRED_PERMISSIONS,
                             PERMISSIONS_REQUEST_CODE);
                 }).show();
 
@@ -748,7 +529,7 @@ public class MyLocationActivity extends AppCompatActivity implements
         currentPosition= new LatLng(37.56, 126.97);   //현재 위치로 임의 설정, gps 쓸 시 주석처리
         double distance = SphericalUtil.computeDistanceBetween(currentPosition, marker.getPosition());
         distance_btn.setOnClickListener(v -> {
-            Toast.makeText(MyLocationActivity.this, (int) distance + "m 남음", Toast.LENGTH_LONG).show();
+            Toast.makeText(LikeActivity.this, (int) distance + "m 남음", Toast.LENGTH_LONG).show();
             Log.d(TAG, "onMarkerClick: 출력완료");
 
         });
@@ -799,9 +580,9 @@ public class MyLocationActivity extends AppCompatActivity implements
         }else {
 
             int hasFineLocationPermission = ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION);
+                    android.Manifest.permission.ACCESS_FINE_LOCATION);
             int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION);
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION);
 
 
 
@@ -878,7 +659,7 @@ public class MyLocationActivity extends AppCompatActivity implements
 
         } catch (IOException ioException) {
             //네트워크 문제
-            //Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
             return "지오코더 서비스 사용불가";
         } catch (IllegalArgumentException illegalArgumentException) {
             Toast.makeText(this, "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
@@ -957,7 +738,7 @@ public class MyLocationActivity extends AppCompatActivity implements
     private boolean checkPermission() {
 
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
+                android.Manifest.permission.ACCESS_FINE_LOCATION);
         int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION);
 
@@ -1026,7 +807,7 @@ public class MyLocationActivity extends AppCompatActivity implements
     //여기부터는 GPS 활성화를 위한 메소드들
     private void showDialogForLocationServiceSetting() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(MyLocationActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(LikeActivity.this);
         builder.setTitle("위치 서비스 비활성화");
         builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n"
                 + "위치 설정을 수정하실래요?");
@@ -1108,7 +889,7 @@ public class MyLocationActivity extends AppCompatActivity implements
 
     @SuppressLint({"NonConstantResourceId", "Range"})
     @Override
-    public void onListButtonClick(int position, int resourceid) {
+    public void onLikeListButtonClick(int position, int resourceid) {
         Log.d(TAG, position + " $$$$$$ 하트 like 누름 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
         switch (resourceid) {
@@ -1120,26 +901,10 @@ public class MyLocationActivity extends AppCompatActivity implements
                 ArrayList<LocationItem> likedLocations = new ArrayList<>();
                 likedLocations.add(selectedLocation);
 
-                DBHelper dbHelper = new DBHelper(this);
-                db = dbHelper.getWritableDatabase();
-                dbHelper.insertFavorite(
-                        selectedLocation.getCategory_name(),
-                        selectedLocation.getLName(),
-                        selectedLocation.getPlaceId(),
-                        selectedLocation.getpNum(),
-                        selectedLocation.getDistance(),
-                        selectedLocation.getVicinity(),
-                        selectedLocation.getOpen_now(),
-                        selectedLocation.getRating(),
-                        selectedLocation.getLat(),
-                        selectedLocation.getLng()
-                );
-                Log.d(TAG, " 즐겨찾기 장소 저장 : " + selectedLocation);
-
                 // LikeActivity 시작
-                //Intent likeIntent = new Intent(this, LikeActivity.class);
-                //likeIntent.putExtra("likedLocations", likedLocations);
-                //startActivity(likeIntent);
+                Intent likeIntent = new Intent(this, LikeActivity.class);
+                likeIntent.putExtra("likedLocations", likedLocations);
+                startActivity(likeIntent);
                 break;
             }
         }
@@ -1147,3 +912,4 @@ public class MyLocationActivity extends AppCompatActivity implements
 
 
 }
+

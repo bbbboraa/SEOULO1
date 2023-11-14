@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/layout_my_location"
+    android:id="@+id/layout_like"
     android:gravity="bottom"
-    tools:context=".MyLocationActivity"
+    tools:context=".LikeActivity"
     tools:ignore="MissingClass"
     app:umanoDragView="@id/dragView"
-    app:umanoScrollableView="@id/listView"
+    app:umanoScrollableView="@id/likeListView"
     app:umanoPanelHeight="80dp"
     app:umanoOverlay="true"
     app:umanoShadowHeight="0dp">
@@ -22,36 +22,19 @@
         android:layout_height="match_parent"
         tools:ignore="MissingClass,UselessParent">
         <fragment
-            android:id="@+id/map_my_location"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.8"
+            android:id="@+id/map_like"
             tools:context=".MapsActivity"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             tools:ignore="MissingConstraints" />
-
-
-        <ImageButton
-            android:id="@+id/like_btn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="end"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/round_background"
-            android:isScrollContainer="true"
-            android:padding="10sp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/like"
-            android:elevation="20dp"
-            tools:ignore="MissingConstraints" />
-
         <ImageButton
             android:id="@+id/menu_btn"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="end"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/round_background"
             android:elevation="20dp"
@@ -59,6 +42,7 @@
             android:scaleType="centerInside"
             android:src="@drawable/baseline_menu_24"
             tools:ignore="MissingConstraints" />
+
         <ImageButton
             android:id="@+id/distance_btn"
             android:layout_width="40dp"
@@ -93,7 +77,6 @@
             android:tintMode="src_in"
             app:tint="#05528F"
             tools:ignore="MissingConstraints" />
-
     </FrameLayout>
 
     <LinearLayout
@@ -115,10 +98,6 @@
             android:layout_marginBottom="10dp"
             android:background="@drawable/round_rectangle"
             android:backgroundTint="#8F8F8F" />
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:orientation = "vertical"
-            android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -128,6 +107,7 @@
             android:padding="7dp"
             android:layout_marginBottom="5dp"
             tools:ignore="MissingClass">
+
             <ImageButton
                 android:id="@+id/list_location"
                 android:layout_width="43dp"
@@ -202,29 +182,12 @@
                 tools:ignore="MissingConstraints" />
         </LinearLayout>
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="wrap_content"
-            android:layout_gravity="end"
-            android:layout_height="wrap_content">
-
-            <ImageButton
-                android:id="@+id/button_sort"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/btn_selector_round"
-                android:scaleType="centerInside"
-                android:src="@drawable/sort" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
-    </androidx.appcompat.widget.LinearLayoutCompat>
         <ListView
-            android:id="@+id/listView"
+            android:id="@+id/likeListView"
             android:layout_width="match_parent"
-            android:layout_height="500dp"
+            android:focusable="true"
             android:clickable="true"
-            android:focusable="true">
-        </ListView>
-
+            android:layout_height="500dp" />
     </LinearLayout>
 
 
