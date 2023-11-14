@@ -46,6 +46,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(SEOUL, 12));
 
         like_btn = findViewById(R.id.like_btn);
+        like_btn.setOnClickListener(view->{
+            Intent intent1 = new Intent(MainActivity.this, LikeActivity.class);
+            startActivity(intent1);
+        });
 
         menu_btn = findViewById(R.id.menu_btn);
         menu_btn.setOnClickListener(view -> {

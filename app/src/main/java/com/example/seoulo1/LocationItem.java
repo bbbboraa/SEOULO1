@@ -1,12 +1,30 @@
 package com.example.seoulo1;
 
-public class LocationItem {
+import java.io.Serializable;
+
+public class LocationItem implements Serializable {
     String category_name;
     String name, placeId, pNum;
     int distance;
     String vicinity;
     String open_now, rating;
-    public LocationItem(String placeId, String name, String category_name, String vicinity, int distance, String pNum, String open_now, String rating){
+    double lat, lng;
+    @Override
+    public String toString() {
+        return "LocationItem{" +
+                "placeId='" + placeId + '\'' +
+                ", name='" + name + '\'' +
+                ", type='" + category_name + '\'' +
+                ", vicinity='" + vicinity + '\'' +
+                ", distance=" + distance +
+                ", phoneNumber='" + pNum + '\'' +
+                ", openNow='" + open_now + '\'' +
+                ", rating='" + rating + '\'' +                ", lat='" + lat + '\'' +                ", lng='" + lng +
+
+
+                '}';
+    }
+    public LocationItem(String placeId, String name, String category_name, String vicinity, int distance, String pNum, String open_now, String rating, double lat, double lng){
         this.placeId=placeId;
         this.name=name;
         this.category_name=category_name;
@@ -15,7 +33,12 @@ public class LocationItem {
         this.pNum= pNum;
         this.open_now= open_now;
         this.rating= rating;
+        this.lat= lat;
+        this.lng= lng;
     }
+    public Double getLat() {return lat;}
+    public Double getLng() {return lng;}
+
     public String getOpen_now() {return open_now;}
     public String getRating() {return rating;}
 
@@ -49,4 +72,8 @@ public class LocationItem {
         this.distance=distance;
     }
 
-}
+    public boolean isLiked() {
+        return true;
+    }
+
+    }
