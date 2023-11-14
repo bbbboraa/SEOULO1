@@ -15,6 +15,8 @@ public class PlaceEntity {
 
     private String address;
 
+    private String category;  // 카테고리 정보 추가
+
     // 생성자, getter, setter 등 필요한 메소드 구현
 
     public int getId() {
@@ -31,5 +33,13 @@ public class PlaceEntity {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

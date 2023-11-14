@@ -8,6 +8,7 @@ import android.webkit.WebViewClient;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -15,13 +16,18 @@ public class SearchActivity extends AppCompatActivity {
     private WebView webView;
     private AppDatabase database;
 
+    private int requestCode; // 추가: 버튼에 대한 요청 코드
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        // 데이터베이스 초기화
-        database = DatabaseInitializer.getDatabase(this);
+        // 데이터베이스 초기화 (한 번만 호출)
+        database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "places-db").build();
+
+        Intent intent = getIntent();
+        requestCode = intent.getIntExtra("requestCode", 0); // 추가: 요청 코드 받아오기
 
         webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -37,20 +43,15 @@ public class SearchActivity extends AppCompatActivity {
 
         // 최초 웹뷰 로드
         webView.loadUrl("https://seoulo-4d3ad.web.app");
+
+
     }
+
 
     private class BridgeInterface {
         @JavascriptInterface
         public void processDATA(String data) {
             // 다음(카카오) 주소 검색 API 결과 값이 브릿지 통로를 통해 전달 받는다. (from Javascript)
-
-            // 주소 정보 생성
-            PlaceEntity place = new PlaceEntity();
-            place.setAddress(data);
-
-            // 주소 정보 저장
-            database.placeDao().insert(place);
-
             Intent intent = new Intent();
             intent.putExtra("data", data);
             setResult(RESULT_OK, intent);
@@ -71,5 +72,4 @@ public class SearchActivity extends AppCompatActivity {
             finish();
         }
     }
-
 }

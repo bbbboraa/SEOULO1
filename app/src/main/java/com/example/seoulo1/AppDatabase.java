@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase;
 // 데이터베이스에 사용할 테이블의 스키마를 정의
 // Room Database에 대한 클래스 생성
 
-@Database(entities = {PlaceEntity.class}, version = 1)
+@Database(entities = {PlaceEntity.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract PlaceDao placeDao();
 }
