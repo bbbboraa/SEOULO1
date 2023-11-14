@@ -8,16 +8,29 @@ import android.webkit.WebViewClient;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 public class SearchActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_ADDR_RESEARCH = 1;
     private WebView webView;
+    private AppDatabase database;
+
+    private int requestCode; // 추가: 버튼에 대한 요청 코드
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        // 데이터베이스 초기화 (한 번만 호출)
+        database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "places-db")
+                .fallbackToDestructiveMigration()
+                .build();
+        //database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "places-db").build();
+
+        Intent intent = getIntent();
+        requestCode = intent.getIntExtra("requestCode", 0); // 추가: 요청 코드 받아오기
 
         webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -33,7 +46,10 @@ public class SearchActivity extends AppCompatActivity {
 
         // 최초 웹뷰 로드
         webView.loadUrl("https://seoulo-4d3ad.web.app");
+
+
     }
+
 
     private class BridgeInterface {
         @JavascriptInterface
@@ -59,5 +75,4 @@ public class SearchActivity extends AppCompatActivity {
             finish();
         }
     }
-
 }

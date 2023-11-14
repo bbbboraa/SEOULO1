@@ -2,6 +2,7 @@ package com.example.seoulo1;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PathListFragment extends Fragment {
     private int position;  // 날짜에 해당하는 위치
@@ -32,6 +35,7 @@ public class PathListFragment extends Fragment {
 
 
     private ImageButton like_btn, menu_btn;
+
 
     // 생성자
     public PathListFragment() {
@@ -58,6 +62,7 @@ public class PathListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             position = getArguments().getInt("position");
             daysDiff = getArguments().getLong("daysDiff");  // 'daysDiff' 값에서 데이터를 가져옴
@@ -188,6 +193,7 @@ public class PathListFragment extends Fragment {
     private void startAddressSearch(int requestCode) {
         Intent intent = new Intent(requireActivity(), AddrResearchActivity.class);
         intent.putExtra("selectDate", daysDiff);
+        intent.putExtra("requestCode", requestCode); // 각 버튼에 대한 요청 코드 추가
         startActivityForResult(intent, requestCode);
     }
 
@@ -256,12 +262,16 @@ public class PathListFragment extends Fragment {
                 }
                 currentDataList.add(address);
                 currentAdapter.notifyItemInserted(currentDataList.size() - 1);
+
+                // 선택한 주소를 카테고리에 맞게 저장
+                saveAddressToDatabase(address, getCategoryByRequestCode(requestCode));
             }
         }
     }
 
     private ArrayList<String> getDataListByRequestCode(int requestCode) {
         switch (requestCode) {
+
             case 1:
                 return rv1DataList;
             case 2:
@@ -294,6 +304,50 @@ public class PathListFragment extends Fragment {
         }
     }
 
+    // 카테고리별 주소 목록을 가져오는 메소드
+    private List<PlaceEntity> getPlacesByCategory(String category) {
+        AppDatabase database = Room.databaseBuilder(requireContext(), AppDatabase.class, "places-db")
+                .fallbackToDestructiveMigration()
+                .build();
+       // AppDatabase database = Room.databaseBuilder(requireContext(), AppDatabase.class, "places-db").build();
+        return database.placeDao().getPlacesByCategory(category);
+    }
 
+        // 주소를 데이터베이스에 저장하는 메서드
+        private void saveAddressToDatabase(String address, String category) {
+            AsyncTask.execute(() -> {
+                AppDatabase database = Room.databaseBuilder(requireContext(), AppDatabase.class, "places-db")
+                        .fallbackToDestructiveMigration()
+                        .build();
+               // AppDatabase database = Room.databaseBuilder(requireContext(), AppDatabase.class, "places-db").build();
+                // PlaceEntity 객체 생성 및 데이터 설정
+                PlaceEntity place = new PlaceEntity();
+                place.setAddress(address);
+                place.setCategory(category);
+                place.setPosition(position);  // 프래그먼트의 위치 정보 설정
+
+                // 데이터베이스에 저장
+                database.placeDao().insert(place);
+            });
+
+    }
+
+    // 각 요청 코드에 따라 카테고리를 반환하는 메서드
+    private String getCategoryByRequestCode(int requestCode) {
+        switch (requestCode) {
+            case 1:
+                return "음식점";
+            case 2:
+                return "카페";
+            case 3:
+                return "쇼핑";
+            case 4:
+                return "문화/관광";
+            case 5:
+                return "숙박";
+            default:
+                return "";
+        }
+    }
 
 }

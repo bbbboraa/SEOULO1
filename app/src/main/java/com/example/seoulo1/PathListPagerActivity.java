@@ -10,6 +10,8 @@ public class PathListPagerActivity extends AppCompatActivity {
     private PathListPagerAdapter pathListPagerAdapter;
     private long daysDiff;
 
+    private int position; // 추가: 프래그먼트의 위치 정보
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,6 +19,8 @@ public class PathListPagerActivity extends AppCompatActivity {
 
         // CalendarActivity에서 전달한 'selectDate' extra 값을 가져옴
         daysDiff = getIntent().getLongExtra("selectDate", 0); // 'selectDate' 값을 가져와 'daysDiff' 변수에 저장
+
+        position = getIntent().getIntExtra("position", 0); // 추가: 'position' 값을 가져옴
 
         viewPager = findViewById(R.id.viewPager);
 
