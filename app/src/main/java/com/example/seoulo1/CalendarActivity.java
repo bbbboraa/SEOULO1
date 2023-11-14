@@ -22,6 +22,8 @@ public class CalendarActivity extends AppCompatActivity {
     private long daysDiff = 0;
     private String[] dateArray;
 
+    private int position = 0; // position 변수를 정의하고 초기값을 설정
+
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -29,6 +31,7 @@ public class CalendarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
 
+        position = getIntent().getIntExtra("position", 0);
 
         //기간 선택
         MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
@@ -71,6 +74,7 @@ public class CalendarActivity extends AppCompatActivity {
                 Intent intent = new Intent(CalendarActivity.this, PathListPagerActivity.class);
                 intent.putExtra("selectDate", daysDiff); // 선택한 날짜 범위의 일 수를 전달
                 intent.putExtra("Date", dateArray); // 선택한 날짜 배열을 전달
+                intent.putExtra("position", position); // 프래그먼트의 위치 정보를 전달
                 startActivity(intent);
                 finish();
             }
