@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -77,7 +78,7 @@ public class MyLocationActivity extends AppCompatActivity implements
         PlacesListener, GoogleMap.OnMarkerClickListener, myLocationAdapter.ListBtnClickListener {
 
     private GoogleMap mMap;
-    static final String DB_NAME = "Like.db";
+    static final String DB_NAME = "Check.db";
     private ImageButton like_btn, menu_btn,my_location_btn, list_location, button_sort;
     private ImageView like;
     private boolean isImage1 = true;
@@ -614,7 +615,7 @@ public class MyLocationActivity extends AppCompatActivity implements
                     open_now_list.add(open_now);
                     rating_list.add(rating);
                     pNum_list.add(pNum);
-                    locationItem.add(new LocationItem(placeId, name, type_keyword,vicinity, (int) distance, pNum, open_now, rating, lat, lng));
+                    locationItem.add(new LocationItem(placeId, name, type_keyword,vicinity, (int) distance, pNum, open_now, rating, lat, lng, false));
                     Log.d(TAG, "item 추가 !!!!!!!!!!!!!!!!!!=======" + name);
 
                 //}
@@ -672,12 +673,24 @@ public class MyLocationActivity extends AppCompatActivity implements
                 options.title(name);
                 options.snippet(vicinity+ "  여기서 "+distance+"m");
                 @SuppressLint("UseCompatLoadingForDrawables")
-                BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.mapmarkerblue);
-                Bitmap b=bitmapdraw.getBitmap();
-                Bitmap smallMarker = Bitmap.createScaledBitmap(b, 65, 90, false);
-                options.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-                Marker marker=mMap.addMarker(options);
-                markers_list.add(marker);
+                //BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.mapmarkerblue);
+                Drawable drawable = ContextCompat.getDrawable(this, R.drawable.mapmarkerblue);
+                if (drawable instanceof BitmapDrawable) {
+                    Bitmap b = ((BitmapDrawable) drawable).getBitmap();
+                    Bitmap smallMarker = Bitmap.createScaledBitmap(b, 65, 90, false);
+                    options.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                    Marker marker=mMap.addMarker(options);
+                    markers_list.add(marker);
+                    // 이제 bitmap을 사용할 수 있습니다.
+                } else {
+                    // BitmapDrawable이 아닌 경우에 대한 처리
+                    Log.d(TAG, "showMarker: errrrrrrrrrrrrrrrrrrrrrrrrrror");
+                }
+                //Bitmap b=bitmapdraw.getBitmap();
+                //Bitmap smallMarker = Bitmap.createScaledBitmap(b, 65, 90, false);
+                //options.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                //Marker marker=mMap.addMarker(options);
+                //markers_list.add(marker);
             }
         });
     }
@@ -1117,11 +1130,15 @@ public class MyLocationActivity extends AppCompatActivity implements
                 Log.d(TAG, position + " $$$$$$ 하트 들어옴 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
                 // LikeActivity로 전달할 데이터 설정
-                ArrayList<LocationItem> likedLocations = new ArrayList<>();
+                List<LocationItem> likedLocations = new ArrayList<>();
                 likedLocations.add(selectedLocation);
+                boolean newStatus = (selectedLocation.getStatus() == false) ? true : false;
+
 
                 DBHelper dbHelper = new DBHelper(this);
                 db = dbHelper.getWritableDatabase();
+                selectedLocation.setStatus(newStatus);
+
                 dbHelper.insertFavorite(
                         selectedLocation.getCategory_name(),
                         selectedLocation.getLName(),
@@ -1132,7 +1149,7 @@ public class MyLocationActivity extends AppCompatActivity implements
                         selectedLocation.getOpen_now(),
                         selectedLocation.getRating(),
                         selectedLocation.getLat(),
-                        selectedLocation.getLng()
+                        selectedLocation.getLng(), newStatus
                 );
                 Log.d(TAG, " 즐겨찾기 장소 저장 : " + selectedLocation);
 

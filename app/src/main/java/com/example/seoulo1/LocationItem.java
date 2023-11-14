@@ -3,12 +3,11 @@ package com.example.seoulo1;
 import java.io.Serializable;
 
 public class LocationItem implements Serializable {
-    String category_name;
-    String name, placeId, pNum;
+    String category_name, name, placeId, pNum;
     int distance;
-    String vicinity;
-    String open_now, rating;
+    String vicinity, open_now, rating;
     double lat, lng;
+    boolean status;
     @Override
     public String toString() {
         return "LocationItem{" +
@@ -19,12 +18,9 @@ public class LocationItem implements Serializable {
                 ", distance=" + distance +
                 ", phoneNumber='" + pNum + '\'' +
                 ", openNow='" + open_now + '\'' +
-                ", rating='" + rating + '\'' +                ", lat='" + lat + '\'' +                ", lng='" + lng +
-
-
-                '}';
+                ", rating='" + rating + '\'' +", lat='" + lat + '\'' +", lng='" + lng + '\''+",status='" + status+ '}';
     }
-    public LocationItem(String placeId, String name, String category_name, String vicinity, int distance, String pNum, String open_now, String rating, double lat, double lng){
+    public LocationItem(String placeId, String name, String category_name, String vicinity, int distance, String pNum, String open_now, String rating, double lat, double lng, boolean status){
         this.placeId=placeId;
         this.name=name;
         this.category_name=category_name;
@@ -35,9 +31,12 @@ public class LocationItem implements Serializable {
         this.rating= rating;
         this.lat= lat;
         this.lng= lng;
+        this.status=status;
     }
     public Double getLat() {return lat;}
     public Double getLng() {return lng;}
+    public Boolean getStatus() {return status;}
+    public void setStatus(boolean status) {this.status = status;}
 
     public String getOpen_now() {return open_now;}
     public String getRating() {return rating;}

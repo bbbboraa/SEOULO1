@@ -79,7 +79,7 @@ public class LikeAdapter extends ArrayAdapter<LocationItem> implements View.OnCl
         holder.distanceTextView.setText(String.valueOf(locationItem.getDistance()));
 
         // "좋아요" 이미지 설정
-        if (locationItem.isLiked()) {
+        if (locationItem.getStatus()) {
             holder.likeImageView.setImageResource(R.drawable.filled_heart);
         } else {
             holder.likeImageView.setImageResource(R.drawable.nonfilled_heart);

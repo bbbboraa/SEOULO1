@@ -52,6 +52,8 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -65,14 +67,10 @@ public class LikeActivity extends AppCompatActivity implements
         ActivityCompat.OnRequestPermissionsResultCallback,
         PlacesListener, GoogleMap.OnMarkerClickListener, LikeAdapter.LikeListBtnClickListener{
     private ListView likeListView;
-    static final String DB_NAME = "Like.db";
+    static final String DB_NAME = "Check.db";
     SQLiteDatabase db;
     private GoogleMap mMap;
     List<Marker> previous_marker = null;
-    ArrayList<Double> lat_list;
-    ArrayList<Double> lng_list;
-    ArrayList<Integer> distance_list;
-    ArrayList<String> name_list, placeId_list, vicinity_list, pNum_list, open_now_list, rating_list;
 
     ArrayList<Marker> markers_list;
     private Location location;
@@ -82,14 +80,15 @@ public class LikeActivity extends AppCompatActivity implements
 
     private Button button_restaurant, button_cafe, button_cvstore, button_shopping, button_sights;
     private Marker currentMarker = null;
-    private ImageButton menu_btn,my_location_btn, list_location;
+    private ImageButton menu_btn,my_location_btn, list_location, button_sort;
     private ImageView like;
     private boolean isImage1 = true;
+    private int category;
 
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
     private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
-    final List<LocationItem> locationItem = new ArrayList<>();
+    final List<LocationItem> filteredFavorites = new ArrayList<>();
     private static final String TAG = "googlemap_example";
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
@@ -111,7 +110,8 @@ public class LikeActivity extends AppCompatActivity implements
     private final String FAVORITES_RATING = "favorites_rating";
     private final String FAVORITES_LAT = "favorites_lat";
     private final String FAVORITES_LNG = "favorites_lng";
-
+    private final String FAVORITES_STATUS = "favorites_status";
+    private List<LocationItem> filteredList = new ArrayList<>();
 
     LikeAdapter adapter;
     @SuppressLint("MissingInflatedId")
@@ -121,13 +121,12 @@ public class LikeActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_like);
 
         likeListView = findViewById(R.id.likeListView);
-        adapter=new LikeAdapter(this, 0, locationItem, this, likeListView);
+        adapter=new LikeAdapter(this, 0, filteredList, this, likeListView);
         likeListView.setAdapter(adapter);
         db=openOrCreateDatabase(DB_NAME, MODE_PRIVATE, null);
         dbHelper=new DBHelper(this);
         db=dbHelper.getReadableDatabase();
-        ArrayList<LocationItem> favorites = dbHelper.selectAllFavorites();
-
+        List<LocationItem> favorites = dbHelper.selectAllFavorites();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_like);
@@ -153,9 +152,11 @@ public class LikeActivity extends AppCompatActivity implements
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         previous_marker = new ArrayList<>();
+        markers_list=new ArrayList<>();
 
         button_restaurant = findViewById(R.id.button_restaurant);
         button_restaurant.setOnClickListener(v -> {
+            Log.d(TAG, "--------@@@@@@@@@@@ ㅔ 버튼 클릭 : ");
             button_restaurant.setSelected(true);
             button_cafe.setSelected(false);
             button_cvstore.setSelected(false);
@@ -167,19 +168,10 @@ public class LikeActivity extends AppCompatActivity implements
             // 사용자가 선택한 항목 인덱스번째의 type 값을 가져온다.
             int j, i=0;
             for(j=0; j< category_value_array[i].length;j++ ){
-                type[0][j]=category_value_array[i][j];
+                Log.d(TAG, category_value_array[i][j] + "onCreate: ");
+                filterFavoritesByCategory(category_value_array[i][j]);
             }
-            ArrayList<LocationItem> filteredFavorites = new ArrayList<>();
-            for(int k = 0; k<j ; k++){
-                //filterFavoritesByCategory(type[0][k]);
-                Log.d(TAG, type[0][k] + "onCreate: ");
-                showMarkerByCategory(type[0][k]);
-            }
-
-            //myLocationAdapter adapter = new myLocationAdapter(this, 0, filteredFavorites, this, likeListView);
-            //likeListView.setAdapter(adapter);
-            //adapter.notifyDataSetChanged();
-            // 주변 정보를 가져온다
+            category=i;filteredList.clear();
         });
 
         button_cafe = findViewById(R.id.button_cafe);
@@ -192,16 +184,13 @@ public class LikeActivity extends AppCompatActivity implements
             //showPlaceInformation_cafe(currentPosition);
             String type[][] = new String[5][5000];
             mMap.clear();//지도 클리어
-            // 사용자가 선택한 항목 인덱스번째의 type 값을 가져온다.
             int j, i=1;
             for(j=0; j< category_value_array[i].length;j++ ){
-                type[0][j]=category_value_array[i][j];
+                Log.d(TAG, category_value_array[i][j] + "onCreate: ");
+                filterFavoritesByCategory(category_value_array[i][j]);
             }
-            for(int k = 0; k<j ; k++){
-                //filterFavoritesByCategory(type[0][k]);
-                Log.d(TAG, type[0][k] + "onCreate: ");
-                showMarkerByCategory(type[0][k]);
-            }
+            category=i;
+            filteredList.clear();
         });
 
         button_cvstore = findViewById(R.id.button_cvstore);
@@ -217,14 +206,11 @@ public class LikeActivity extends AppCompatActivity implements
             // 사용자가 선택한 항목 인덱스번째의 type 값을 가져온다.
             int j, i=2;
             for(j=0; j< category_value_array[i].length;j++ ){
-                type[0][j]=category_value_array[i][j];
+                Log.d(TAG, category_value_array[i][j] + "onCreate: ");
+                filterFavoritesByCategory(category_value_array[i][j]);
             }
-            for(int k = 0; k<j ; k++){
-                //filterFavoritesByCategory(type[0][k]);
-                Log.d(TAG, type[0][k] + "onCreate: ");
-                showMarkerByCategory(type[0][k]);
-            }
-
+            category=i;
+            filteredList.clear();
         });
 
         button_shopping = findViewById(R.id.button_shopping);
@@ -240,13 +226,11 @@ public class LikeActivity extends AppCompatActivity implements
             // 사용자가 선택한 항목 인덱스번째의 type 값을 가져온다.
             int j, i=3;
             for(j=0; j< category_value_array[i].length;j++ ){
-                type[0][j]=category_value_array[i][j];
+                Log.d(TAG, category_value_array[i][j] + "onCreate: ");
+                filterFavoritesByCategory(category_value_array[i][j]);
             }
-            for(int k = 0; k<j ; k++){
-                //filterFavoritesByCategory(type[0][k]);
-                Log.d(TAG, type[0][k] + "onCreate: ");
-                showMarkerByCategory(type[0][k]);
-            }
+            category=i;
+            filteredList.clear();
         });
 
         button_sights = findViewById(R.id.button_sights);
@@ -260,15 +244,13 @@ public class LikeActivity extends AppCompatActivity implements
             String type[][] = new String[5][5000];
             mMap.clear();//지도 클리어
             // 사용자가 선택한 항목 인덱스번째의 type 값을 가져온다.
-            int j, i=4;
+            int j, i=1;
             for(j=0; j< category_value_array[i].length;j++ ){
-                type[0][j]=category_value_array[i][j];
+                Log.d(TAG, category_value_array[i][j] + "onCreate: ");
+                filterFavoritesByCategory(category_value_array[i][j]);
             }
-            for(int k = 0; k<j ; k++){
-                //filterFavoritesByCategory(type[0][k]);
-                Log.d(TAG, type[0][k] + "onCreate: ");
-                showMarkerByCategory(type[0][k]);
-            }
+            category=i;
+            filteredList.clear();
         });
 
 
@@ -290,7 +272,43 @@ public class LikeActivity extends AppCompatActivity implements
             startActivity(intent1);
         });
 
+        button_sort = findViewById(R.id.button_sort);
+        button_sort.setOnClickListener(view->{
+            PopupMenu popup= new PopupMenu(LikeActivity.this, view); //두 번째 파라미터가 팝업메뉴가 붙을 뷰
+            //PopupMenu popup= new PopupMenu(MainActivity.this, btn2); //첫번째 버튼을 눌렀지만 팝업메뉴는 btn2에 붙어서 나타남
+            getMenuInflater().inflate(R.menu.popup_sort, popup.getMenu());
 
+            //팝업메뉴의 메뉴아이템을 선택하는 것을 듣는 리스너 객체 생성 및 설정
+            popup.setOnMenuItemClickListener(menuItem -> {
+
+                switch (menuItem.getItemId()){
+                    case R.id.menu_rating:
+                        Collections.sort(filteredList, Collections.reverseOrder(Comparator.comparingDouble(o -> {
+                            if (o.rating != null && !o.rating.isEmpty()) {
+                                return Double.parseDouble(o.rating);
+                            } else {
+                                return -1;
+                            }
+                        })));
+                        break;
+
+                    case R.id.menu_distance:
+                        Collections.sort(filteredList, Comparator.comparingInt(o -> o.distance));
+                        break;
+                }
+                //final ListView listView = findViewById(R.id.listView);
+                for(int a=0; a<category_value_array[category].length ; a++){
+                showMarkerByCategory(category_value_array[category][a]);}
+
+                final LikeAdapter adapter=new LikeAdapter(this,0, filteredList,this, likeListView);
+                likeListView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+
+                //return false;
+                return false;
+            });
+            popup.show();
+        });
 
         menu_btn = findViewById(R.id.menu_btn);
         menu_btn.setOnClickListener(view -> {
@@ -353,8 +371,7 @@ public class LikeActivity extends AppCompatActivity implements
 //            }
 //        }
     }
-    private ArrayList<LocationItem> filterFavoritesByCategory(String selectedCategory) {
-        ArrayList<LocationItem> filteredFavorites = new ArrayList<>();
+    private List<LocationItem> filterFavoritesByCategory(String selectedCategory) {
         db=dbHelper.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + FAVORITES_CATEGORY_NAME + " = ?", new String[]{selectedCategory});
         if (c != null && c.moveToFirst()) {
@@ -368,35 +385,33 @@ public class LikeActivity extends AppCompatActivity implements
                 @SuppressLint("Range") String favorites_rating = c.getString(c.getColumnIndex(FAVORITES_RATING));
                 @SuppressLint("Range") double favorites_lat= c.getDouble(c.getColumnIndex(FAVORITES_LAT));
                 @SuppressLint("Range") double favorites_lng= c.getDouble(c.getColumnIndex(FAVORITES_LNG));
+                @SuppressLint("Range") boolean favorites_status= Boolean.parseBoolean(c.getString(c.getColumnIndex(FAVORITES_STATUS)));
                 Log.d(TAG, favorites_name + "///select all favorites////" + favorites_open_now);
 
-                filteredFavorites.add(new LocationItem(favorites_placeId, favorites_name, selectedCategory, favorites_vicinity, favorites_distance, favorites_pNum, favorites_open_now, favorites_rating, favorites_lat, favorites_lng));
+                filteredFavorites.add(new LocationItem(favorites_placeId, favorites_name, selectedCategory, favorites_vicinity, favorites_distance, favorites_pNum, favorites_open_now, favorites_rating, favorites_lat, favorites_lng,favorites_status));
 
             } while (c.moveToNext());
         }
+        showMarkerByCategory(selectedCategory);
         return filteredFavorites;
     }
     public void showMarkerByCategory(String category) {
         runOnUiThread(() -> {
+            Log.d(TAG, "showMarkerByCategory:  들어옴 ************************************");
             final ListView likeListView = findViewById(R.id.likeListView);
-            ArrayList<LocationItem> filteredList = new ArrayList<>();
 
             // 해당 카테고리에 속하는 데이터만 필터링
-            for (LocationItem item : locationItem) {
+            for (LocationItem item : filteredFavorites) {
                 if (item.getCategory_name().equals(category)) {
-                    Log.d(TAG, item + "   !!!!showMarkerByCategory: ");
                     filteredList.add(item);
 
                 }
             }
 
-            final LikeAdapter adapter = new LikeAdapter(this,  0, filteredList,this, likeListView);
-            likeListView.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
-
             // 가져온 데이터의 수 만큼 마커 객체를 만들어 표시한다.
             for (LocationItem item : filteredList) {
                 // 값 추출
+                Log.d(TAG, filteredList + "   !!!!showMarkerByCategory: ");
                 double lat = item.getLat();
                 double lng = item.getLng();
                 String name = item.getLName();
@@ -412,58 +427,18 @@ public class LikeActivity extends AppCompatActivity implements
                 options.title(name);
                 options.snippet(vicinity + "  여기서 " + distance + "m");
                 @SuppressLint("UseCompatLoadingForDrawables")
-                BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.mapmarkerblue);
+                BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.star);
                 Bitmap b = bitmapdraw.getBitmap();
                 Bitmap smallMarker = Bitmap.createScaledBitmap(b, 65, 90, false);
                 options.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
                 Marker marker = mMap.addMarker(options);
                 markers_list.add(marker);
-            }
+            }final LikeAdapter adapter = new LikeAdapter(this,  0, filteredList,this, likeListView);
+            likeListView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+
         });
     }
-//    public void showMarker(){
-//        runOnUiThread(() -> {
-//            // 지도에 마커를 표시한다.
-//            // 지도에 표시되어있는 마커를 모두 제거한다.
-////            for(Marker marker : markers_list){
-////                marker.remove();
-////            }
-////            markers_list.clear();
-//            final ListView likeListView = findViewById(R.id.likeListView);
-//            //Collections.sort(locationItem, Comparator.comparingInt(o -> o.distance));
-//            final myLocationAdapter adapter=new myLocationAdapter(this,0, locationItem,this, likeListView);
-//            likeListView.setAdapter(adapter);
-//            adapter.notifyDataSetChanged();
-//            // 가져온 데이터의 수 만큼 마커 객체를 만들어 표시한다.
-//            for(int i= 0 ; i< lat_list.size() ; i++){
-//                // 값 추출
-//                double lat= lat_list.get(i);
-//                double lng=lng_list.get(i);
-//                String name=name_list.get(i);
-//                String vicinity=vicinity_list.get(i);
-//                int distance=distance_list.get(i);
-//
-//
-//                // 생성할 마커의 정보를 가지고 있는 객체를 생성
-//                MarkerOptions options=new MarkerOptions();
-//                // 위치설정
-//                LatLng pos=new LatLng(lat,lng);
-//                options.position(pos);
-//                // 말풍선이 표시될 값 설정
-//                options.title(name);
-//                options.snippet(vicinity+ "  여기서 "+distance+"m");
-//                @SuppressLint("UseCompatLoadingForDrawables")
-//                BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.mapmarkerblue);
-//                Bitmap b=bitmapdraw.getBitmap();
-//                Bitmap smallMarker = Bitmap.createScaledBitmap(b, 65, 90, false);
-//                options.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-//                Marker marker=mMap.addMarker(options);
-//                markers_list.add(marker);
-//            }
-//        });
-//    }
-
-
     @Override
     public void onMapReady(@NonNull final GoogleMap googleMap) {
         Log.d(TAG, "onMapReady :");
@@ -863,7 +838,7 @@ public class LikeActivity extends AppCompatActivity implements
                 markerOptions.position(latLng);
                 markerOptions.title(place.getName());
                 markerOptions.snippet(markerSnippet);
-                BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.mapmarkerblue);
+                BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.star);
                 Bitmap b=bitmapdraw.getBitmap();
                 Bitmap smallMarker = Bitmap.createScaledBitmap(b, 65, 90, false);
                 markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
@@ -894,22 +869,31 @@ public class LikeActivity extends AppCompatActivity implements
 
         switch (resourceid) {
             case R.id.like -> {
-                LocationItem selectedLocation = locationItem.get(position);
+                LocationItem selectedLocation = filteredFavorites.get(position);
                 Log.d(TAG, position + " $$$$$$ 하트 들어옴 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
                 // LikeActivity로 전달할 데이터 설정
-                ArrayList<LocationItem> likedLocations = new ArrayList<>();
+                List<LocationItem> likedLocations = new ArrayList<>();
                 likedLocations.add(selectedLocation);
 
                 // LikeActivity 시작
                 Intent likeIntent = new Intent(this, LikeActivity.class);
-                likeIntent.putExtra("likedLocations", likedLocations);
+                likeIntent.putExtra("likedLocations", (CharSequence) likedLocations);
                 startActivity(likeIntent);
                 break;
             }
         }
     }
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (db != null) {
+            db.close();
+        }
+        if (dbHelper != null) {
+            dbHelper.close();
+        }
+    }
 
 }
 

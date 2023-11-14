@@ -98,7 +98,11 @@ public class myLocationAdapter extends ArrayAdapter<LocationItem> implements Vie
         viewHolder.like.setOnClickListener(this);
         viewHolder.like.setTag(pos); // position을 tag로 설정
         //viewHolder.like.setVisibility(View.VISIBLE);
-
+        if (locationItems.getStatus()) {
+            viewHolder.like.setImageResource(R.drawable.filled_heart);
+        } else {
+            viewHolder.like.setImageResource(R.drawable.nonfilled_heart);
+        }
 
         //this.notifyDataSetChanged();
 
@@ -120,6 +124,7 @@ public class myLocationAdapter extends ArrayAdapter<LocationItem> implements Vie
 
             int position = (int) view.getTag();
             int resourceId = view.getId();
+
             this.listBtnClickListener.onListButtonClick(position, resourceId) ;
         }
     }

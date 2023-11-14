@@ -124,6 +124,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private final String FAVORITES_RATING = "favorites_rating";
     private final String FAVORITES_LAT = "favorites_lat";
     private final String FAVORITES_LNG = "favorites_lng";
+    private final String FAVORITES_STATUS = "favorites_status";
 
     private final String createFavoritesQuery = "CREATE TABLE IF NOT EXISTS " + FAVORITES_TABLE + "(" +
             FAVORITES_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -133,11 +134,11 @@ public class DBHelper extends SQLiteOpenHelper {
             FAVORITES_DISTANCE + " INTEGER DEFAULT 0, " +
             FAVORITES_VICINITY + " TEXT, "+
             FAVORITES_OPENNOW + " TEXT, "+
-            FAVORITES_RATING + " TEXT, "+FAVORITES_LAT + " DOUBLE DEFAULT 0, "+ FAVORITES_LNG + " DOUBLE DEFAULT 0) " ;
+            FAVORITES_RATING + " TEXT, "+FAVORITES_LAT + " DOUBLE DEFAULT 0, "+ FAVORITES_LNG + " DOUBLE DEFAULT 0, " + FAVORITES_STATUS + " TEXT) " ;
 
 
     // 추가된 메서드
-    public void insertFavorite(String favorites_category_name, String favorites_name, String favorites_placeId, String favorites_pNum, int favorites_distance, String favorites_vicinity, String favorites_open_now, String favorites_rating, Double favorites_lat, Double favorites_lng) {
+    public void insertFavorite(String favorites_category_name, String favorites_name, String favorites_placeId, String favorites_pNum, int favorites_distance, String favorites_vicinity, String favorites_open_now, String favorites_rating, Double favorites_lat, Double favorites_lng, Boolean favorites_status) {
         ContentValues contentValues = new ContentValues();
         SQLiteDatabase db = getWritableDatabase();
         contentValues.put(FAVORITES_CATEGORY_NAME, favorites_category_name);
@@ -150,7 +151,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(FAVORITES_RATING, favorites_rating);
         contentValues.put(FAVORITES_LAT, favorites_lat);
         contentValues.put(FAVORITES_LNG, favorites_lng);
-
+        contentValues.put(FAVORITES_STATUS, favorites_status);
         db.insert(FAVORITES_TABLE, null, contentValues);
     }
 
@@ -159,6 +160,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ArrayList<LocationItem> allFavorites = new ArrayList<>();
         Cursor c = getWritableDatabase().rawQuery("select * from " + FAVORITES_TABLE, null);
         if (c != null && c.moveToFirst()) {
+            try{
             do {
                 @SuppressLint("Range") String favorites_category_name= c.getString(c.getColumnIndex(FAVORITES_CATEGORY_NAME));;
                 @SuppressLint("Range") String favorites_name= c.getString(c.getColumnIndex(FAVORITES_CATEGORY_NAME));
@@ -170,11 +172,15 @@ public class DBHelper extends SQLiteOpenHelper {
                 @SuppressLint("Range") String favorites_rating= c.getString(c.getColumnIndex(FAVORITES_RATING));
                 @SuppressLint("Range") double favorites_lat= c.getDouble(c.getColumnIndex(FAVORITES_LAT));
                 @SuppressLint("Range") double favorites_lng= c.getDouble(c.getColumnIndex(FAVORITES_LNG));
+                @SuppressLint("Range") boolean favorites_status= Boolean.parseBoolean(c.getString(c.getColumnIndex(FAVORITES_STATUS)));
                 Log.d(TAG, favorites_name + "///select all favorites////" + favorites_open_now);
 
-                allFavorites.add(new LocationItem(favorites_placeId, favorites_name, favorites_category_name,favorites_vicinity, favorites_distance, favorites_pNum, favorites_open_now, favorites_rating, favorites_lat, favorites_lng));
+                allFavorites.add(new LocationItem(favorites_placeId, favorites_name, favorites_category_name,favorites_vicinity, favorites_distance, favorites_pNum, favorites_open_now, favorites_rating, favorites_lat, favorites_lng,favorites_status));
 
-            } while (c.moveToNext());
+            } while (c.moveToNext());}
+            finally {
+                c.close();
+            }
         }
         return allFavorites;
     }
