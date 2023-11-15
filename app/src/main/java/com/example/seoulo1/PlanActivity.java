@@ -1,15 +1,17 @@
 package com.example.seoulo1;
 
-
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,16 +23,17 @@ import java.util.List;
 
 public class PlanActivity extends AppCompatActivity {
     // 필요한 변수들 선언
-    private ListView scheduleListView;
-    private EditText placeEditText;
-    private EditText expenseEditText;
-    private EditText memoEditText;
-    private Button saveButton;
-    private ArrayAdapter<String> adapter;
-    private HashMap<String, List<HashMap<String, String>>> scheduleMap;
-    private CalendarView calendarView;
-    private TextView dateTextView;
-    private String selectedDate;
+    private ListView scheduleListView; // 스케줄 목록을 표시하는 ListView
+    private EditText placeEditText; // 장소 입력 필드
+    private EditText expenseEditText; // 비용 입력 필드
+    private EditText memoEditText; // 메모 입력 필드
+    private Button saveButton; // 일정 저장 버튼
+    private Button viewButton; // 작성된 일정 보기 버튼
+    private ArrayAdapter<String> adapter; // 스케줄 목록을 표시하기 위한 어댑터
+    private HashMap<String, List<HashMap<String, String>>> scheduleMap; // 날짜별 스케줄을 저장하는 맵
+    private CalendarView calendarView; // 날짜를 선택하는 캘린더 뷰
+    private TextView dateTextView; // 선택한 날짜를 표시하는 텍스트 뷰
+    private String selectedDate; // 사용자가 선택한 날짜를 저장하는 변수
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -39,13 +42,14 @@ public class PlanActivity extends AppCompatActivity {
         setContentView(R.layout.activity_plan);
 
         // 레이아웃 파일의 UI 요소들과 연결
-        scheduleListView = findViewById(R.id.scheduleListView);
-        placeEditText = findViewById(R.id.placeEditText);
-        expenseEditText = findViewById(R.id.expenseEditText);
-        memoEditText = findViewById(R.id.memoEditText);
-        saveButton = findViewById(R.id.saveButton);
-        calendarView = findViewById(R.id.calendarView);
-        dateTextView = findViewById(R.id.dateTextView);
+        scheduleListView = findViewById(R.id.scheduleListView); // ListView 초기화
+        placeEditText = findViewById(R.id.placeEditText); // 장소 입력 필드 초기화
+        expenseEditText = findViewById(R.id.expenseEditText); // 비용 입력 필드 초기화
+        memoEditText = findViewById(R.id.memoEditText); // 메모 입력 필드 초기화
+        saveButton = findViewById(R.id.saveButton); // 일정 저장 버튼 초기화
+        viewButton = findViewById(R.id.viewButton); // 작성된 일정 보기 버튼 초기화
+        calendarView = findViewById(R.id.calendarView); // 캘린더 뷰 초기화
+        dateTextView = findViewById(R.id.dateTextView); // 선택한 날짜를 표시하는 텍스트 뷰 초기화
 
         // 스케줄 목록을 저장할 맵 초기화
         scheduleMap = new HashMap<>();
@@ -100,6 +104,10 @@ public class PlanActivity extends AppCompatActivity {
 
                         // 일정 목록 업데이트
                         updateListView(scheduleList);
+
+                        // 일정을 데이터베이스에 저장
+                        saveToDatabase(place, expense, memo);
+
                         clearFields();
                         Toast.makeText(PlanActivity.this, "일정이 저장되었습니다.", Toast.LENGTH_SHORT).show();
                     } else {
@@ -109,43 +117,47 @@ public class PlanActivity extends AppCompatActivity {
             }
         });
 
-        // 스케줄 목록을 클릭했을 때 이벤트 처리
-        scheduleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // "작성된 일정 보기" 버튼 클릭 이벤트 처리
+        viewButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // 클릭된 스케줄의 정보를 가져와서 필드에 표시
+            public void onClick(View v) {
+                // MemoActivity로 전환
+                Intent intent = new Intent(PlanActivity.this, MemoActivity.class);
+
+                // 일정 목록을 Intent에 추가
                 List<HashMap<String, String>> scheduleList = scheduleMap.get(selectedDate);
-                if (scheduleList != null && position < scheduleList.size()) {
-                    HashMap<String, String> schedule = scheduleList.get(position);
-                    String place = schedule.get("place");
-                    String expense = schedule.get("expense");
-                    String memo = schedule.get("memo");
-
-                    placeEditText.setText(place);
-                    expenseEditText.setText(expense);
-                    memoEditText.setText(memo);
-
-                    // 클릭한 스케줄을 삭제
-                    scheduleList.remove(position);
-                    updateListView(scheduleList);
+                if (scheduleList != null) {
+                    intent.putExtra("scheduleList", new ArrayList<>(scheduleList));
                 }
+
+                startActivity(intent);
             }
         });
 
-        // 스케줄 목록을 롱클릭했을 때 이벤트 처리
-        scheduleListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                // 롱클릭된 스케줄을 삭제하고 목록을 업데이트
-                List<HashMap<String, String>> scheduleList = scheduleMap.get(selectedDate);
-                if (scheduleList != null && position < scheduleList.size()) {
-                    scheduleList.remove(position);
-                    updateListView(scheduleList);
-                    clearFields();
-                }
-                return true;
-            }
-        });
+
+    }
+    // SQLite 데이터베이스에 일정 저장
+    private void saveToDatabase(String place, String expense, String memo) {
+        // 데이터베이스 도우미 초기화
+        ScheduleDbHelper dbHelper = new ScheduleDbHelper(this);
+
+        // 쓰기 가능한 데이터베이스 가져오기
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // 일정 데이터를 저장할 ContentValues 객체 생성
+        ContentValues values = new ContentValues();
+        values.put("place", place);
+        values.put("expense", expense);
+        values.put("memo", memo);
+
+        // 데이터를 'schedule' 테이블에 삽입
+        long newRowId = db.insert("schedule", null, values);
+
+        // Log for debugging
+        Log.d("Database", "Inserted row with ID: " + newRowId);
+
+        // 데이터베이스 연결 닫기
+        dbHelper.close();
     }
 
     // 스케줄 목록을 업데이트하는 메서드
@@ -158,6 +170,7 @@ public class PlanActivity extends AppCompatActivity {
             String scheduleText = "장소: " + place + "\n쓴 금액: " + expense + "\n일정: " + memo;
             scheduleTextList.add(scheduleText);
         }
+
         adapter.clear();
         adapter.addAll(scheduleTextList);
         adapter.notifyDataSetChanged();
