@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class ScheduleDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "schedule.db"; // 데이터베이스 이름
-    private static final int DATABASE_VERSION = 1; // 데이터베이스 버전
+    private static final int DATABASE_VERSION = 2; // 데이터베이스 버전 (업그레이드 시 버전을 증가시켜야 함)
 
     public ScheduleDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -18,6 +18,7 @@ public class ScheduleDbHelper extends SQLiteOpenHelper {
         String createTableQuery = "CREATE TABLE schedule " +
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "place TEXT, " +
+                "category TEXT, " + // 새로운 열(category)을 추가
                 "expense TEXT, " +
                 "memo TEXT);";
         db.execSQL(createTableQuery);
