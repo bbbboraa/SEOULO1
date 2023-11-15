@@ -121,12 +121,11 @@ public class LikeActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_like);
 
         likeListView = findViewById(R.id.likeListView);
-        adapter=new LikeAdapter(this, 0, filteredList, this, likeListView);
+        adapter=new LikeAdapter(this, R.layout.like_items, filteredFavorites, this, likeListView);
         likeListView.setAdapter(adapter);
         db=openOrCreateDatabase(DB_NAME, MODE_PRIVATE, null);
         dbHelper=new DBHelper(this);
         db=dbHelper.getReadableDatabase();
-        List<LocationItem> favorites = dbHelper.selectAllFavorites();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_like);
@@ -167,11 +166,12 @@ public class LikeActivity extends AppCompatActivity implements
             mMap.clear();//지도 클리어
             // 사용자가 선택한 항목 인덱스번째의 type 값을 가져온다.
             int j, i=0;
+            category=i;filteredList.clear();
+
             for(j=0; j< category_value_array[i].length;j++ ){
                 Log.d(TAG, category_value_array[i][j] + "onCreate: ");
                 filterFavoritesByCategory(category_value_array[i][j]);
             }
-            category=i;filteredList.clear();
         });
 
         button_cafe = findViewById(R.id.button_cafe);
@@ -185,12 +185,12 @@ public class LikeActivity extends AppCompatActivity implements
             String type[][] = new String[5][5000];
             mMap.clear();//지도 클리어
             int j, i=1;
+            category=i;filteredList.clear();
+
             for(j=0; j< category_value_array[i].length;j++ ){
                 Log.d(TAG, category_value_array[i][j] + "onCreate: ");
                 filterFavoritesByCategory(category_value_array[i][j]);
             }
-            category=i;
-            filteredList.clear();
         });
 
         button_cvstore = findViewById(R.id.button_cvstore);
@@ -205,12 +205,12 @@ public class LikeActivity extends AppCompatActivity implements
             mMap.clear();//지도 클리어
             // 사용자가 선택한 항목 인덱스번째의 type 값을 가져온다.
             int j, i=2;
+            category=i;filteredList.clear();
+
             for(j=0; j< category_value_array[i].length;j++ ){
                 Log.d(TAG, category_value_array[i][j] + "onCreate: ");
                 filterFavoritesByCategory(category_value_array[i][j]);
             }
-            category=i;
-            filteredList.clear();
         });
 
         button_shopping = findViewById(R.id.button_shopping);
@@ -225,12 +225,12 @@ public class LikeActivity extends AppCompatActivity implements
             mMap.clear();//지도 클리어
             // 사용자가 선택한 항목 인덱스번째의 type 값을 가져온다.
             int j, i=3;
+            category=i;filteredList.clear();
+
             for(j=0; j< category_value_array[i].length;j++ ){
                 Log.d(TAG, category_value_array[i][j] + "onCreate: ");
                 filterFavoritesByCategory(category_value_array[i][j]);
             }
-            category=i;
-            filteredList.clear();
         });
 
         button_sights = findViewById(R.id.button_sights);
@@ -244,18 +244,20 @@ public class LikeActivity extends AppCompatActivity implements
             String type[][] = new String[5][5000];
             mMap.clear();//지도 클리어
             // 사용자가 선택한 항목 인덱스번째의 type 값을 가져온다.
-            int j, i=1;
+            int j, i=4;
+            category=i;filteredList.clear();
+
             for(j=0; j< category_value_array[i].length;j++ ){
                 Log.d(TAG, category_value_array[i][j] + "onCreate: ");
                 filterFavoritesByCategory(category_value_array[i][j]);
             }
-            category=i;
-            filteredList.clear();
         });
 
 
         list_location = findViewById(R.id.list_location);
         list_location.setOnClickListener(v ->{
+            Log.d(TAG, filteredList + " filteredlist 리스트뷰 떠야대!!!!!!!!!!!!!! ");
+            Log.d(TAG, filteredFavorites + " filteredFavorites 리스트뷰 떠야대!!!!!!!!!!!!!! ");
             SlidingUpPanelLayout layout_like;
             layout_like=findViewById(R.id.layout_like);
             if(layout_like.getPanelState()== SlidingUpPanelLayout.PanelState.EXPANDED){
@@ -277,10 +279,8 @@ public class LikeActivity extends AppCompatActivity implements
             PopupMenu popup= new PopupMenu(LikeActivity.this, view); //두 번째 파라미터가 팝업메뉴가 붙을 뷰
             //PopupMenu popup= new PopupMenu(MainActivity.this, btn2); //첫번째 버튼을 눌렀지만 팝업메뉴는 btn2에 붙어서 나타남
             getMenuInflater().inflate(R.menu.popup_sort, popup.getMenu());
-
             //팝업메뉴의 메뉴아이템을 선택하는 것을 듣는 리스너 객체 생성 및 설정
             popup.setOnMenuItemClickListener(menuItem -> {
-
                 switch (menuItem.getItemId()){
                     case R.id.menu_rating:
                         Collections.sort(filteredList, Collections.reverseOrder(Comparator.comparingDouble(o -> {
@@ -300,7 +300,7 @@ public class LikeActivity extends AppCompatActivity implements
                 for(int a=0; a<category_value_array[category].length ; a++){
                 showMarkerByCategory(category_value_array[category][a]);}
 
-                final LikeAdapter adapter=new LikeAdapter(this,0, filteredList,this, likeListView);
+                final LikeAdapter adapter=new LikeAdapter(this,0, filteredFavorites,this, likeListView);
                 likeListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
 
@@ -433,7 +433,11 @@ public class LikeActivity extends AppCompatActivity implements
                 options.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
                 Marker marker = mMap.addMarker(options);
                 markers_list.add(marker);
-            }final LikeAdapter adapter = new LikeAdapter(this,  0, filteredList,this, likeListView);
+            }
+            filteredFavorites.removeAll(filteredList);
+            final LikeAdapter adapter = new LikeAdapter(this,  0, filteredList,this, likeListView);
+            Log.d(TAG, "show filteredfavorites " + filteredFavorites );
+            Log.d(TAG, "show filteredlist  " + filteredList);
             likeListView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
 
@@ -869,18 +873,36 @@ public class LikeActivity extends AppCompatActivity implements
 
         switch (resourceid) {
             case R.id.like -> {
-                LocationItem selectedLocation = filteredFavorites.get(position);
+                LocationItem selectedLocation = filteredList.get(position);
                 Log.d(TAG, position + " $$$$$$ 하트 들어옴 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
                 // LikeActivity로 전달할 데이터 설정
                 List<LocationItem> likedLocations = new ArrayList<>();
                 likedLocations.add(selectedLocation);
+                boolean newStatus = true;
+                if(selectedLocation.getStatus() == true){
+                    Log.d(TAG, "newstatus 이프문 들어옴 !! false로 바뀌어야함... ");
+                    newStatus = false;
+                }
+                Log.d(TAG, "newstatus : " + newStatus +" false로 바뀌어야함... ");
+                DBHelper dbHelper = new DBHelper(this);
+                db = dbHelper.getWritableDatabase();
+                selectedLocation.setStatus(newStatus);
+                if (newStatus==false) {
+                    filteredList.remove(selectedLocation);
+                    dbHelper.deleteFavorite(selectedLocation.getLName()); // DB에서 삭제
+                    adapter.notifyDataSetChanged();
+                    Log.d(TAG, filteredList + "list 삭제 됐는지 확인:~~~~~~~~~~~~~` ");
+                } else {
+                    Log.d(TAG, "코드 다시... true가 있으면 안대!!!!!!!!!!!!!!!!!시방: ");
+                }
+                Log.d(TAG, " 즐겨찾기 장소 저장 또는 삭제: " + selectedLocation);
+                final ListView listView = findViewById(R.id.likeListView);
+                final LikeAdapter adapter=new LikeAdapter(this,0, filteredList,this, listView);
+                listView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
 
-                // LikeActivity 시작
-                Intent likeIntent = new Intent(this, LikeActivity.class);
-                likeIntent.putExtra("likedLocations", (CharSequence) likedLocations);
-                startActivity(likeIntent);
-                break;
+
             }
         }
     }

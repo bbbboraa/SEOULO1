@@ -71,8 +71,16 @@ public class LocationItem implements Serializable {
         this.distance=distance;
     }
 
-    public boolean isLiked() {
-        return true;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        LocationItem other = (LocationItem) obj;
+        return name.equals(other.name); // 여기에서 name은 LocationItem 객체를 고유하게 식별하는 어떤 값인지에 따라 달라집니다.
     }
 
     }

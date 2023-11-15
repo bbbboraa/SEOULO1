@@ -638,8 +638,7 @@ public class MyLocationActivity extends AppCompatActivity implements
 
     }
 
-
-    public void showMarker(){
+       public void showMarker(){
         runOnUiThread(() -> {
             // 지도에 마커를 표시한다.
             // 지도에 표시되어있는 마커를 모두 제거한다.
@@ -1138,20 +1137,29 @@ public class MyLocationActivity extends AppCompatActivity implements
                 DBHelper dbHelper = new DBHelper(this);
                 db = dbHelper.getWritableDatabase();
                 selectedLocation.setStatus(newStatus);
+                if (newStatus==false) {
+                    likedLocations.remove(selectedLocation);
+                    dbHelper.deleteFavorite(selectedLocation.getLName()); // DB에서 삭제
+                } else {
+                    dbHelper.insertFavorite(
+                            selectedLocation.getCategory_name(),
+                            selectedLocation.getLName(),
+                            selectedLocation.getPlaceId(),
+                            selectedLocation.getpNum(),
+                            selectedLocation.getDistance(),
+                            selectedLocation.getVicinity(),
+                            selectedLocation.getOpen_now(),
+                            selectedLocation.getRating(),
+                            selectedLocation.getLat(),
+                            selectedLocation.getLng(), newStatus
+                    );
+                }
+                Log.d(TAG, " 즐겨찾기 장소 저장 또는 삭제: " + selectedLocation);
+                final ListView listView = findViewById(R.id.listView);
+                final myLocationAdapter adapter=new myLocationAdapter(this,0, locationItem,this, listView);
+                listView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
 
-                dbHelper.insertFavorite(
-                        selectedLocation.getCategory_name(),
-                        selectedLocation.getLName(),
-                        selectedLocation.getPlaceId(),
-                        selectedLocation.getpNum(),
-                        selectedLocation.getDistance(),
-                        selectedLocation.getVicinity(),
-                        selectedLocation.getOpen_now(),
-                        selectedLocation.getRating(),
-                        selectedLocation.getLat(),
-                        selectedLocation.getLng(), newStatus
-                );
-                Log.d(TAG, " 즐겨찾기 장소 저장 : " + selectedLocation);
 
                 // LikeActivity 시작
                 //Intent likeIntent = new Intent(this, LikeActivity.class);

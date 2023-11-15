@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -34,6 +35,15 @@ public class myLocationAdapter extends ArrayAdapter<LocationItem> implements Vie
         this.listBtnClickListener = listBtnClickListener;
         this.mList = objects;
         this.mListView = listView;
+        this.mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (listBtnClickListener != null) {
+                    listBtnClickListener.onListButtonClick(position, view.getId());
+                }
+            }
+        });
+
     }
     class UserViewHolder {
         public TextView category_name;
@@ -99,10 +109,19 @@ public class myLocationAdapter extends ArrayAdapter<LocationItem> implements Vie
         viewHolder.like.setTag(pos); // position을 tag로 설정
         //viewHolder.like.setVisibility(View.VISIBLE);
         if (locationItems.getStatus()) {
+            Log.d(TAG, locationItems.getStatus() + "어댑터의 좋아요 이미지 설정 getstatus () ");
             viewHolder.like.setImageResource(R.drawable.filled_heart);
         } else {
             viewHolder.like.setImageResource(R.drawable.nonfilled_heart);
         }
+        viewHolder.like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listBtnClickListener != null) {
+                    listBtnClickListener.onListButtonClick(position, view.getId());
+                }
+            }
+        });
 
         //this.notifyDataSetChanged();
 
