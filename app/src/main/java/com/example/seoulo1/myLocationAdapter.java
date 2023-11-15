@@ -3,11 +3,12 @@ package com.example.seoulo1;
 import static android.content.ContentValues.TAG;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -25,6 +26,11 @@ public class myLocationAdapter extends ArrayAdapter<LocationItem> implements Vie
     private List<LocationItem> mList;
     private ListView mListView;
 
+    @Override
+    public void onClick(View v) {
+
+    }
+
     public interface ListBtnClickListener {
         void onListButtonClick(int position, int resourceid) ;
 
@@ -35,15 +41,11 @@ public class myLocationAdapter extends ArrayAdapter<LocationItem> implements Vie
         this.listBtnClickListener = listBtnClickListener;
         this.mList = objects;
         this.mListView = listView;
-        this.mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (listBtnClickListener != null) {
-                    listBtnClickListener.onListButtonClick(position, view.getId());
-                }
+        this.mListView.setOnItemClickListener((parent, view, position, id) -> {
+            if (listBtnClickListener != null) {
+                listBtnClickListener.onListButtonClick(position, view.getId());
             }
         });
-
     }
     class UserViewHolder {
         public TextView category_name;
@@ -122,6 +124,19 @@ public class myLocationAdapter extends ArrayAdapter<LocationItem> implements Vie
                 }
             }
         });
+        rowView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 클릭 이벤트에서 해당 장소의 이름을 사용하여 URL 생성
+                String url = null;
+                url = "https://www.google.com/maps/search/?api=1&query=" + locationItems.getLat() + "%2C" + locationItems.getLng() + "&query_place_id=" + locationItems.getPlaceId();
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                Log.d(TAG, url + "리스트뷰 누름 !!!!myloca");
+                intent.setPackage("com.google.android.apps.maps");
+                context.startActivity(intent);
+
+            }
+        });
 
         //this.notifyDataSetChanged();
 
@@ -135,16 +150,16 @@ public class myLocationAdapter extends ArrayAdapter<LocationItem> implements Vie
 
 
     }
-    @Override
-    public void onClick(View view) {
-        Log.d(TAG, "like 버튼  onClick: ");
-        if (this.listBtnClickListener != null) {
-            Log.d(TAG, "like 버튼  onClick 들어옴 !!!!!!!! ");
-
-            int position = (int) view.getTag();
-            int resourceId = view.getId();
-
-            this.listBtnClickListener.onListButtonClick(position, resourceId) ;
-        }
-    }
+//    @Override
+//    public void onClick(View view) {
+//        Log.d(TAG, "like 버튼  onClick: ");
+//        if (this.listBtnClickListener != null) {
+//            Log.d(TAG, "like 버튼  onClick 들어옴 !!!!!!!! ");
+//
+//            int position = (int) view.getTag();
+//            int resourceId = view.getId();
+//
+//            this.listBtnClickListener.onListButtonClick(position, resourceId) ;
+//        }
+//    }
 }

@@ -3,6 +3,8 @@ package com.example.seoulo1;
 import static android.content.ContentValues.TAG;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,12 @@ public class LikeAdapter extends ArrayAdapter<LocationItem> implements View.OnCl
     private LikeListBtnClickListener likeListBtnClickListener;
     private ImageView like;
     private ListView mListView;
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
     public interface LikeListBtnClickListener {
         void onLikeListButtonClick(int position, int resourceid) ;
 
@@ -91,6 +99,19 @@ public class LikeAdapter extends ArrayAdapter<LocationItem> implements View.OnCl
                 }
             }
         });
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 클릭 이벤트에서 해당 장소의 이름을 사용하여 URL 생성
+                String url = null;
+                url = "https://www.google.com/maps/search/?api=1&query=" + locationItem.getLat() + "%2C" + locationItem.getLng() + "&query_place_id=" + locationItem.getPlaceId();
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                Log.d(TAG, url + "리스트뷰 누름 !!!!like");
+                intent.setPackage("com.google.android.apps.maps");
+                context.startActivity(intent);
+
+            }
+        });
         return convertView;
     }
 
@@ -103,15 +124,15 @@ public class LikeAdapter extends ArrayAdapter<LocationItem> implements View.OnCl
         TextView distanceTextView;
         ImageView likeImageView;
     }
-    @Override
-    public void onClick(View view) {
-        Log.d(TAG, "like 버튼  onClick: ");
-        if (this.likeListBtnClickListener!= null) {
-            Log.d(TAG, "like 버튼  onClick 들어옴 !!!!!!!! ");
-
-            int position = (int) view.getTag();
-            int resourceId = view.getId();
-            this.likeListBtnClickListener.onLikeListButtonClick(position, resourceId) ;
-        }
-    }
+//    @Override
+//    public void onClick(View view) {
+//        Log.d(TAG, "like 버튼  onClick: ");
+//        if (this.likeListBtnClickListener!= null) {
+//            Log.d(TAG, "like 버튼  onClick 들어옴 !!!!!!!! ");
+//
+//            int position = (int) view.getTag();
+//            int resourceId = view.getId();
+//            this.likeListBtnClickListener.onLikeListButtonClick(position, resourceId) ;
+//        }
+//    }
 }

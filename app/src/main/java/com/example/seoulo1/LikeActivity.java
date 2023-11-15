@@ -267,12 +267,6 @@ public class LikeActivity extends AppCompatActivity implements
             //showCategoryList();
         });
 
-        my_location_btn = findViewById(R.id.my_location_btn);
-        my_location_btn.setOnClickListener(v -> {
-            Intent intent1 = new Intent(LikeActivity.this, MyLocationActivity.class);
-            intent1.addFlags (Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent1);
-        });
 
         button_sort = findViewById(R.id.button_sort);
         button_sort.setOnClickListener(view->{
@@ -504,14 +498,14 @@ public class LikeActivity extends AppCompatActivity implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        ImageButton distance_btn = findViewById(R.id.distance_btn);
+        //ImageButton distance_btn = findViewById(R.id.distance_btn);
         currentPosition= new LatLng(37.56, 126.97);   //현재 위치로 임의 설정, gps 쓸 시 주석처리
         double distance = SphericalUtil.computeDistanceBetween(currentPosition, marker.getPosition());
-        distance_btn.setOnClickListener(v -> {
-            Toast.makeText(LikeActivity.this, (int) distance + "m 남음", Toast.LENGTH_LONG).show();
-            Log.d(TAG, "onMarkerClick: 출력완료");
-
-        });
+//        distance_btn.setOnClickListener(v -> {
+//            Toast.makeText(LikeActivity.this, (int) distance + "m 남음", Toast.LENGTH_LONG).show();
+//            Log.d(TAG, "onMarkerClick: 출력완료");
+//
+//        });
         return false;
     }
 
