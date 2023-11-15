@@ -15,7 +15,6 @@
             android:layout_height="match_parent"
             android:focusable="true"
             android:clickable="true"
-            android:focusableInTouchMode="true"
             android:gravity="center"
             android:id="@+id/checkbox"/>
 
@@ -27,7 +26,6 @@
             android:layout_marginStart="10dp"
             android:focusable="true"
             android:clickable="true"
-            android:focusableInTouchMode="true"
             android:inputType="text"
             android:textSize="20sp"
             tools:ignore="LabelFor" />
@@ -36,7 +34,6 @@
             android:id="@+id/btn_delete"
             android:focusable="true"
             android:clickable="true"
-            android:focusableInTouchMode="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

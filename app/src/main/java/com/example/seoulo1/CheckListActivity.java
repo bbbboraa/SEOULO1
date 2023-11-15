@@ -20,9 +20,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.List;
+
 public class CheckListActivity extends AppCompatActivity implements myCheckListAdapter.ListBtnClickListener {
-    ArrayList checkList=null;
-    ArrayList<PreparationItem> items= new ArrayList<>();
+    List<PreparationItem> items= new ArrayList<>();
 
     //int count=0;
     ImageButton plus;
@@ -38,7 +39,7 @@ public class CheckListActivity extends AppCompatActivity implements myCheckListA
     static final String TABLE_NAME = "Table_content";
     private final String INFO="info";
     private final String STATE="state";
-    myCheckListAdapter adapter;
+    private myCheckListAdapter adapter;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -53,8 +54,8 @@ public class CheckListActivity extends AppCompatActivity implements myCheckListA
         db=openOrCreateDatabase(DB_NAME, MODE_PRIVATE, null);
         db=dbHelper.getReadableDatabase();
 //        db.execSQL("DELETE FROM "+ TABLE_NAME);
-        adapter=new myCheckListAdapter(this, R.layout.checklist_items,dbHelper.SelectAll(), this);
         final ListView listview = findViewById(R.id.listview);
+        adapter=new myCheckListAdapter(this, R.layout.checklist_items,items, this);
         listview.setAdapter(adapter);
         show(listview);
 
@@ -66,6 +67,7 @@ public class CheckListActivity extends AppCompatActivity implements myCheckListA
             Log.d(TAG, items +" ###### 단어 등록 성공 ++++++++++++++");
             dbHelper.insertContent(editText.getText().toString(), String.valueOf(false));
             editText.setText("");
+            adapter.notifyDataSetChanged(); // 리스트 갱신
             show(listview);
         });
 
@@ -92,8 +94,7 @@ public class CheckListActivity extends AppCompatActivity implements myCheckListA
     @SuppressLint({"NonConstantResourceId", "Range"})
     @Override
     public void onListBtnClick(int position, int resourceid) {
-        //Object selected =  checkList.get(position);
-        sp = getSharedPreferences("temp", MODE_PRIVATE);
+        db=dbHelper.getReadableDatabase();
         @SuppressLint("Recycle") Cursor c=db.rawQuery("select * from "+ TABLE_NAME, null);
         Log.d(TAG, position + "!!!!!! 리스트뷰 누름 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
@@ -106,15 +107,18 @@ public class CheckListActivity extends AppCompatActivity implements myCheckListA
                 assert c != null;
                 s = c.getString(c.getColumnIndex(INFO));
                 b = Boolean.parseBoolean(c.getString(c.getColumnIndex(STATE)));
-                Log.d(TAG, s + " ###### 단어 삭제 성공 ???????");
+                PreparationItem selected = items.get(position);
+                Log.d(TAG, selected + " ###### 단어 삭제 성공 ???????");
                 //db.execSQL("delete from "+TABLE_NAME+" WHERE INFO="+s);
-                dbHelper.deleteData(s);
+                if (!adapter.isEmpty() && position >= 0 && position < adapter.getCount()) {
+                dbHelper.deleteData(selected.getItemString());
                 //myCheckListAdapter adapter = new myCheckListAdapter(this, R.layout.checklist_items, dbHelper.SelectAll(), this);
                 @SuppressLint("CutPasteId") ListView listview = findViewById(R.id.listview);
-                adapter.remove(position);
-                //listview.setAdapter(adapter);
+                items.remove(selected);
                 adapter.notifyDataSetChanged();
+                myCheckListAdapter adapter = new myCheckListAdapter(this, R.layout.checklist_items, items, this);
                 show(listview);
+                break;}
             }
             case R.id.checkbox -> {
                 Log.d(TAG, position + "!!!!!! 체크박스 버튼 누름 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -127,26 +131,39 @@ public class CheckListActivity extends AppCompatActivity implements myCheckListA
                 if (!b) {
                     //dbHelper.updateContent(s, String.valueOf(b));
                     dbHelper.updateContent(s, String.valueOf(true));
-                    myCheckListAdapter adapter = new myCheckListAdapter(this, R.layout.checklist_items, dbHelper.SelectAll(), this);
+                    myCheckListAdapter adapter = new myCheckListAdapter(this, R.layout.checklist_items, items, this);
                     ListView listview = findViewById(R.id.listview);
                     listview.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                     show(listview);
                 } else {
                     dbHelper.updateContent(s, String.valueOf(false));
-                    myCheckListAdapter adapter = new myCheckListAdapter(this, R.layout.checklist_items, dbHelper.SelectAll(), this);
+                    myCheckListAdapter adapter = new myCheckListAdapter(this, R.layout.checklist_items, items, this);
                     ListView listview = findViewById(R.id.listview);
                     listview.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                     show(listview);}
+            }
+            case R.id.item_edit -> {
+                s = c.getString(c.getColumnIndex(INFO));
+
+                PreparationItem selected = items.get(position);
+                dbHelper.updateContent(s, String.valueOf(selected.getChecked()));
+                //myCheckListAdapter adapter = new myCheckListAdapter(this, R.layout.checklist_items, dbHelper.SelectAll(), this);
+                @SuppressLint("CutPasteId") ListView listview = findViewById(R.id.listview);
+                selected.setItemString(s);
+                adapter.notifyDataSetChanged();
+                myCheckListAdapter adapter = new myCheckListAdapter(this, R.layout.checklist_items, items, this);
+                show(listview);
+
             }
         }
     }
     public void show(ListView listView) {
         db=dbHelper.getReadableDatabase();
         Cursor c=db.rawQuery("select * from "+ TABLE_NAME, null);
-        ArrayList item_db= new ArrayList<>();
-
+        List<PreparationItem> item_db= new ArrayList<>();
+        Log.d(TAG, items + "!!!!!!!!!!!!!!!!!!!!!!!!11show: ");
         try {
             if (c != null) {
                 if (c.moveToFirst()) {
@@ -160,6 +177,7 @@ public class CheckListActivity extends AppCompatActivity implements myCheckListA
                         //HashMap<String, String> persons = new HashMap<String, String>();
 
                         item_db.add(new PreparationItem(Boolean.valueOf(state), info));
+                        items.add(new PreparationItem(Boolean.valueOf(state), info));
                         //persons.put(INFO, info);
                         //persons.put(STATE, state);
                         Log.d(TAG, info+"++++++++++++++++"+state);
