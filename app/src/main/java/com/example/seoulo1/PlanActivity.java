@@ -170,6 +170,7 @@ public class PlanActivity extends AppCompatActivity {
             String scheduleText = "장소: " + place + "\n쓴 금액: " + expense + "\n일정: " + memo;
             scheduleTextList.add(scheduleText);
         }
+
         adapter.clear();
         adapter.addAll(scheduleTextList);
         adapter.notifyDataSetChanged();

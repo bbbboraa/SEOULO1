@@ -55,5 +55,4 @@
         android:layout_height="wrap_content"
         android:text="작성된 일정 보기" />
 
-
 </LinearLayout>

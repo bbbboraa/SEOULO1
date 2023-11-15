@@ -107,6 +107,5 @@ public class MemoActivity extends AppCompatActivity {
             memoAdapter.add(scheduleText);
         }
         memoAdapter.notifyDataSetChanged();
-
     }
 }
