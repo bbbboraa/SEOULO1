@@ -185,4 +185,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return allFavorites;
     }
 
+    public int deleteFavorite(String name) {
+        SQLiteDatabase db = getWritableDatabase(); // 데이터베이스를 수정할 때는 getWritableDatabase(), 데이터를 읽을 떄는 getReadableDatabase()를 씁니다
+        return db.delete(FAVORITES_TABLE, "FAVORITES_NAME = ?", new String[]{name});
+
+    }
 }

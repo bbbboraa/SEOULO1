@@ -3,10 +3,13 @@ package com.example.seoulo1;
 import static android.content.ContentValues.TAG;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -23,6 +26,12 @@ public class LikeAdapter extends ArrayAdapter<LocationItem> implements View.OnCl
     private LikeListBtnClickListener likeListBtnClickListener;
     private ImageView like;
     private ListView mListView;
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
     public interface LikeListBtnClickListener {
         void onLikeListButtonClick(int position, int resourceid) ;
 
@@ -35,23 +44,18 @@ public class LikeAdapter extends ArrayAdapter<LocationItem> implements View.OnCl
         this.likeListBtnClickListener = likeListBtnClickListener;
         this.likedLocations = objects;
         this.mListView = listView;
+        for (LocationItem item : likedLocations) {
+            item.setStatus(true);
+        }
+        this.mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (likeListBtnClickListener != null) {
+                    likeListBtnClickListener.onLikeListButtonClick(position, view.getId());
+                }
+            }
+        });
     }
-
-   // @Override
-//    public int getCount() {
-//        return likedLocations.size();
-//    }
-//
-//    @Override
-//    public Object getItem(int position) {
-//        return likedLocations.get(position);
-//    }
-//
-//    @Override
-//    public long getItemId(int position) {
-//        return position;
-//    }
-//
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
@@ -72,14 +76,17 @@ public class LikeAdapter extends ArrayAdapter<LocationItem> implements View.OnCl
 
         // 데이터 설정
         LocationItem locationItem = likedLocations.get(position);
+        String dis=locationItem.getDistance() + "m";
+
         holder.nameTextView.setText(locationItem.getLName());
         holder.openNowTextView.setText(locationItem.getOpen_now());
         holder.ratingTextView.setText(locationItem.getRating());
         holder.vicinityTextView.setText(locationItem.getVicinity());
-        holder.distanceTextView.setText(String.valueOf(locationItem.getDistance()));
+        holder.distanceTextView.setText(dis);
 
         // "좋아요" 이미지 설정
         if (locationItem.getStatus()) {
+            Log.d(TAG, locationItem.getStatus() + "어댑터의 좋아요 이미지 설정 getstatus () ");
             holder.likeImageView.setImageResource(R.drawable.filled_heart);
         } else {
             holder.likeImageView.setImageResource(R.drawable.nonfilled_heart);
@@ -90,6 +97,19 @@ public class LikeAdapter extends ArrayAdapter<LocationItem> implements View.OnCl
                 if (likeListBtnClickListener != null) {
                     likeListBtnClickListener.onLikeListButtonClick(position, view.getId());
                 }
+            }
+        });
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 클릭 이벤트에서 해당 장소의 이름을 사용하여 URL 생성
+                String url = null;
+                url = "https://www.google.com/maps/search/?api=1&query=" + locationItem.getLat() + "%2C" + locationItem.getLng() + "&query_place_id=" + locationItem.getPlaceId();
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                Log.d(TAG, url + "리스트뷰 누름 !!!!like");
+                intent.setPackage("com.google.android.apps.maps");
+                context.startActivity(intent);
+
             }
         });
         return convertView;
@@ -104,15 +124,15 @@ public class LikeAdapter extends ArrayAdapter<LocationItem> implements View.OnCl
         TextView distanceTextView;
         ImageView likeImageView;
     }
-    @Override
-    public void onClick(View view) {
-        Log.d(TAG, "like 버튼  onClick: ");
-        if (this.likeListBtnClickListener!= null) {
-            Log.d(TAG, "like 버튼  onClick 들어옴 !!!!!!!! ");
-
-            int position = (int) view.getTag();
-            int resourceId = view.getId();
-            this.likeListBtnClickListener.onLikeListButtonClick(position, resourceId) ;
-        }
-    }
+//    @Override
+//    public void onClick(View view) {
+//        Log.d(TAG, "like 버튼  onClick: ");
+//        if (this.likeListBtnClickListener!= null) {
+//            Log.d(TAG, "like 버튼  onClick 들어옴 !!!!!!!! ");
+//
+//            int position = (int) view.getTag();
+//            int resourceId = view.getId();
+//            this.likeListBtnClickListener.onLikeListButtonClick(position, resourceId) ;
+//        }
+//    }
 }

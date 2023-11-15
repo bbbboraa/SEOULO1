@@ -45,6 +45,7 @@
             android:id="@+id/like"
             android:layout_width="20dp"
             android:layout_height="20dp"
+
             android:layout_gravity="center"
             android:layout_marginEnd="8dp"
             android:src ="@drawable/nonfilled_heart"/>

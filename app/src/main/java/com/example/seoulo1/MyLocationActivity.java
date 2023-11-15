@@ -350,13 +350,6 @@ public class MyLocationActivity extends AppCompatActivity implements
             //showCategoryList();
         });
 
-        my_location_btn = findViewById(R.id.my_location_btn);
-        my_location_btn.setOnClickListener(v -> {
-            Intent intent1 = new Intent(MyLocationActivity.this, MyLocationActivity.class);
-            intent1.addFlags (Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent1);
-        });
-
         button_sort = findViewById(R.id.button_sort);
         button_sort.setOnClickListener(view->{
             PopupMenu popup= new PopupMenu(MyLocationActivity.this, view); //두 번째 파라미터가 팝업메뉴가 붙을 뷰
@@ -638,8 +631,7 @@ public class MyLocationActivity extends AppCompatActivity implements
 
     }
 
-
-    public void showMarker(){
+       public void showMarker(){
         runOnUiThread(() -> {
             // 지도에 마커를 표시한다.
             // 지도에 표시되어있는 마커를 모두 제거한다.
@@ -662,6 +654,7 @@ public class MyLocationActivity extends AppCompatActivity implements
                 String name=name_list.get(i);
                 String vicinity=vicinity_list.get(i);
                 int distance=distance_list.get(i);
+                String placeId = placeId_list.get(i);
 
 
                 // 생성할 마커의 정보를 가지고 있는 객체를 생성
@@ -686,11 +679,7 @@ public class MyLocationActivity extends AppCompatActivity implements
                     // BitmapDrawable이 아닌 경우에 대한 처리
                     Log.d(TAG, "showMarker: errrrrrrrrrrrrrrrrrrrrrrrrrror");
                 }
-                //Bitmap b=bitmapdraw.getBitmap();
-                //Bitmap smallMarker = Bitmap.createScaledBitmap(b, 65, 90, false);
-                //options.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-                //Marker marker=mMap.addMarker(options);
-                //markers_list.add(marker);
+
             }
         });
     }
@@ -757,14 +746,14 @@ public class MyLocationActivity extends AppCompatActivity implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        ImageButton distance_btn = findViewById(R.id.distance_btn);
+        //ImageButton distance_btn = findViewById(R.id.distance_btn);
         currentPosition= new LatLng(37.56, 126.97);   //현재 위치로 임의 설정, gps 쓸 시 주석처리
         double distance = SphericalUtil.computeDistanceBetween(currentPosition, marker.getPosition());
-        distance_btn.setOnClickListener(v -> {
-            Toast.makeText(MyLocationActivity.this, (int) distance + "m 남음", Toast.LENGTH_LONG).show();
-            Log.d(TAG, "onMarkerClick: 출력완료");
-
-        });
+//        distance_btn.setOnClickListener(v -> {
+//            Toast.makeText(MyLocationActivity.this, (int) distance + "m 남음", Toast.LENGTH_LONG).show();
+//            Log.d(TAG, "onMarkerClick: 출력완료");
+//
+//        });
         return false;
     }
 
@@ -1127,6 +1116,7 @@ public class MyLocationActivity extends AppCompatActivity implements
         switch (resourceid) {
             case R.id.like -> {
                 LocationItem selectedLocation = locationItem.get(position);
+
                 Log.d(TAG, position + " $$$$$$ 하트 들어옴 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
                 // LikeActivity로 전달할 데이터 설정
@@ -1138,20 +1128,29 @@ public class MyLocationActivity extends AppCompatActivity implements
                 DBHelper dbHelper = new DBHelper(this);
                 db = dbHelper.getWritableDatabase();
                 selectedLocation.setStatus(newStatus);
+                if (newStatus==false) {
+                    likedLocations.remove(selectedLocation);
+                    dbHelper.deleteFavorite(selectedLocation.getLName()); // DB에서 삭제
+                } else {
+                    dbHelper.insertFavorite(
+                            selectedLocation.getCategory_name(),
+                            selectedLocation.getLName(),
+                            selectedLocation.getPlaceId(),
+                            selectedLocation.getpNum(),
+                            selectedLocation.getDistance(),
+                            selectedLocation.getVicinity(),
+                            selectedLocation.getOpen_now(),
+                            selectedLocation.getRating(),
+                            selectedLocation.getLat(),
+                            selectedLocation.getLng(), newStatus
+                    );
+                }
+                Log.d(TAG, " 즐겨찾기 장소 저장 또는 삭제: " + selectedLocation);
+                final ListView listView = findViewById(R.id.listView);
+                final myLocationAdapter adapter=new myLocationAdapter(this,0, locationItem,this, listView);
+                listView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
 
-                dbHelper.insertFavorite(
-                        selectedLocation.getCategory_name(),
-                        selectedLocation.getLName(),
-                        selectedLocation.getPlaceId(),
-                        selectedLocation.getpNum(),
-                        selectedLocation.getDistance(),
-                        selectedLocation.getVicinity(),
-                        selectedLocation.getOpen_now(),
-                        selectedLocation.getRating(),
-                        selectedLocation.getLat(),
-                        selectedLocation.getLng(), newStatus
-                );
-                Log.d(TAG, " 즐겨찾기 장소 저장 : " + selectedLocation);
 
                 // LikeActivity 시작
                 //Intent likeIntent = new Intent(this, LikeActivity.class);
