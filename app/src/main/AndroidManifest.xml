@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -13,8 +17,8 @@
 
     <application
         android:allowBackup="false"
-        android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -25,6 +29,81 @@
         tools:targetApi="tiramisu">
         <activity
             android:name=".MemoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalSeochoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalGangnamActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalSongpaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalGangdongActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalGwanakActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalDongjakActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalYdpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalGeumcheonActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalGuroActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalYangcheonActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalYongsanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalJungActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalSeongdongActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalGwangjinActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalJungnangActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalNowonActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalSeongbukActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalGangbukActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalDobongActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalJongnoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalEunpyeongActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalDdmActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalSdmActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalMapoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocalGangseoActivity"
             android:exported="false" />
         <activity
             android:name=".RouteRecommActivity"
@@ -44,9 +123,6 @@
             android:exported="false" />
         <activity
             android:name=".CheckListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LocalHotplaceActivity"
             android:exported="false" />
         <activity
             android:name=".SearchActivity"
