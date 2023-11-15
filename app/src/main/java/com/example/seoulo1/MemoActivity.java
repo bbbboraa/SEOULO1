@@ -42,9 +42,10 @@ public class MemoActivity extends AppCompatActivity {
         if (scheduleList != null) {
             for (HashMap<String, String> schedule : scheduleList) {
                 String place = schedule.get("place");
+                String category = schedule.get("category");
                 String expense = schedule.get("expense");
                 String memo = schedule.get("memo");
-                String scheduleText = "장소: " + place + "\n쓴 금액: " + expense + "\n일정: " + memo;
+                String scheduleText = "장소: " + place + "\n(카테고리: " + category + ")\n사용 금액: " + expense + "\n일정: " + memo;
                 memoAdapter.add(scheduleText);
             }
         }
@@ -85,8 +86,13 @@ public class MemoActivity extends AppCompatActivity {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         // 선택 및 선택 인수 정의
-        String selection = "place = ? AND expense = ? AND memo = ?";
-        String[] selectionArgs = {schedule.get("place"), schedule.get("expense"), schedule.get("memo")};
+        String selection = "place = ? AND category = ? AND expense = ? AND memo = ?";
+        String[] selectionArgs = {
+                schedule.get("place"),
+                schedule.get("category"),
+                schedule.get("expense"),
+                schedule.get("memo")
+        };
 
         // 'schedule' 테이블에서 스케줄 삭제
         db.delete("schedule", selection, selectionArgs);
@@ -101,9 +107,10 @@ public class MemoActivity extends AppCompatActivity {
         memoAdapter.clear();
         for (HashMap<String, String> schedule : scheduleList) {
             String place = schedule.get("place");
+            String category = schedule.get("category");
             String expense = schedule.get("expense");
             String memo = schedule.get("memo");
-            String scheduleText = "장소: " + place + "\n쓴 금액: " + expense + "\n일정: " + memo;
+            String scheduleText = "장소: " + place + "\n(카테고리: " + category + ")\n사용 금액: " + expense + "\n일정: " + memo;
             memoAdapter.add(scheduleText);
         }
         memoAdapter.notifyDataSetChanged();
