@@ -33,9 +33,6 @@ import java.util.ArrayList;
 
 
 
-
-
-
 public class LocalGangseoActivity extends AppCompatActivity {
     private ImageButton like_btn, menu_btn, list_location;
     private Button button_restaurant, button_cafe, button_shopping, button_tour;
@@ -126,6 +123,8 @@ public class LocalGangseoActivity extends AppCompatActivity {
                         startActivity(intent5);
                         break;
                     case R.id.menu_expense_graph:
+                        Intent intent6 = new Intent(LocalGangseoActivity.this, GraphActivity.class);
+                        startActivity(intent6);
                         break;
                     case R.id.menu_mypage:
                         Intent intent7 = new Intent(LocalGangseoActivity.this, MypageActivity.class);
