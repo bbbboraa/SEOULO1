@@ -16,6 +16,13 @@ public interface PlaceDao {
     @Insert
     void insert(PlaceEntity place);
 
-    @Query("SELECT * FROM places")
-    List<PlaceEntity> getAllPlaces();
+    //@Query("SELECT * FROM places")
+    //List<PlaceEntity> getAllPlaces();
+
+    @Query("SELECT * FROM places WHERE category = :category")
+    List<PlaceEntity> getPlacesByCategory(String category);
+
+    //Query("SELECT * FROM places WHERE address = :address")
+    //List<PlaceEntity> getPlacesByAddress(String address);
+
 }
