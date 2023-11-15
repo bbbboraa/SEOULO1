@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class PathListFragment extends Fragment {
     private int position;  // 날짜에 해당하는 위치
     private long daysDiff;  // 사용자가 선택한 날짜
 
+
     private static final int MAX_ADDRESS_COUNT = 3;
     private RecyclerView rv1, rv2, rv3, rv4, rv5;
     private AddressAdapter rv1Adapter, rv2Adapter, rv3Adapter, rv4Adapter, rv5Adapter;
@@ -42,7 +44,6 @@ public class PathListFragment extends Fragment {
         // 빈 생성자가 필요합니다.
     }
 
-
     // 프래그먼트를 생성하는 메서드
     // 'PathListFragment 클래스는 Android Fragment 클래스를 확장한 것이며
     // 화면에 표시되는 하위 경로 목록을 관리합니다. 여러 멤버 변수와 메소드가 있습니다.
@@ -54,7 +55,6 @@ public class PathListFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
 
 
     // 'onCreate' 메서드는 Fragment가 생성될 때 호출되는 메서드이며
@@ -70,7 +70,6 @@ public class PathListFragment extends Fragment {
     }
 
 
-
     // 'onCreateView' 메서드는 Fragment의 레이아웃을 설정하고
     // 날짜 및 위치 정보를 표시하는 메서드입니다.
     @Nullable
@@ -83,12 +82,18 @@ public class PathListFragment extends Fragment {
         // 선택된 날짜와 위치를 표시
         textView.setText("day " + (position + 1));
 
+
         // RecyclerView 및 관련 어댑터 및 데이터 목록을 초기화
         rv1 = view.findViewById(R.id.rv1);
         rv2 = view.findViewById(R.id.rv2);
         rv3 = view.findViewById(R.id.rv3);
         rv4 = view.findViewById(R.id.rv4);
         rv5 = view.findViewById(R.id.rv5);
+
+        // 데이터베이스 객체를 먼저 생성
+        AppDatabase database = Room.databaseBuilder(requireContext(), AppDatabase.class, "places-db")
+                .fallbackToDestructiveMigration()
+                .build();
 
         rv1LayoutManager = new LinearLayoutManager(requireContext());
         rv2LayoutManager = new LinearLayoutManager(requireContext());
@@ -102,27 +107,25 @@ public class PathListFragment extends Fragment {
         rv4DataList = new ArrayList<>();
         rv5DataList = new ArrayList<>();
 
-        rv1Adapter = new AddressAdapter(rv1DataList);
-        rv2Adapter = new AddressAdapter(rv2DataList);
-        rv3Adapter = new AddressAdapter(rv3DataList);
-        rv4Adapter = new AddressAdapter(rv4DataList);
-        rv5Adapter = new AddressAdapter(rv5DataList);
-
-
         // RecyclerView 및 관련 어댑터, 레이아웃 매니저를 설정
         rv1.setLayoutManager(rv1LayoutManager);
+        rv1Adapter = new AddressAdapter(database, rv1DataList);
         rv1.setAdapter(rv1Adapter);
 
         rv2.setLayoutManager(rv2LayoutManager);
+        rv2Adapter = new AddressAdapter(database, rv2DataList);
         rv2.setAdapter(rv2Adapter);
 
         rv3.setLayoutManager(rv3LayoutManager);
+        rv3Adapter = new AddressAdapter(database, rv3DataList);
         rv3.setAdapter(rv3Adapter);
 
         rv4.setLayoutManager(rv4LayoutManager);
+        rv4Adapter = new AddressAdapter(database, rv4DataList);
         rv4.setAdapter(rv4Adapter);
 
         rv5.setLayoutManager(rv5LayoutManager);
+        rv5Adapter = new AddressAdapter(database, rv5DataList);
         rv5.setAdapter(rv5Adapter);
 
 
@@ -179,9 +182,17 @@ public class PathListFragment extends Fragment {
         });
 
 
-
         // 나머지 버튼과 메뉴 버튼 관련 코드 추가
         like_btn = view.findViewById(R.id.like_btn);
+        like_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 루트 추천 버튼 클릭 시 실행할 로직 추가
+                Intent intent = new Intent(requireContext(), LikeActivity.class);
+                startActivity(intent);
+            }
+        });
+
         menu_btn = view.findViewById(R.id.menu_btn);
         menu_btn.setOnClickListener(this::showPopupMenu);
 
@@ -189,17 +200,8 @@ public class PathListFragment extends Fragment {
     }
 
 
-    // 'startAddressSearch' 메서드는 주소 검색 액티비티를 시작
-    private void startAddressSearch(int requestCode) {
-        Intent intent = new Intent(requireActivity(), AddrResearchActivity.class);
-        intent.putExtra("selectDate", daysDiff);
-        intent.putExtra("requestCode", requestCode); // 각 버튼에 대한 요청 코드 추가
-        startActivityForResult(intent, requestCode);
-    }
-
-
-
     // 팝업 메뉴를 표시하고 팝업 메뉴 아이템 클릭에 따른 동작을 처리
+
     private void showPopupMenu(View view) {
         PopupMenu popup = new PopupMenu(requireContext(), view);
         popup.getMenuInflater().inflate(R.menu.popup, popup.getMenu());
@@ -243,6 +245,14 @@ public class PathListFragment extends Fragment {
 
 
     // 주소 검색 액티비티에서 결과를 처리하고 RecyclerView에 추가
+    // 'startAddressSearch' 메서드는 주소 검색 액티비티를 시작
+    private void startAddressSearch(int requestCode) {
+        Intent intent = new Intent(requireActivity(), AddrResearchActivity.class);
+        intent.putExtra("selectDate", daysDiff);
+        intent.putExtra("requestCode", requestCode); // 각 버튼에 대한 요청 코드 추가
+        startActivityForResult(intent, requestCode);
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -263,8 +273,8 @@ public class PathListFragment extends Fragment {
                 currentDataList.add(address);
                 currentAdapter.notifyItemInserted(currentDataList.size() - 1);
 
-                // 선택한 주소를 카테고리에 맞게 저장
                 saveAddressToDatabase(address, getCategoryByRequestCode(requestCode));
+
             }
         }
     }
@@ -309,26 +319,35 @@ public class PathListFragment extends Fragment {
         AppDatabase database = Room.databaseBuilder(requireContext(), AppDatabase.class, "places-db")
                 .fallbackToDestructiveMigration()
                 .build();
-       // AppDatabase database = Room.databaseBuilder(requireContext(), AppDatabase.class, "places-db").build();
+        // AppDatabase database = Room.databaseBuilder(requireContext(), AppDatabase.class, "places-db").build();
         return database.placeDao().getPlacesByCategory(category);
     }
 
-        // 주소를 데이터베이스에 저장하는 메서드
-        private void saveAddressToDatabase(String address, String category) {
-            AsyncTask.execute(() -> {
-                AppDatabase database = Room.databaseBuilder(requireContext(), AppDatabase.class, "places-db")
-                        .fallbackToDestructiveMigration()
-                        .build();
-               // AppDatabase database = Room.databaseBuilder(requireContext(), AppDatabase.class, "places-db").build();
-                // PlaceEntity 객체 생성 및 데이터 설정
-                PlaceEntity place = new PlaceEntity();
-                place.setAddress(address);
-                place.setCategory(category);
-                place.setPosition(position);  // 프래그먼트의 위치 정보 설정
+    // 주소를 데이터베이스에 저장하는 메서드
+    private void saveAddressToDatabase(String address, String category) {
+        AsyncTask.execute(() -> {
+            AppDatabase database = Room.databaseBuilder(requireContext(), AppDatabase.class, "places-db")
+                    .fallbackToDestructiveMigration()
+                    .build();
+            // AppDatabase database = Room.databaseBuilder(requireContext(), AppDatabase.class, "places-db").build();
+            // PlaceEntity 객체 생성 및 데이터 설정
+            PlaceEntity place = new PlaceEntity();
+            place.setAddress(address);
+            place.setCategory(category);
+            place.setPosition(position);  // 프래그먼트의 위치 정보 설정
 
+            try {
                 // 데이터베이스에 저장
                 database.placeDao().insert(place);
-            });
+
+                // 성공적으로 삭제되었음을 로그에 출력
+                Log.d("Database", "Address saved: " + address + ", category:"+ category + ", position:" + position);
+
+            } catch (Exception e) {
+                // 삭제 중 오류가 발생했음을 로그에 출력
+                Log.e("Database", "Error saving address: " + address, e);
+            }
+        });
 
     }
 
@@ -349,7 +368,5 @@ public class PathListFragment extends Fragment {
                 return "";
         }
     }
-
-
 
 }

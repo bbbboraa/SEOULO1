@@ -11,7 +11,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 // Room Database에 대한 클래스 생성
 
 
-@Database(entities = {PlaceEntity.class}, version = 3)
+@Database(entities = {PlaceEntity.class}, version = 4)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract PlaceDao placeDao();
 
