@@ -25,4 +25,9 @@ public interface PlaceDao {
     //Query("SELECT * FROM places WHERE address = :address")
     //List<PlaceEntity> getPlacesByAddress(String address);
 
+    // 프래그먼트의 위치(position)을 기반으로 데이터 조회
+    @Query("SELECT * FROM places WHERE position = :position")
+    List<PlaceEntity> getPlacesByPosition(int position);
+
+
 }

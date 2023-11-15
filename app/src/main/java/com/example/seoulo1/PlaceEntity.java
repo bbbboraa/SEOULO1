@@ -17,6 +17,8 @@ public class PlaceEntity {
 
     private String category;  // 카테고리 정보 추가
 
+    private int position;     // 프래그먼트의 위치 정보 추가
+
     // 생성자, getter, setter 등 필요한 메소드 구현
 
     public int getId() {
@@ -41,5 +43,13 @@ public class PlaceEntity {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 }

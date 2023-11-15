@@ -91,11 +91,15 @@ public class AddrSetActivity extends AppCompatActivity {
     // 주소를 데이터베이스에 저장하는 메서드
     private void saveAddressToDatabase(String address, String category) {
         AsyncTask.execute(() -> {
-            AppDatabase database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "places-db").build();
+            AppDatabase database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "places-db")
+                    .fallbackToDestructiveMigration()
+                    .build();
+            //AppDatabase database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "places-db").build();
             // PlaceEntity 객체 생성 및 데이터 설정
             PlaceEntity place = new PlaceEntity();
             place.setAddress(address);
             place.setCategory(category);
+
 
             // 데이터베이스에 저장
             database.placeDao().insert(place);

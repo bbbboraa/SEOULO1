@@ -1,12 +1,26 @@
 package com.example.seoulo1;
 
-public class LocationItem {
-    String category_name;
-    String name, placeId, pNum;
+import java.io.Serializable;
+
+public class LocationItem implements Serializable {
+    String category_name, name, placeId, pNum;
     int distance;
-    String vicinity;
-    String open_now, rating;
-    public LocationItem(String placeId, String name, String category_name, String vicinity, int distance, String pNum, String open_now, String rating){
+    String vicinity, open_now, rating;
+    double lat, lng;
+    boolean status;
+    @Override
+    public String toString() {
+        return "LocationItem{" +
+                "placeId='" + placeId + '\'' +
+                ", name='" + name + '\'' +
+                ", type='" + category_name + '\'' +
+                ", vicinity='" + vicinity + '\'' +
+                ", distance=" + distance +
+                ", phoneNumber='" + pNum + '\'' +
+                ", openNow='" + open_now + '\'' +
+                ", rating='" + rating + '\'' +", lat='" + lat + '\'' +", lng='" + lng + '\''+",status='" + status+ '}';
+    }
+    public LocationItem(String placeId, String name, String category_name, String vicinity, int distance, String pNum, String open_now, String rating, double lat, double lng, boolean status){
         this.placeId=placeId;
         this.name=name;
         this.category_name=category_name;
@@ -15,7 +29,15 @@ public class LocationItem {
         this.pNum= pNum;
         this.open_now= open_now;
         this.rating= rating;
+        this.lat= lat;
+        this.lng= lng;
+        this.status=status;
     }
+    public Double getLat() {return lat;}
+    public Double getLng() {return lng;}
+    public Boolean getStatus() {return status;}
+    public void setStatus(boolean status) {this.status = status;}
+
     public String getOpen_now() {return open_now;}
     public String getRating() {return rating;}
 
@@ -49,4 +71,8 @@ public class LocationItem {
         this.distance=distance;
     }
 
-}
+    public boolean isLiked() {
+        return true;
+    }
+
+    }

@@ -306,18 +306,25 @@ public class PathListFragment extends Fragment {
 
     // 카테고리별 주소 목록을 가져오는 메소드
     private List<PlaceEntity> getPlacesByCategory(String category) {
-        AppDatabase database = Room.databaseBuilder(requireContext(), AppDatabase.class, "places-db").build();
+        AppDatabase database = Room.databaseBuilder(requireContext(), AppDatabase.class, "places-db")
+                .fallbackToDestructiveMigration()
+                .build();
+       // AppDatabase database = Room.databaseBuilder(requireContext(), AppDatabase.class, "places-db").build();
         return database.placeDao().getPlacesByCategory(category);
     }
 
         // 주소를 데이터베이스에 저장하는 메서드
         private void saveAddressToDatabase(String address, String category) {
             AsyncTask.execute(() -> {
-                AppDatabase database = Room.databaseBuilder(requireContext(), AppDatabase.class, "places-db").build();
+                AppDatabase database = Room.databaseBuilder(requireContext(), AppDatabase.class, "places-db")
+                        .fallbackToDestructiveMigration()
+                        .build();
+               // AppDatabase database = Room.databaseBuilder(requireContext(), AppDatabase.class, "places-db").build();
                 // PlaceEntity 객체 생성 및 데이터 설정
                 PlaceEntity place = new PlaceEntity();
                 place.setAddress(address);
                 place.setCategory(category);
+                place.setPosition(position);  // 프래그먼트의 위치 정보 설정
 
                 // 데이터베이스에 저장
                 database.placeDao().insert(place);
@@ -342,5 +349,7 @@ public class PathListFragment extends Fragment {
                 return "";
         }
     }
+
+
 
 }

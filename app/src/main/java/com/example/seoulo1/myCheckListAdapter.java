@@ -1,6 +1,7 @@
 package com.example.seoulo1;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +23,12 @@ public class myCheckListAdapter extends ArrayAdapter implements View.OnClickList
 
     private List<PreparationItem> preparationItems;
 
-    public interface ListBtnClickListener {
+       public interface ListBtnClickListener {
 
         void onListBtnClick(int position, int resourceid) ;
 
     }
-    public myCheckListAdapter(@NonNull Context context, int resource, @NonNull List objects, ListBtnClickListener listBtnClickListener) {
+    public myCheckListAdapter(@NonNull Context context, int resource, @NonNull List objects, CheckListActivity listBtnClickListener) {
         super(context, resource, objects);
         this.listBtnClickListener = listBtnClickListener;
         this.preparationItems = objects;
@@ -55,6 +56,10 @@ public class myCheckListAdapter extends ArrayAdapter implements View.OnClickList
         btn_delete.setOnClickListener(this);
         btn_delete.setVisibility(View.VISIBLE);
         item_edit.setText(checklist_items.getItemString());
+        this.notifyDataSetChanged();
+
+        Log.d("@@@", "preparationitem[" + position + "]" + " row view is " + checklist_items.getItemString());
+
         return convertView;
     }
     @Override

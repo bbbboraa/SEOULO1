@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
     android:orientation="vertical">
 
     <LinearLayout
-        android:descendantFocusability="blocksDescendants"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal">

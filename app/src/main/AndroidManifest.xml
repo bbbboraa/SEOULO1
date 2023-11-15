@@ -30,6 +30,10 @@
             android:name=".RouteRecommActivity"
             android:exported="false" />
         <activity
+            android:name=".LikeActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".AddrSetActivity"
             android:exported="false" />
         <activity

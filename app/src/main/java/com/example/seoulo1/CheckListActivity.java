@@ -109,10 +109,10 @@ public class CheckListActivity extends AppCompatActivity implements myCheckListA
                 Log.d(TAG, s + " ###### 단어 삭제 성공 ???????");
                 //db.execSQL("delete from "+TABLE_NAME+" WHERE INFO="+s);
                 dbHelper.deleteData(s);
-                myCheckListAdapter adapter = new myCheckListAdapter(this, R.layout.checklist_items, dbHelper.SelectAll(), this);
+                //myCheckListAdapter adapter = new myCheckListAdapter(this, R.layout.checklist_items, dbHelper.SelectAll(), this);
                 @SuppressLint("CutPasteId") ListView listview = findViewById(R.id.listview);
                 adapter.remove(position);
-                listview.setAdapter(adapter);
+                //listview.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 show(listview);
             }
@@ -177,11 +177,14 @@ public class CheckListActivity extends AppCompatActivity implements myCheckListA
 //                    new String[]{INFO, STATE},
 //                    new int[]{R.id.item_edit, R.id.checkbox}
 //            );
-            //새로운 apapter를 생성하여 데이터를 넣은 후..
-            PreparationAdapter adapter = new PreparationAdapter(
-                    this, item_db, listView);
-            //화면에 보여주기 위해 Listview에 연결합니다.
+//            //새로운 apapter를 생성하여 데이터를 넣은 후..
+//            PreparationAdapter adapter = new PreparationAdapter(
+//                    this, item_db, listView);
+//            //화면에 보여주기 위해 Listview에 연결합니다.
+//            listView.setAdapter(adapter);
+            myCheckListAdapter adapter = new myCheckListAdapter(this, R.layout.checklist_items, item_db, this);
             listView.setAdapter(adapter);
+
 
         } catch (
                 SQLiteException se) {

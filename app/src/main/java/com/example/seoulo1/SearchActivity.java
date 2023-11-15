@@ -24,7 +24,10 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
 
         // 데이터베이스 초기화 (한 번만 호출)
-        database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "places-db").build();
+        database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "places-db")
+                .fallbackToDestructiveMigration()
+                .build();
+        //database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "places-db").build();
 
         Intent intent = getIntent();
         requestCode = intent.getIntExtra("requestCode", 0); // 추가: 요청 코드 받아오기
