@@ -3,6 +3,7 @@ package com.example.seoulo1;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -94,15 +95,23 @@ public class AddrSetActivity extends AppCompatActivity {
             AppDatabase database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "places-db")
                     .fallbackToDestructiveMigration()
                     .build();
-            //AppDatabase database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "places-db").build();
+
             // PlaceEntity 객체 생성 및 데이터 설정
             PlaceEntity place = new PlaceEntity();
             place.setAddress(address);
             place.setCategory(category);
 
+            try {
+                // 데이터베이스에 저장
+                database.placeDao().insert(place);
 
-            // 데이터베이스에 저장
-            database.placeDao().insert(place);
+                // 성공적으로 삭제되었음을 로그에 출력
+                Log.d("Database", "arrival/departure Address saved: " + address + "category"+ category);
+
+            } catch (Exception e) {
+                // 삭제 중 오류가 발생했음을 로그에 출력
+                Log.e("Database", "Error saving arrival/departure address: " + address, e);
+            }
         });
     }
 

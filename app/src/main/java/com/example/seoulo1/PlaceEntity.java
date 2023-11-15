@@ -52,4 +52,16 @@ public class PlaceEntity {
     public void setPosition(int position) {
         this.position = position;
     }
+
+//    // toString 메소드 추가
+//    @Override
+//    public String toString() {
+//        return "PlaceEntity{" +
+//                "id=" + id +
+//                ", address='" + address + '\'' +
+//                ", category='" + category + '\'' +
+//                ", position=" + position +
+//                '}';
+//    }
+//
 }

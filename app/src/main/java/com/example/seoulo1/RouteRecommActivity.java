@@ -60,7 +60,7 @@ public class RouteRecommActivity extends AppCompatActivity implements OnMapReady
         LatLng seoulLatLng = new LatLng(37.5665, 126.9780);
 
         // 지도를 서울로 이동 및 초기 줌 레벨 설정
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoulLatLng, 10.0f));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoulLatLng, 13.0f));
 
         // 날짜별로 구분된 장소 정보를 가져와 지도에 마커 추가
         loadMarkersForDates(position);
