@@ -178,6 +178,8 @@ public class PathListFragment extends Fragment {
             public void onClick(View view) {
                 // 루트 추천 버튼 클릭 시 실행할 로직 추가
                 Intent intent = new Intent(requireContext(), AddrSetActivity.class);
+                // 현재 프래그먼트의 위치 정보를 Intent에 추가
+                intent.putExtra("position", position);
                 startActivity(intent);
             }
         });
