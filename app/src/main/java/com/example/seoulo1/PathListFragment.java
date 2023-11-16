@@ -79,6 +79,7 @@ public class PathListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_path_list, container, false);
         TextView textView = view.findViewById(R.id.calendar_day);
 
+
         // 선택된 날짜와 위치를 표시
         textView.setText("day " + (position + 1));
 
@@ -270,8 +271,19 @@ public class PathListFragment extends Fragment {
                     currentDataList.remove(0); // 가장 오래된 항목 제거
                     currentAdapter.notifyItemRemoved(0);
                 }
-                currentDataList.add(address);
-                currentAdapter.notifyItemInserted(currentDataList.size() - 1);
+
+                // 주소가 기존 목록에 있는지 확인하고 업데이트 또는 추가합니다.
+                if (currentDataList.contains(address)) {
+                    // 기존 목록에 주소가 있으면 업데이트
+                    int index = currentDataList.indexOf(address);
+                    currentDataList.set(index, address);
+                    currentAdapter.notifyItemChanged(index);
+                } else {
+                    // 기존 목록에 주소가 없으면 추가
+                    currentDataList.add(address);
+                    currentAdapter.notifyItemInserted(currentDataList.size() - 1);
+                }
+
 
                 saveAddressToDatabase(address, getCategoryByRequestCode(requestCode));
 
@@ -368,5 +380,6 @@ public class PathListFragment extends Fragment {
                 return "";
         }
     }
+
 
 }

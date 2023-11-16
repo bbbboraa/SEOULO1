@@ -53,6 +53,7 @@ public class PlaceEntity {
         this.position = position;
     }
 
+
 //    // toString 메소드 추가
 //    @Override
 //    public String toString() {
