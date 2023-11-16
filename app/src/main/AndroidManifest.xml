@@ -125,6 +125,7 @@
             android:exported="false" />
         <activity
             android:name=".CheckListActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="false" />
         <activity
             android:name=".SearchActivity"

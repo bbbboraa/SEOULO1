@@ -49,7 +49,11 @@ public class myCheckListAdapter extends ArrayAdapter<PreparationItem> implements
             viewHolder.btn_delete = convertView.findViewById(R.id.btn_delete);
             viewHolder.checkBox.setOnClickListener(this);
             viewHolder.btn_delete.setOnClickListener(this);
-
+            viewHolder.item_edit.setOnEditorActionListener((v, actionId, event) -> {
+                int clickedPosition = (int) v.getTag();
+                ((CheckListActivity) getContext()).handleEnterKey(clickedPosition);
+                return true;
+            });
             convertView.setTag(viewHolder);
         }
         UserViewHolder viewHolder = (UserViewHolder) convertView.getTag();
@@ -63,10 +67,19 @@ public class myCheckListAdapter extends ArrayAdapter<PreparationItem> implements
             viewHolder.checkBox.setChecked(false);
         }
         viewHolder.btn_delete.setTag(pos);
-        //viewHolder.btn_delete.setOnClickListener(this);
-        //viewHolder.btn_delete.setVisibility(View.VISIBLE);
 
-        viewHolder.item_edit.setText(checklist_items.getItemString());
+        viewHolder.item_edit.setTag(pos);
+        //값을 불려오고 해당 리스너를 적용한다
+        viewHolder.item_edit.setText(checklist_items.itemString);
+        clearTextChangedListener(viewHolder.item_edit);
+        viewHolder.item_edit.addTextChangedListener(checklist_items.mTextWatcher);
+        viewHolder.item_edit.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                // 포커스를 잃었을 때
+                checklist_items.newitemString = viewHolder.item_edit.getText().toString();
+            }
+        });
+        //viewHolder.item_edit.setText(checklist_items.getItemString());
 
 
         Log.d("@@@", "preparationitem[" + position + "]" + " row view is " + checklist_items.getItemString());
@@ -88,8 +101,18 @@ public class myCheckListAdapter extends ArrayAdapter<PreparationItem> implements
 //
 //        return convertView;
     }
+    private void clearTextChangedListener(EditText editText) {
+        //리스트 목록의 모든 리스너를 대상으로 검사하여 삭제해 준다
+        int count = getCount();
+        for (int i = 0 ; i < count ; i++)
+            editText.removeTextChangedListener(getItem(i).mTextWatcher);
+    }
+    public void updateItemText(int position, String newText) {
+        PreparationItem item = preparationItems.get(position);
+        item.setItemString(newText);
+        notifyDataSetChanged();
+    }
     @Override
-
     public void onClick(View view) {
         if (this.listBtnClickListener != null) {
             int position = (int) view.getTag();
@@ -99,7 +122,6 @@ public class myCheckListAdapter extends ArrayAdapter<PreparationItem> implements
                 PreparationItem item = preparationItems.get(position);
                 item.setChecked(!item.isChecked());
                 notifyDataSetChanged(); // 이 부분이 변경된 상태를 어댑터에 알려 업데이트합니다.
-
             }
 
         }

@@ -3,6 +3,7 @@ package com.example.seoulo1;
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,11 +11,14 @@ import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -116,7 +120,6 @@ public class CheckListActivity extends AppCompatActivity implements myCheckListA
                 @SuppressLint("CutPasteId") ListView listview = findViewById(R.id.listview);
                 items.remove(selected);
                 adapter.notifyDataSetChanged();
-                myCheckListAdapter adapter = new myCheckListAdapter(this, R.layout.checklist_items, items, this);
                 show(listview);
                 break;}
             }
@@ -145,20 +148,70 @@ public class CheckListActivity extends AppCompatActivity implements myCheckListA
                     show(listview);}
             }
             case R.id.item_edit -> {
-                s = c.getString(c.getColumnIndex(INFO));
+                handleEnterKey(position);
 
-                PreparationItem selected = items.get(position);
-                dbHelper.updateContent(s, String.valueOf(selected.getChecked()));
-                //myCheckListAdapter adapter = new myCheckListAdapter(this, R.layout.checklist_items, dbHelper.SelectAll(), this);
-                @SuppressLint("CutPasteId") ListView listview = findViewById(R.id.listview);
-                selected.setItemString(s);
-                adapter.notifyDataSetChanged();
-                myCheckListAdapter adapter = new myCheckListAdapter(this, R.layout.checklist_items, items, this);
-                show(listview);
-
+                   break;
             }
         }
     }
+
+    void handleEnterKey(int position) {
+        db=dbHelper.getReadableDatabase();
+        @SuppressLint("Recycle") Cursor c=db.rawQuery("select * from "+ TABLE_NAME, null);
+        Log.d(TAG, position + "!!!!!! 리스트뷰 누름 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+        if (c.moveToPosition(position)) {
+            // 원하는 위치로 이동한 후 데이터를 가져옴
+            EditText editText = findViewById(R.id.item_edit);
+            editText.requestFocus();
+            Log.d(TAG, "IME_ACTION_DONE 못드감 ㅋㅋㅋㅋ");
+            editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+            editText.setOnEditorActionListener(new EditText.OnEditorActionListener()  {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    Log.d(TAG, "onEditorAction: actionId = " + actionId + ", event = " + event);
+                    final boolean isEnterEvent = event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER;
+                    Log.d(TAG, "IME_ACTION_DONE if");
+                    final boolean isEnterUpEvent = isEnterEvent && event.getAction() == KeyEvent.ACTION_UP;
+                    final boolean isEnterDownEvent = isEnterEvent && event.getAction() == KeyEvent.ACTION_DOWN;
+                    if ( actionId == EditorInfo.IME_ACTION_DONE || isEnterUpEvent || isEnterDownEvent) {
+                        PreparationItem item = items.get(position);
+                        item.setItemString(v.getText().toString());
+                        Log.d(TAG, v.getText().toString() + "준비물 수정 ...... ");
+                        // 어댑터에 데이터셋 변경을 알립니다.
+                        dbHelper.updateContent(v.getText().toString(), String.valueOf(item.getChecked()));
+                        // 키보드를 숨깁니다.
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        ListView listview = findViewById(R.id.listview);
+                        listview.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+                        show(listview);
+
+                        return true; // 이벤트가 소비되었음을 알립니다.
+                    }                        Log.d(TAG, "IME_ACTION_DONE else");
+                    return false;
+
+                }
+            });
+//                    String s = c.getString(c.getColumnIndex(INFO));
+//                    Log.d(TAG, "Selected item at position " + position + ": " + s); // 추가한 로그
+//                    PreparationItem selected = items.get(position);
+//                    dbHelper.updateContent(s, String.valueOf(selected.getChecked()));
+//                    adapter.updateItemText(position, selected.getItemString()); // 어댑터에서 리스트 업데이트
+//                    //myCheckListAdapter adapter = new myCheckListAdapter(this, R.layout.checklist_items, dbHelper.SelectAll(), this);
+//                    @SuppressLint("CutPasteId") ListView listview = findViewById(R.id.listview);
+//                    selected.setItemString(s);
+//                    items.set(position, selected);
+//                    adapter.notifyDataSetChanged();
+//                    show(listview);
+        } else {
+            Log.e(TAG, "Failed to move cursor to position: " + position);
+        }
+
+    }
+
     public void show(ListView listView) {
         db=dbHelper.getReadableDatabase();
         Cursor c=db.rawQuery("select * from "+ TABLE_NAME, null);
