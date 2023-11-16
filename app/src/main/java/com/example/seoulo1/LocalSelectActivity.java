@@ -87,6 +87,8 @@ public class LocalSelectActivity extends AppCompatActivity {
                         startActivity(intent5);
                         break;
                     case R.id.menu_expense_graph:
+                        Intent intent6 = new Intent(LocalSelectActivity.this, GraphActivity.class);
+                        startActivity(intent6);
                         break;
                     case R.id.menu_mypage:
                         Intent intent7 = new Intent(LocalSelectActivity.this, MypageActivity.class);

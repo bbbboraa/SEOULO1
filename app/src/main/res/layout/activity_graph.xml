@@ -14,7 +14,9 @@
             android:id="@+id/text_total_expense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="30dp"
+            android:textStyle="bold"
             android:text="총 지출" />
 
         <LinearLayout
@@ -25,14 +27,19 @@
             <TextView
                 android:id="@+id/edittext_total_expense"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:textSize="25dp"
+                android:textStyle="bold"
                 android:text="0" />
 
             <TextView
                 android:id="@+id/text_won"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
+                android:textSize="30dp"
+                android:textStyle="bold"
                 android:text="원" />
         </LinearLayout>
 
@@ -48,7 +55,7 @@
             android:id="@+id/restaurant_category"
             android:layout_width="3dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.7"
+            android:layout_weight="1.2"
             android:background="@drawable/btn_selector"
             android:onClick="onCategoryButtonClick"
             android:text="음식점" />
@@ -58,14 +65,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textStyle="bold"
+            android:textColor="#1E285C"
+            android:textSize="18dp"
+            android:layout_marginLeft="20dp"
             android:text="TextView" />
 
         <TextView
             android:id="@+id/restaurant_won"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="right"
             android:layout_weight="1"
+            android:textSize="18dp"
+            android:textStyle="bold"
             android:text="TextView" />
+
+        <TextView
+            android:id="@+id/text_won2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="0.7"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:text="원" />
 
     </LinearLayout>
 
@@ -86,7 +110,7 @@
             android:id="@+id/cafe_category"
             android:layout_width="3dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.7"
+            android:layout_weight="1.2"
             android:background="@drawable/btn_selector"
             android:onClick="onCategoryButtonClick"
             android:text="카페" />
@@ -96,14 +120,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:textStyle="bold"
+            android:textColor="#1E285C"
+            android:textSize="18dp"
             android:text="TextView" />
 
         <TextView
             android:id="@+id/cafe_won"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="right"
             android:layout_weight="1"
+            android:textStyle="bold"
+            android:textSize="18dp"
             android:text="TextView" />
+
+        <TextView
+            android:id="@+id/text_won3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="0.7"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:text="원" />
 
     </LinearLayout>
 
@@ -124,7 +165,7 @@
             android:id="@+id/tour_category"
             android:layout_width="3dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.7"
+            android:layout_weight="1.2"
             android:background="@drawable/btn_selector"
             android:onClick="onCategoryButtonClick"
             android:text="문화/관광" />
@@ -134,14 +175,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:textColor="#1E285C"
+            android:textStyle="bold"
+            android:textSize="18dp"
             android:text="TextView" />
 
         <TextView
             android:id="@+id/tour_won"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="right"
             android:layout_weight="1"
+            android:textStyle="bold"
+            android:textSize="18dp"
             android:text="TextView" />
+
+        <TextView
+            android:id="@+id/text_won4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="0.7"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:text="원" />
 
     </LinearLayout>
 
@@ -163,7 +221,7 @@
             android:id="@+id/shop_category"
             android:layout_width="3dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.7"
+            android:layout_weight="1.2"
             android:background="@drawable/btn_selector"
             android:onClick="onCategoryButtonClick"
             android:text="쇼핑" />
@@ -173,14 +231,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:textColor="#1E285C"
+            android:textStyle="bold"
+            android:textSize="18dp"
             android:text="TextView" />
 
         <TextView
             android:id="@+id/shop_won"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textStyle="bold"
             android:layout_weight="1"
+            android:textSize="18dp"
             android:text="TextView" />
+
+        <TextView
+            android:id="@+id/text_won5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="0.7"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:text="원" />
 
     </LinearLayout>
 
@@ -201,7 +276,7 @@
             android:id="@+id/other_category"
             android:layout_width="3dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.7"
+            android:layout_weight="1.2"
             android:background="@drawable/btn_selector"
             android:onClick="onCategoryButtonClick"
             android:text="기타" />
@@ -211,14 +286,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:textColor="#1E285C"
+            android:textStyle="bold"
+            android:textSize="18dp"
             android:text="TextView" />
 
         <TextView
             android:id="@+id/other_won"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textStyle="bold"
+            android:textSize="18dp"
             android:layout_weight="1"
             android:text="TextView" />
+
+        <TextView
+            android:id="@+id/text_won6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="0.7"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:text="원" />
 
     </LinearLayout>
 
