@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +25,9 @@ import java.util.List;
 public class PlanActivity extends AppCompatActivity {
     // 필요한 변수들 선언
     private List<String> scheduleTextList; // RecyclerView 어댑터에 사용할 스케줄 텍스트 목록
+    private SQLiteDatabase db;
+    static final String DB_NAME = "schedule.db";
+    static final String TABLE_NAME = "schedule";
 
     private RecyclerView scheduleRecyclerView; // 스케줄 목록을 표시하는 RecyclerView
     private EditText placeEditText; // 장소 입력 필드
@@ -48,6 +50,10 @@ public class PlanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
 
+        ScheduleDbHelper dbHelper=new ScheduleDbHelper(this);
+        db=openOrCreateDatabase(DB_NAME, MODE_PRIVATE, null);
+        db=dbHelper.getReadableDatabase();
+//
         Button categoryRestaurant = findViewById(R.id.categoryRestaurant);
         Button categoryCafe = findViewById(R.id.categoryCafe);
         Button categoryCultureTourism = findViewById(R.id.categoryCultureTourism);
