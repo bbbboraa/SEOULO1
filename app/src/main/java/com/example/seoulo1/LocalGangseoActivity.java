@@ -1,15 +1,12 @@
 package com.example.seoulo1;
 
-import static com.google.android.material.color.utilities.MaterialDynamicColors.error;
-
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
-import android.content.Intent;
 import android.util.Log;
-import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -23,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -137,6 +135,11 @@ public class LocalGangseoActivity extends AppCompatActivity {
             popup.show();
         });
 
+        like_btn = findViewById(R.id.like_btn);
+        like_btn.setOnClickListener(view ->{
+            Intent intent8 = new Intent(LocalGangseoActivity.this, LikeActivity.class);
+            startActivity(intent8);
+        });
     }
 
     private void displayListFromAsset(String fileName, String urlFileName) {
@@ -239,7 +242,7 @@ public class LocalGangseoActivity extends AppCompatActivity {
                                     startActivity(intent);
                                 } else {
                                     // 네이버 지도 앱이 설치되어 있지 않으면 웹 브라우저로 해당 URL 열기
-                                    Log.e("LocalHotplaceActivity", "네이버 지도 앱이 설치되어 있지 않습니다.");
+                                    Log.e("LocalGangseoActivity", "네이버 지도 앱이 설치되어 있지 않습니다.");
                                     Toast.makeText(context, "네이버 지도 앱이 설치되어 있지 않습니다. 웹 브라우저로 열겠습니다.", Toast.LENGTH_SHORT).show();
 
                                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(intentUrl));
