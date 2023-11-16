@@ -55,8 +55,14 @@ public class AddrSetActivity extends AppCompatActivity {
         btn_addr_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //기본 코드
+                // 현재 프래그먼트의 위치 정보를 가져옴
+                int position = getIntent().getIntExtra("position", 0);
+
+                // RouteRecommActivity로 화면 이동
                 Intent intent = new Intent(AddrSetActivity.this, RouteRecommActivity.class);
+
+                // 현재 프래그먼트의 위치 정보를 Intent에 추가
+                intent.putExtra("position", position);
                 startForResult.launch(intent);
             }
 
