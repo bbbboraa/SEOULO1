@@ -421,6 +421,8 @@ public class MyLocationActivity extends AppCompatActivity implements
                         startActivity(intent5);
                         break;
                     case R.id.menu_expense_graph:
+                        Intent intent6 = new Intent(MyLocationActivity.this, GraphActivity.class);
+                        startActivity(intent6);
                         break;
                     case R.id.menu_mypage:
                         Intent intent7 = new Intent(MyLocationActivity.this, MypageActivity.class);
@@ -735,7 +737,6 @@ public class MyLocationActivity extends AppCompatActivity implements
                 ActivityCompat.requestPermissions( this, REQUIRED_PERMISSIONS,
                         PERMISSIONS_REQUEST_CODE);
             }
-
         }
 
         mMap.getUiSettings().setMyLocationButtonEnabled(true);

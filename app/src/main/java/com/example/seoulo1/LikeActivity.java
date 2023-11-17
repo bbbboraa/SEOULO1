@@ -339,6 +339,8 @@ public class LikeActivity extends AppCompatActivity implements
                         startActivity(intent5);
                         break;
                     case R.id.menu_expense_graph:
+                        Intent intent6 = new Intent(LikeActivity.this, GraphActivity.class);
+                        startActivity(intent6);
                         break;
                     case R.id.menu_mypage:
                         Intent intent7 = new Intent(LikeActivity.this, MypageActivity.class);
